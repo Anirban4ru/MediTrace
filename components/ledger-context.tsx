@@ -4,6 +4,8 @@ import { createContext, useContext, useEffect, useMemo, useState, useCallback } 
 import { Batch, TelemetryCheckpoint, BatchStatus, SAFE_BAND } from '@/lib/types';
 import { makeBatches, provisionBatch, ingestTelemetry, verifyBatch } from '@/lib/engine';
 import { getSupabase, isSupabaseConfigured } from '@/lib/supabase-client';
+import { ethers } from 'ethers';
+import { MedicineTrackerABI } from '@/lib/abi';
 import { useAuth } from '@/components/auth-context';
 
 export interface Alert {
@@ -199,7 +201,34 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
 
   const addBatch = useCallback(
     async (productName: string, units: number, seedKey: string): Promise<Batch> => {
+      if (typeof window === 'undefined' || !(window as any).ethereum) {
+        throw new Error("MetaMask is not installed. Web3 features are disabled.");
+      }
+      
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+      if (!contractAddress) throw new Error("NEXT_PUBLIC_CONTRACT_ADDRESS not set in environment variables");
+      
+      const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+
       const batch = provisionBatch(productName, units, seedKey);
+      
+      const tx = await contract.provisionBatch(
+        batch.batchId,
+        batch.productName,
+        batch.manufacturerLabel,
+        batch.units,
+        batch.serial,
+        batch.origin.label,
+        batch.destination.label
+      );
+      
+      await tx.wait();
+      batch.provisionTx = tx.hash;
+
       const supabase = getSupabase();
 
       if (supabase && user) {
@@ -241,7 +270,31 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     async (batchId: string, temperature: number, seedKey: string) => {
       const batch = batches.find((b) => b.batchId === batchId);
       if (!batch) return;
+
+      if (typeof window === 'undefined' || !(window as any).ethereum) {
+        throw new Error("MetaMask is not installed. Web3 features are disabled.");
+      }
+      
+      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = await provider.getSigner();
+      
+      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+      if (!contractAddress) throw new Error("NEXT_PUBLIC_CONTRACT_ADDRESS not set in environment variables");
+      
+      const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+
       const { batch: updated, checkpoint, spoiled } = ingestTelemetry(batch, temperature, seedKey);
+      
+      const latE6 = Math.round(checkpoint.lat * 1e6);
+      const lngE6 = Math.round(checkpoint.lng * 1e6);
+      const tempCp = Math.round(checkpoint.temperature * 100);
+
+      const tx = await contract.logTelemetry(batchId, latE6, lngE6, tempCp);
+      await tx.wait();
+      
+      checkpoint.txHash = tx.hash;
+
       const supabase = getSupabase();
 
       if (supabase && user) {
