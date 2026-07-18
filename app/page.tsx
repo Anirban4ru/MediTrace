@@ -234,6 +234,20 @@ function Shell({
                   autoFocus
                 />
                 {pwdError && <span className="text-[#B91C1C] text-[10px] uppercase font-bold mt-1 block">Incorrect password</span>}
+
+                {pendingRole && (
+                  <div className="mt-4 flex items-start gap-3 border-2 border-black bg-[#F4F4F6] p-3 brutal-shadow-sm">
+                    <AlertTriangle className="h-5 w-5 shrink-0 text-black" strokeWidth={2} />
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-black">
+                        Demo Mode Active
+                      </span>
+                      <span className="mt-0.5 font-mono text-[11px] text-black/70">
+                        Use test passcode: <strong className="text-black text-[13px] tracking-wider bg-black/10 px-1 py-0.5 rounded-sm">{PASSWORDS[pendingRole]}</strong>
+                      </span>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex gap-2">
                 <button
