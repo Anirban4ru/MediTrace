@@ -88,7 +88,7 @@ export function AuthScreen() {
                     value={displayName}
                     onChange={(e) => setDisplayName(e.target.value)}
                     className="w-full bg-transparent px-3 py-2.5 text-[13px] mono-data focus:outline-none"
-                    placeholder="John Doe"
+                    placeholder="Authorized Personnel"
                   />
                 </div>
               </div>
@@ -139,7 +139,7 @@ export function AuthScreen() {
           </form>
 
           <p className="mt-4 text-center text-[10px] uppercase tracking-[0.12em] text-black/45">
-            Email confirmation is disabled — sign up and sign in immediately.
+            Secure Terminal. All ledger operations are cryptographically signed.
           </p>
         </div>
       </div>

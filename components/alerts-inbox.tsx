@@ -1,11 +1,13 @@
 'use client';
 
+import { useState } from 'react';
+
 import { useLedger } from '@/components/ledger-context';
 import { AlertTriangle, Bell, Check, X, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function AlertsInbox() {
-  const { alerts, acknowledgeAlert } = useLedger();
+  const { alerts, acknowledgeAlert, fileAudit } = useLedger();
   const unack = alerts.filter((a) => !a.acknowledged);
   const acked = alerts.filter((a) => a.acknowledged);
 
@@ -41,6 +43,13 @@ export function AlertsInbox() {
                 key={alert.id}
                 alert={alert}
                 onAck={() => acknowledgeAlert(alert.id)}
+                onFileAudit={
+                  alert.severity === 'critical'
+                    ? async () => {
+                        await fileAudit(alert.id, alert.batch_id, alert.message);
+                      }
+                    : undefined
+                }
               />
             ))}
             {unack.length > 0 && acked.length > 0 && (
@@ -63,6 +72,7 @@ export function AlertsInbox() {
 function AlertItem({
   alert,
   onAck,
+  onFileAudit,
   acknowledged,
 }: {
   alert: {
@@ -75,10 +85,25 @@ function AlertItem({
     created_at: string;
   };
   onAck?: () => void;
+  onFileAudit?: () => Promise<void>;
   acknowledged?: boolean;
 }) {
   const isCritical = alert.severity === 'critical';
   const isWarning = alert.severity === 'warning';
+  const [isFiling, setIsFiling] = useState(false);
+
+  const handleFileAudit = async () => {
+    if (!onFileAudit) return;
+    try {
+      setIsFiling(true);
+      await onFileAudit();
+    } catch (err) {
+      console.error(err);
+      window.alert("Failed to file audit: " + (err as any).message);
+    } finally {
+      setIsFiling(false);
+    }
+  };
 
   return (
     <li
@@ -120,15 +145,28 @@ function AlertItem({
             </span>
           </div>
         </div>
-        {onAck && (
-          <button
-            onClick={onAck}
-            className="flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-white transition-colors hover:bg-black hover:text-white"
-            title="Acknowledge"
-          >
-            <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          {onFileAudit && !acknowledged && (
+            <button
+              onClick={handleFileAudit}
+              disabled={isFiling}
+              className="flex h-6 items-center justify-center border-2 border-black bg-[#B91C1C] px-2 text-[10px] font-bold uppercase text-white transition-colors hover:bg-black disabled:opacity-50"
+              title="File Audit & Revoke Batch On-Chain"
+            >
+              {isFiling ? 'Mining...' : 'File Audit & Revoke'}
+            </button>
+          )}
+          {onAck && (
+            <button
+              onClick={onAck}
+              disabled={isFiling}
+              className="flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-white transition-colors hover:bg-black hover:text-white disabled:opacity-50"
+              title="Acknowledge"
+            >
+              <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
+            </button>
+          )}
+        </div>
       </div>
     </li>
   );

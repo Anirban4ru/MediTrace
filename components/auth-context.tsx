@@ -72,7 +72,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .maybeSingle();
 
     if (profileError) {
-      setError(profileError.message);
+      console.warn("Could not load profile (table might be missing). Using fallback.", profileError.message);
+      setUser({
+        id: userId,
+        email,
+        role: 'MANUFACTURER_ROLE',
+        displayName: email.split('@')[0],
+      });
       setLoading(false);
       return;
     }

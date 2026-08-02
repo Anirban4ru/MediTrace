@@ -237,3 +237,42 @@ export async function runMultiImagePipeline(
     overallVerdict: anyAnomaly ? 'ANOMALY DETECTED' : 'AUTHENTIC',
   };
 }
+
+export function getLevenshteinDistance(a: string, b: string): number {
+  const matrix = Array.from({ length: a.length + 1 }, () => new Array(b.length + 1).fill(0));
+  for (let i = 0; i <= a.length; i++) matrix[i][0] = i;
+  for (let j = 0; j <= b.length; j++) matrix[0][j] = j;
+
+  for (let i = 1; i <= a.length; i++) {
+    for (let j = 1; j <= b.length; j++) {
+      const cost = a[i - 1] === b[j - 1] ? 0 : 1;
+      matrix[i][j] = Math.min(
+        matrix[i - 1][j] + 1,
+        matrix[i][j - 1] + 1,
+        matrix[i - 1][j - 1] + cost
+      );
+    }
+  }
+  return matrix[a.length][b.length];
+}
+
+export function verifyDigitalHandoff(): { safe: boolean; reason?: string } {
+  if (typeof window === 'undefined') return { safe: true };
+  
+  const currentHost = window.location.hostname;
+  const officialHost = 'pharma-trace-one.vercel.app';
+  const allowedHosts = [officialHost, 'localhost', '127.0.0.1'];
+
+  if (allowedHosts.includes(currentHost)) {
+    return { safe: true };
+  }
+
+  // Check for typosquatting / lookalike
+  const distance = getLevenshteinDistance(currentHost, officialHost);
+  
+  if (distance > 0 && distance <= 3) {
+    return { safe: false, reason: `CRITICAL: TYPOSQUATTING DETECTED! Lookalike domain (${currentHost}). Official domain is ${officialHost}.` };
+  }
+
+  return { safe: false, reason: `UNAUTHORIZED DOMAIN: ${currentHost} is not recognized for authentic handoff.` };
+}

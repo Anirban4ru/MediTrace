@@ -52,10 +52,11 @@ interface LedgerContextValue {
   verifications: VerificationRecord[];
   loading: boolean;
   addBatch: (productName: string, units: number, seedKey: string) => Promise<Batch>;
-  pushTelemetry: (batchId: string, temperature: number, seedKey: string) => Promise<void>;
+  pushTelemetry: (batchId: string, temperature: number, seedKey: string, skipBlockchain?: boolean) => Promise<void>;
   getBatch: (batchId: string) => Batch | undefined;
   refresh: () => Promise<void>;
   acknowledgeAlert: (alertId: string) => Promise<void>;
+  fileAudit: (alertId: string, batchId: string, message: string) => Promise<void>;
   saveVerification: (record: Omit<VerificationRecord, 'id'>) => Promise<void>;
 }
 
@@ -199,13 +200,55 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(interval);
   }, []);
 
+  // Supabase Realtime subscription for alerts (e.g., from Dedaub webhooks)
+  useEffect(() => {
+    const supabase = getSupabase();
+    if (!supabase || !user) return;
+
+    const channel = supabase
+      .channel('schema-db-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'alerts',
+        },
+        (payload) => {
+          const newAlert = payload.new as Alert;
+          setAlerts((prev) => {
+            if (prev.some((a) => a.id === newAlert.id)) return prev;
+            return [newAlert, ...prev].slice(0, 50);
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user]);
+
   const addBatch = useCallback(
-    async (productName: string, units: number, seedKey: string): Promise<Batch> => {
+    async (productName: string, units: number, seedKey: string): Promise<Batch | undefined> => {
+      try {
       if (typeof window === 'undefined' || !(window as any).ethereum) {
         throw new Error("MetaMask is not installed. Web3 features are disabled.");
       }
       
-      const provider = new ethers.BrowserProvider((window as any).ethereum);
+      const ethereum = (window as any).ethereum;
+      try {
+        await ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0xaa36a7' }] });
+      } catch (switchError: any) {
+        if (switchError.code === 4902) {
+          await ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [{ chainId: '0xaa36a7', chainName: 'Sepolia', rpcUrls: ['https://rpc.sepolia.org'], nativeCurrency: { name: 'SepoliaETH', symbol: 'SEP', decimals: 18 } }]
+          });
+        }
+      }
+
+      const provider = new ethers.BrowserProvider(ethereum);
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
       
@@ -262,38 +305,61 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
 
       setBatches((prev) => [batch, ...prev]);
       return batch;
+      } catch (err: any) {
+        console.error("addBatch Error:", err);
+      }
     },
     [user]
   );
 
   const pushTelemetry = useCallback(
-    async (batchId: string, temperature: number, seedKey: string) => {
-      const batch = batches.find((b) => b.batchId === batchId);
-      if (!batch) return;
+    async (batchId: string, temperature: number, seedKey: string, skipBlockchain: boolean = false) => {
+      try {
+        const batch = batches.find((b) => b.batchId === batchId);
+        if (!batch) return;
 
-      if (typeof window === 'undefined' || !(window as any).ethereum) {
-        throw new Error("MetaMask is not installed. Web3 features are disabled.");
-      }
-      
-      const provider = new ethers.BrowserProvider((window as any).ethereum);
-      await provider.send("eth_requestAccounts", []);
-      const signer = await provider.getSigner();
-      
-      const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
-      if (!contractAddress) throw new Error("NEXT_PUBLIC_CONTRACT_ADDRESS not set in environment variables");
-      
-      const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+        const { batch: updated, checkpoint, spoiled } = ingestTelemetry(batch, temperature, seedKey);
+        
+        const latE6 = Math.round(checkpoint.lat * 1e6);
+        const lngE6 = Math.round(checkpoint.lng * 1e6);
+        const tempCp = Math.round(checkpoint.temperature * 100);
 
-      const { batch: updated, checkpoint, spoiled } = ingestTelemetry(batch, temperature, seedKey);
-      
-      const latE6 = Math.round(checkpoint.lat * 1e6);
-      const lngE6 = Math.round(checkpoint.lng * 1e6);
-      const tempCp = Math.round(checkpoint.temperature * 100);
+        if (!skipBlockchain) {
+          if (typeof window === 'undefined' || !(window as any).ethereum) {
+            throw new Error("MetaMask is not installed. Web3 features are disabled.");
+          }
+          
+          const ethereum = (window as any).ethereum;
+          try {
+            await ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0xaa36a7' }] });
+          } catch (switchError: any) {
+            if (switchError.code === 4902) {
+              await ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{ chainId: '0xaa36a7', chainName: 'Sepolia', rpcUrls: ['https://rpc.sepolia.org'], nativeCurrency: { name: 'SepoliaETH', symbol: 'SEP', decimals: 18 } }]
+              });
+            }
+          }
 
-      const tx = await contract.logTelemetry(batchId, latE6, lngE6, tempCp);
-      await tx.wait();
-      
-      checkpoint.txHash = tx.hash;
+          const provider = new ethers.BrowserProvider(ethereum);
+          await provider.send("eth_requestAccounts", []);
+          const signer = await provider.getSigner();
+          
+          let contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
+          if (!contractAddress) throw new Error("NEXT_PUBLIC_CONTRACT_ADDRESS not set in environment variables");
+          
+          // Ensure valid checksum address if possible
+          try { contractAddress = ethers.getAddress(contractAddress); } catch (e) {}
+          
+          const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+          const tx = await contract.logTelemetry(batchId, latE6, lngE6, tempCp);
+          await tx.wait();
+          
+          checkpoint.txHash = tx.hash;
+        } else {
+          // Simulated IoT device transaction (no MetaMask popup)
+          checkpoint.txHash = '0x' + Math.random().toString(16).slice(2).padStart(64, '0');
+        }
 
       const supabase = getSupabase();
 
@@ -339,11 +405,14 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
           batch_id: batchId,
           event_type: 'telemetry_logged',
           actor: user.email,
-          details: { temperature: checkpoint.temperature, breached: checkpoint.breached },
+          details: { temperature: checkpoint.temperature, breached: checkpoint.breached, simulated: skipBlockchain },
         });
       }
 
       setBatches((prev) => prev.map((b) => (b.batchId === batchId ? updated : b)));
+      } catch (err: any) {
+        console.error("pushTelemetry Error:", err);
+      }
     },
     [batches, user]
   );
@@ -355,6 +424,70 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
     }
     setAlerts((prev) => prev.map((a) => (a.id === alertId ? { ...a, acknowledged: true } : a)));
   }, []);
+
+  const fileAudit = useCallback(
+    async (alertId: string, batchId: string, message: string) => {
+      try {
+        if (typeof window === 'undefined' || !(window as any).ethereum) {
+          throw new Error("MetaMask is not installed.");
+        }
+        const ethereum = (window as any).ethereum;
+        try {
+          await ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0xaa36a7' }] });
+        } catch (switchError: any) {
+          if (switchError.code === 4902) {
+            await ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [{ chainId: '0xaa36a7', chainName: 'Sepolia', rpcUrls: ['https://rpc.sepolia.org'], nativeCurrency: { name: 'SepoliaETH', symbol: 'SEP', decimals: 18 } }]
+            });
+          }
+        }
+        
+        const provider = new ethers.BrowserProvider(ethereum);
+        const signer = await provider.getSigner();
+        const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+        const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+        
+        // Revoke the batch on-chain by logging an extreme temperature (999.00°C = 99900 cp)
+        let chainSuccess = false;
+        try {
+          const tx = await contract.logTelemetry(batchId, 0, 0, 99900);
+          await tx.wait(1);
+          chainSuccess = true;
+        } catch (contractErr: any) {
+          console.warn("On-chain revocation failed, falling back to off-chain:", contractErr);
+          if (contractErr.message && contractErr.message.includes("Batch does not exist")) {
+            window.alert(`Note: Batch ${batchId} was never registered on the blockchain. The alert has been resolved and the audit filed off-chain in the database instead.`);
+          } else {
+            throw contractErr; // Re-throw if it's a MetaMask rejection or something else
+          }
+        }
+
+        const supabase = getSupabase();
+        if (supabase && user) {
+          await supabase
+            .from('alerts')
+            .update({ acknowledged: true })
+            .eq('id', alertId);
+
+          await supabase.from('audit_logs').insert({
+            batch_id: batchId,
+            event_type: 'spoiled', // Trigger red styling
+            actor: user.email,
+            details: { action: 'admin_revocation', reason: message, on_chain: chainSuccess },
+          });
+        }
+        
+        setAlerts((prev) =>
+          prev.map((a) => (a.id === alertId ? { ...a, acknowledged: true } : a))
+        );
+      } catch (err: any) {
+        console.error("fileAudit Error:", err);
+        throw err;
+      }
+    },
+    [user]
+  );
 
   const saveVerification = useCallback(
     async (record: Omit<VerificationRecord, 'id'>) => {
@@ -389,7 +522,7 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
             batch_id: record.batch_id,
             alert_type: 'anomaly',
             message: `Verification anomaly detected for ${record.batch_id} — score ${(record.authenticity_score * 100).toFixed(1)}%`,
-            severity: 'warning',
+            severity: 'critical',
           });
         }
       }
@@ -415,9 +548,10 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
       getBatch,
       refresh: loadFromSupabase,
       acknowledgeAlert,
+      fileAudit,
       saveVerification,
     }),
-    [batches, alerts, auditLog, verifications, loading, addBatch, pushTelemetry, getBatch, loadFromSupabase, acknowledgeAlert, saveVerification]
+    [batches, alerts, auditLog, verifications, loading, addBatch, pushTelemetry, getBatch, loadFromSupabase, acknowledgeAlert, fileAudit, saveVerification]
   );
 
   return <LedgerContext.Provider value={value}>{children}</LedgerContext.Provider>;

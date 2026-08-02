@@ -59,6 +59,7 @@ export function TelemetryConsole() {
   const [tempInput, setTempInput] = useState(5.0);
   const [seedKey, setSeedKey] = useState('');
   const [liveMode, setLiveMode] = useState(false);
+  const [isWriting, setIsWriting] = useState(false);
   const liveRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Live streaming telemetry simulation
@@ -68,7 +69,7 @@ export function TelemetryConsole() {
         const baseTemp = 4.5 + Math.random() * 2;
         const drift = (Math.random() - 0.5) * 3;
         const temp = Math.round((baseTemp + drift) * 10) / 10;
-        pushTelemetry(selected.batchId, temp, `${selected.batchId}-live-${Date.now()}`);
+        pushTelemetry(selected.batchId, temp, `${selected.batchId}-live-${Date.now()}`, true);
       }, 3000);
     }
     return () => {
@@ -77,12 +78,19 @@ export function TelemetryConsole() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [liveMode, selectedId]);
 
-  function handleIngest(e: React.FormEvent) {
+  async function handleIngest(e: React.FormEvent) {
     e.preventDefault();
     if (!selected) return;
-    const key = seedKey || `${selected.batchId}-${tempInput}-${Date.now()}`;
-    pushTelemetry(selected.batchId, tempInput, key);
-    setSeedKey('');
+    setIsWriting(true);
+    try {
+      const key = seedKey || `${selected.batchId}-${tempInput}-${Date.now()}`;
+      await pushTelemetry(selected.batchId, tempInput, key);
+      setSeedKey('');
+    } catch (err: any) {
+      alert("Failed to write to ledger: " + (err.reason || err.message));
+    } finally {
+      setIsWriting(false);
+    }
   }
 
   if (!selected) {
@@ -356,10 +364,23 @@ export function TelemetryConsole() {
             </div>
             <button
               type="submit"
-              className="brutal-border brutal-shadow brutal-press flex w-full items-center justify-center gap-2 bg-black py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-white"
+              disabled={isWriting}
+              className={cn(
+                "brutal-border brutal-shadow flex w-full items-center justify-center gap-2 bg-black py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-opacity",
+                isWriting ? "opacity-50 cursor-not-allowed" : "brutal-press"
+              )}
             >
-              <Send className="h-4 w-4" strokeWidth={2.5} />
-              Write To Chain
+              {isWriting ? (
+                <>
+                  <Timer className="h-4 w-4 animate-spin" strokeWidth={2.5} />
+                  Mining on Sepolia...
+                </>
+              ) : (
+                <>
+                  <Send className="h-4 w-4" strokeWidth={2.5} />
+                  Write To Chain
+                </>
+              )}
             </button>
             <p className="text-[10px] uppercase tracking-[0.12em] text-black/50">
               Breach outside [2.0, 8.0]°C auto-mutates status to SPOILED on-chain.

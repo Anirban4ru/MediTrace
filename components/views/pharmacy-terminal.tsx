@@ -7,7 +7,7 @@ import { Batch, CHAIN } from '@/lib/types';
 import { StatusPill, BrutalTag } from '@/components/primitives';
 import { fmtTime, fmtScore } from '@/lib/format';
 import { shortAddr, shortHash } from '@/lib/rng';
-import { runCVPipeline, runMultiImagePipeline, type CVResult, type MultiImageResult } from '@/lib/cv-pipeline';
+import { runCVPipeline, runMultiImagePipeline, verifyDigitalHandoff, type CVResult, type MultiImageResult } from '@/lib/cv-pipeline';
 import { findReferenceForProduct, generateReferenceDataUrl } from '@/lib/reference-library';
 import { decodeBarcodeFromDataUrl, parseGS1 } from '@/lib/barcode';
 import { txExplorerUrl, blockExplorerUrl, contractExplorerUrl } from '@/lib/explorer';
@@ -105,6 +105,14 @@ export function PharmacyTerminal() {
     (async () => {
       setProgress(0);
       setStage(stages[0]);
+
+      const handoff = verifyDigitalHandoff();
+      if (!handoff.safe) {
+        cancelled = true;
+        setError(handoff.reason ?? 'Domain verification failed');
+        setPhase('error');
+        return;
+      }
 
       // Animate progress
       let p = 0;

@@ -1,8 +1,9 @@
 'use client';
 
 import { useLedger } from '@/components/ledger-context';
-import { History, Package, Truck, ShieldCheck, AlertTriangle, ScanLine } from 'lucide-react';
+import { History, Package, Truck, ShieldCheck, AlertTriangle, ScanLine, FileText } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { generatePDFReport } from '@/lib/pdf-report';
 
 const EVENT_ICONS: Record<string, React.ElementType> = {
   provisioned: Package,
@@ -14,7 +15,7 @@ const EVENT_ICONS: Record<string, React.ElementType> = {
 };
 
 export function AuditLog() {
-  const { auditLog } = useLedger();
+  const { auditLog, getBatch } = useLedger();
 
   return (
     <div className="brutal-card">
@@ -90,6 +91,19 @@ export function AuditLog() {
                         </div>
                       )}
                     </div>
+                    {entry.batch_id && (
+                      <button
+                        onClick={() => {
+                          const b = getBatch(entry.batch_id!);
+                          if (b) generatePDFReport(b);
+                        }}
+                        className="flex h-7 shrink-0 items-center gap-1 border-2 border-black bg-white px-2 transition-colors hover:bg-black hover:text-white"
+                        title="Download PDF Report"
+                      >
+                        <FileText className="h-3 w-3" strokeWidth={2.5} />
+                        <span className="text-[9px] font-bold uppercase tracking-[0.1em]">PDF</span>
+                      </button>
+                    )}
                   </div>
                 </li>
               );

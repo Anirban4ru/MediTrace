@@ -86,7 +86,7 @@ export const SAFE_BAND = { min: 2.0, max: 8.0 };
 export const CHAIN = {
   name: 'Arbitrum Sepolia L2',
   chainId: 421614,
-  contractAddress: '0x7A3c1F2E4b9D8aBc1234567890aBcDeF123456789',
+  contractAddress: '0x53f97C27131C2D0B801D718bD9C61CaC71E93EB8',
 };
 
 export const ROLES: Record<Role, string> = {
