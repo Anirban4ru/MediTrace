@@ -51,7 +51,7 @@ interface LedgerContextValue {
   auditLog: AuditEntry[];
   verifications: VerificationRecord[];
   loading: boolean;
-  addBatch: (productName: string, units: number, seedKey: string) => Promise<Batch>;
+  addBatch: (productName: string, units: number, seedKey: string) => Promise<Batch | undefined>;
   pushTelemetry: (batchId: string, temperature: number, seedKey: string, skipBlockchain?: boolean) => Promise<void>;
   getBatch: (batchId: string) => Batch | undefined;
   refresh: () => Promise<void>;

@@ -1,6 +1,13 @@
 import jsPDF from 'jspdf';
 import { Batch } from './types';
 
+export function calculateExcursionDuration(batch: Batch | null): number {
+  if (!batch || !batch.telemetry) return 0;
+  // Simple heuristic: each breached checkpoint counts as a 5-minute excursion
+  const breaches = batch.telemetry.filter(cp => cp.breached);
+  return breaches.length * 5 * 60 * 1000;
+}
+
 export function generatePDFReport(batch: Batch) {
   const doc = new jsPDF();
 
@@ -27,39 +34,33 @@ export function generatePDFReport(batch: Batch) {
   doc.text(`Status: `, 20, 75);
   
   let mfgStr = 'Unknown';
-  if (batch.manufacturing_date) {
-    const d = new Date(batch.manufacturing_date);
+  if (batch.createdAt) {
+    const d = new Date(batch.createdAt);
     if (!isNaN(d.getTime())) mfgStr = d.toLocaleDateString();
   }
   
-  let expStr = 'Unknown';
-  if (batch.expiry_date) {
-    const d = new Date(batch.expiry_date);
-    if (!isNaN(d.getTime())) expStr = d.toLocaleDateString();
-  }
-  
   doc.text(`Mfg Date: `, 110, 55);
-  doc.text(`Exp Date: `, 110, 65);
-  doc.text(`Current Holder: `, 110, 75);
+  doc.text(`Units: `, 110, 65);
+  doc.text(`Serial: `, 110, 75);
 
   doc.setFont("helvetica", "bold");
   doc.text("Telemetry Checkpoints", 20, 95);
   
   doc.setFont("helvetica", "normal");
-  if (!batch.checkpoints || batch.checkpoints.length === 0) {
+  if (!batch.telemetry || batch.telemetry.length === 0) {
     doc.text("No checkpoints recorded.", 20, 105);
   } else {
     let yPos = 105;
-    batch.checkpoints.forEach((cp, index) => {
+    batch.telemetry.forEach((cp, index) => {
       if (yPos > 270) {
         doc.addPage();
         yPos = 20;
       }
       
       const tsStr = new Date(cp.timestamp).toLocaleString();
-      const status = cp.is_breached ? "BREACHED" : "OK";
-      doc.text(`. [] Temp: C, Hum: % - Status: `, 20, yPos);
-      doc.text(`   Location:  | Reporter: `, 20, yPos + 7);
+      const status = cp.breached ? "BREACHED" : "OK";
+      doc.text(`. [] Temp: C - Status: `, 20, yPos);
+      doc.text(`   Location: [, ] | Reporter: `, 20, yPos + 7);
       
       yPos += 16;
     });
@@ -76,3 +77,5 @@ export function generatePDFReport(batch: Batch) {
 
   doc.save(`PharmaTrace_Audit_.pdf`);
 }
+
+export const generateBatchReport = generatePDFReport;
