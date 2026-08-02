@@ -61,7 +61,7 @@ export function ManufacturerDashboard() {
     if (!productName.trim() || units <= 0) return;
     const key = seedKey || `${productName}-${units}-${Date.now()}`;
     const batch = await addBatch(productName.trim(), units, key);
-    setLastProvisioned(batch);
+    setLastProvisioned(batch || null);
     setSeedKey('');
   }
 
