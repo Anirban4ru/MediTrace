@@ -84,10 +84,10 @@ The platform features distinct dashboards based on supply chain roles. *Default 
 
 | Role | Passcode | Responsibilities |
 | :--- | :--- | :--- |
-| **Admin** | `000000` | Manages alerts, views the immutable audit trail. |
-| **Manufacturer** | `111111` | Provisions new drug batches and mints them onto the blockchain. |
-| **Carrier** | `222222` | Monitors live fleet telemetry and records IoT checkpoints. |
-| **Inspector** | `333333` | Utilizes the Pharmacy Terminal to verify physical packaging before dispensation. |
+| **Admin** | `admin123` | Manages alerts, views the immutable audit trail. |
+| **Manufacturer** | `mfg123` | Provisions new drug batches and mints them onto the blockchain. |
+| **Carrier** | `car123` | Monitors live fleet telemetry and records IoT checkpoints. |
+| **Inspector** | `ins123` | Utilizes the Pharmacy Terminal to verify physical packaging before dispensation. |
 
 > **Note on Web3 Usage:** Whenever you interact with the dashboards (e.g., Provisioning a batch or submitting a reading), MetaMask will pop up requiring you to sign a transaction. Ensure you have Sepolia ETH to cover gas fees!
 
