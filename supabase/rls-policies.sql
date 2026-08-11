@@ -34,28 +34,28 @@ CREATE POLICY "Allow authenticated SELECT on verifications" ON verifications FOR
 DROP POLICY IF EXISTS "Manufacturer can insert batches" ON batches;
 CREATE POLICY "Manufacturer can insert batches" ON batches 
 FOR INSERT TO authenticated 
-WITH CHECK (public.get_user_role() = 'MANUFACTURER_ROLE');
+WITH CHECK (public.get_user_role() IN ('MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'));
 
 -- Carrier can insert telemetry_checkpoints
 DROP POLICY IF EXISTS "Carrier can insert telemetry" ON telemetry_checkpoints;
 CREATE POLICY "Carrier can insert telemetry" ON telemetry_checkpoints 
 FOR INSERT TO authenticated 
-WITH CHECK (public.get_user_role() IN ('CARRIER_ROLE', 'MANUFACTURER_ROLE'));
+WITH CHECK (public.get_user_role() IN ('CARRIER_ROLE', 'MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'));
 
 -- Admin / Inspector can update alerts
 DROP POLICY IF EXISTS "Admin can update alerts" ON alerts;
 CREATE POLICY "Admin can update alerts" ON alerts 
 FOR UPDATE TO authenticated 
-USING (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'));
+USING (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));
 
 -- Admin / Inspector can insert audit logs
 DROP POLICY IF EXISTS "Admin can insert audit logs" ON audit_logs;
 CREATE POLICY "Admin can insert audit logs" ON audit_logs 
 FOR INSERT TO authenticated 
-WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'));
+WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));
 
 -- Inspector can insert verifications
 DROP POLICY IF EXISTS "Inspector can insert verifications" ON verifications;
 CREATE POLICY "Inspector can insert verifications" ON verifications
 FOR INSERT TO authenticated
-WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'));
+WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));

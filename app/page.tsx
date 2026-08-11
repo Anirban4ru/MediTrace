@@ -29,10 +29,10 @@ type DashboardRole = 'admin' | 'manufacturer' | 'carrier' | 'inspector';
 type ViewState = 'landing' | DashboardRole;
 
 const REQUIRED_ROLES: Record<DashboardRole, string[]> = {
-  admin: ['ADMIN_ROLE', 'admin'],
-  manufacturer: ['MANUFACTURER_ROLE'],
-  carrier: ['CARRIER_ROLE', 'MANUFACTURER_ROLE'],
-  inspector: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'],
+  admin: ['ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'],
+  manufacturer: ['MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'],
+  carrier: ['CARRIER_ROLE', 'MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'],
+  inspector: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'],
 };
 
 const ROLE_LABELS: Record<DashboardRole, string> = {
@@ -285,7 +285,10 @@ function TopBar({
           
           <div className="flex items-center gap-4">
             <div className="text-right dark:text-white">
-              <div className="text-[11px] font-bold uppercase">{user.displayName}</div>
+              <div className="flex items-center justify-end gap-1.5">
+                <div className="text-[11px] font-bold uppercase">{user.displayName}</div>
+                <div className="bg-black text-white dark:bg-white dark:text-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider">{user.role.replace('_ROLE', '').replace('_', ' ')}</div>
+              </div>
               <div className="mono-data text-[9px] text-black/50 dark:text-white/50">{user.email}</div>
             </div>
             <div className="flex gap-2">

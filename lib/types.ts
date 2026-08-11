@@ -17,7 +17,7 @@ export const STATUS_ORDER: BatchStatus[] = [
   'Spoiled',
 ];
 
-export type Role = 'MANUFACTURER_ROLE' | 'CARRIER_ROLE' | 'INSPECTOR_ROLE' | 'ADMIN_ROLE';
+export type Role = 'MANUFACTURER_ROLE' | 'CARRIER_ROLE' | 'INSPECTOR_ROLE' | 'ADMIN_ROLE' | 'SUPERIOR_HEAD_ROLE';
 
 export interface TelemetryCheckpoint {
   /** Epoch milliseconds. */
@@ -94,4 +94,5 @@ export const ROLES: Record<Role, string> = {
   CARRIER_ROLE: '0x3f7c2d1e9b8a5f6c4d2e1a3b5c7d9e1f3a5b7c9d1',
   INSPECTOR_ROLE: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b',
   ADMIN_ROLE: '0xadminrole0000000000000000000000000000000',
+  SUPERIOR_HEAD_ROLE: '0xsuperiorheadrole0000000000000000000000',
 };
