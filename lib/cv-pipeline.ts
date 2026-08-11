@@ -263,7 +263,7 @@ export function verifyDigitalHandoff(): { safe: boolean; reason?: string } {
   const officialHost = process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname : 'pharma-trace-ten.vercel.app';
   const allowedHosts = [officialHost, 'pharma-trace-ten.vercel.app', 'localhost', '127.0.0.1'];
 
-  if (allowedHosts.includes(currentHost)) {
+  if (allowedHosts.includes(currentHost) || currentHost.endsWith('.vercel.app')) {
     return { safe: true };
   }
 
