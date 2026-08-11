@@ -29,9 +29,9 @@ type DashboardRole = 'admin' | 'manufacturer' | 'carrier' | 'inspector';
 type ViewState = 'landing' | DashboardRole;
 
 const REQUIRED_ROLES: Record<DashboardRole, string[]> = {
-  admin: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'],
-  manufacturer: ['MANUFACTURER_ROLE', 'ADMIN_ROLE', 'admin'],
-  carrier: ['CARRIER_ROLE', 'ADMIN_ROLE', 'admin'],
+  admin: ['ADMIN_ROLE', 'admin'],
+  manufacturer: ['MANUFACTURER_ROLE'],
+  carrier: ['CARRIER_ROLE', 'MANUFACTURER_ROLE'],
   inspector: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'],
 };
 
