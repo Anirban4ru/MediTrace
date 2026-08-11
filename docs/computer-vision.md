@@ -1,23 +1,23 @@
-# Computer Vision Verification (OpenCV)
+# 👁️ Computer Vision Verification (OpenCV)
 
-The weakest link in any digital supply chain is the "physical-to-digital handoff". A blockchain can prove a digital token is authentic, but it cannot prove that the physical box of medicine sitting on a pharmacy counter matches that digital token.
+The weakest link in any digital supply chain is the **physical-to-digital handoff**. 
 
-To solve this, PharmaTrace utilizes **client-side Computer Vision (OpenCV.js)** to verify physical anti-tamper holographic seals.
+A blockchain can prove a digital token is authentic, but it cannot prove that the physical box of medicine sitting on a pharmacy counter matches that digital token. To solve this, PharmaTrace utilizes **client-side Computer Vision (OpenCV.js)** to verify physical anti-tamper holographic seals.
 
 ---
 
-## The Verification Pipeline
+## 🔍 The Verification Pipeline
 
 When a Pharmacy Inspector receives a shipment, they open the Inspector Dashboard and activate their webcam.
 
 1. **Capture:** The browser captures a high-resolution frame of the physical packaging and the holographic seal.
-2. **Client-Side Processing:** To ensure extreme privacy and zero latency, the image is never uploaded to a server. It is processed entirely inside the browser using a Web Worker.
+2. **Client-Side Processing:** To ensure extreme privacy and zero latency, the image is **never uploaded to a server**. It is processed entirely inside the browser using a Web Worker.
 3. **Feature Extraction:** OpenCV analyzes the image for specific tampered patterns (e.g., micro-tears in the seal, incorrect optical refraction).
 4. **Blockchain Sync:** If the physical packaging passes the visual integrity check, the Inspector signs a MetaMask transaction marking the batch as `DELIVERED` on the blockchain.
 
 ---
 
-## OpenCV Implementation
+## ⚙️ OpenCV Implementation
 
 To prevent blocking the main React UI thread during heavy matrix calculations, PharmaTrace offloads the OpenCV logic to a dedicated `cv.worker.js` Web Worker.
 
@@ -73,4 +73,5 @@ self.onmessage = function(e) {
 };
 ```
 
-If the confidence score drops below the required threshold, the UI flashes red, and the Inspector is prevented from verifying the drug.
+> 🛡️ **Fail-Safe Mechanism:** 
+> If the confidence score drops below the required threshold, the UI flashes red, and the Inspector is cryptographically prevented from verifying the drug.

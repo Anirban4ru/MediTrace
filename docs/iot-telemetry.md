@@ -1,12 +1,13 @@
-# IoT Telemetry & Security Alerts
+# 📡 IoT Telemetry & Security Alerts
 
 PharmaTrace relies on a hybrid Web2/Web3 architecture to handle high-frequency IoT data (like GPS and Temperature sensors) efficiently.
 
-Writing temperature data to the blockchain every 10 seconds is too expensive and slow. Instead, PharmaTrace indexes high-frequency telemetry in **Supabase (PostgreSQL)** and only executes on-chain transactions when a critical state change occurs (e.g., a temperature breach).
+> ⚡ **Performance Optimization:** 
+> Writing temperature data to the blockchain every 10 seconds is too expensive and slow. Instead, PharmaTrace indexes high-frequency telemetry in **Supabase (PostgreSQL)** and only executes on-chain transactions when a critical state change occurs (e.g., a temperature breach).
 
 ---
 
-## Telemetry Ingestion
+## 🛰️ Telemetry Ingestion
 
 When a carrier transports a batch, their IoT device (or mobile terminal) continuously pings the Supabase database with the current temperature and coordinates.
 
@@ -28,15 +29,15 @@ If the `isBreached` flag is true, the application simultaneously prompts the Car
 
 ---
 
-## Real-time Dashboards
+## 📊 Real-time Dashboards
 
 Because Supabase supports **Realtime WebSockets**, the Admin and Carrier dashboards do not need to constantly refresh the page.
 
-When a new telemetry checkpoint is inserted into the database, the React frontend instantly re-renders the map and temperature charts with zero latency.
+When a new telemetry checkpoint is inserted into the database, the React frontend instantly re-renders the map and temperature charts with **zero latency**.
 
 ---
 
-## Dedaub Security Webhooks (Zero-Day Protection)
+## 🚨 Dedaub Security Webhooks (Zero-Day Protection)
 
 To protect the smart contract from zero-day exploits and off-chain discrepancies, PharmaTrace integrates with the **Dedaub Security Suite**.
 

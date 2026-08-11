@@ -1,14 +1,15 @@
-# Web3 Smart Contracts
+# ⛓️ Web3 Smart Contracts
 
-At the core of PharmaTrace is a Solidity smart contract deployed on the **Arbitrum Sepolia L2** network. This contract acts as the ultimate, immutable source of truth for the entire supply chain.
+At the absolute core of PharmaTrace is a bespoke Solidity smart contract deployed on the **Arbitrum Sepolia L2** network. This contract acts as the ultimate, immutable source of truth for the entire supply chain.
 
-By leveraging an Ethereum Layer-2 (Arbitrum), PharmaTrace achieves enterprise scalability and near-zero gas fees while inheriting the massive cryptographic security of the Ethereum mainnet.
+> 🚀 **Why Arbitrum L2?** 
+> By leveraging an Ethereum Layer-2, PharmaTrace achieves enterprise-grade scalability and near-zero gas fees while fully inheriting the massive cryptographic security of the Ethereum mainnet.
 
 ---
 
-## The Ledger State
+## 🧊 The Ledger State Machine
 
-The smart contract maintains the strict state machine of every pharmaceutical batch.
+The smart contract maintains a strict state machine for every pharmaceutical batch.
 
 ### Batch Status Flow
 A drug batch can only exist in one of four states:
@@ -35,14 +36,14 @@ mapping(string => Batch) public batches;
 
 ---
 
-## Cryptographic Role Enforcement
+## 🛡️ Cryptographic Role Enforcement
 
 To prevent malicious actors from altering the ledger, the contract utilizes **OpenZeppelin's AccessControl**.
 
 Only wallets that have been explicitly granted the `MANUFACTURER_ROLE` can mint new batches. Only the `CARRIER_ROLE` can log telemetry.
 
 ### Code Snippet: Provisioning a Batch
-Notice the `onlyRole(MANUFACTURER_ROLE)` modifier. If an unauthorized wallet attempts to call this function, the blockchain node will instantly reject the transaction.
+Notice the `onlyRole(MANUFACTURER_ROLE)` modifier. If an unauthorized wallet attempts to call this function, the blockchain node will instantly reject the transaction at the protocol level.
 
 ```solidity
 function provisionBatch(string memory _batchId, string memory _productName) 
@@ -66,11 +67,14 @@ function provisionBatch(string memory _batchId, string memory _productName)
 
 ---
 
-## The Irreversible "Spoiled" State
+## ⚠️ The Irreversible "Spoiled" State
 
 In the pharmaceutical industry, if a batch of biologics drops below 2°C or exceeds 8°C, it becomes chemically inert or toxic. 
 
-If the IoT telemetry system detects a breach, it calls the `markSpoiled` function. Once a batch is marked as `SPOILED`, **it can never be transitioned back to a safe state**. This guarantees that no human administrator can override a safety failure to save costs.
+If the IoT telemetry system detects a breach, it calls the `markSpoiled` function. 
+
+> 🛑 **CRITICAL SECURITY FEATURE:** 
+> Once a batch is marked as `SPOILED`, **it can never be transitioned back to a safe state**. This guarantees that no human administrator or executive can override a safety failure to save costs.
 
 ```solidity
 function markSpoiled(string memory _batchId) public {
