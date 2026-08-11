@@ -4,3 +4,4 @@
 * [Smart Contracts](smart-contracts.md)
 * [IoT Telemetry & Security](iot-telemetry.md)
 * [Computer Vision](computer-vision.md)
+* [Legal & Compliance](legal-compliance.md)

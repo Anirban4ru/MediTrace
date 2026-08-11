@@ -33,6 +33,12 @@
         "docs/iot-telemetry",
         "docs/computer-vision"
       ]
+    },
+    {
+      "group": "Legal",
+      "pages": [
+        "docs/legal-compliance"
+      ]
     }
   ]
 }
