@@ -148,3 +148,4 @@ export function RoleAllocationDashboard() {
       </div>
     </div>
   );
+}
