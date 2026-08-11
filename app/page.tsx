@@ -309,13 +309,6 @@ function TopBar({
                 Docs <ExternalLink className="h-3 w-3" />
               </a>
               <button
-                onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
-                title="Toggle Dark Mode"
-              >
-                {theme === 'dark' ? <Sun className="h-4 w-4" strokeWidth={2.5} /> : <Moon className="h-4 w-4" strokeWidth={2.5} />}
-              </button>
-              <button
                 onClick={onSignOut}
                 className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-[#B91C1C] hover:text-white dark:hover:bg-[#B91C1C] hover:border-[#B91C1C] dark:hover:border-[#B91C1C]"
                 title="Sign out"
