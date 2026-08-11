@@ -9,6 +9,7 @@ import { LedgerProvider } from '@/components/ledger-context';
 import { ManufacturerDashboard } from '@/components/views/manufacturer-dashboard';
 import { TelemetryConsole } from '@/components/views/telemetry-console';
 import { PharmacyTerminal } from '@/components/views/pharmacy-terminal';
+import { RoleAllocationDashboard } from '@/components/views/role-allocation-dashboard';
 import { AuthScreen } from '@/components/auth-screen';
 import { SearchFilter } from '@/components/search-filter';
 import { AlertsInbox } from '@/components/alerts-inbox';
@@ -25,7 +26,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import { CommandPalette } from '@/components/command-palette';
 import { JudgeModeTour } from '@/components/judge-mode-tour';
 
-type DashboardRole = 'admin' | 'manufacturer' | 'carrier' | 'inspector';
+type DashboardRole = 'admin' | 'manufacturer' | 'carrier' | 'inspector' | 'role-allocation';
 type ViewState = 'landing' | DashboardRole;
 
 const REQUIRED_ROLES: Record<DashboardRole, string[]> = {
@@ -33,6 +34,7 @@ const REQUIRED_ROLES: Record<DashboardRole, string[]> = {
   manufacturer: ['MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'],
   carrier: ['CARRIER_ROLE', 'MANUFACTURER_ROLE', 'SUPERIOR_HEAD_ROLE'],
   inspector: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'],
+  'role-allocation': ['SUPERIOR_HEAD_ROLE'],
 };
 
 const ROLE_LABELS: Record<DashboardRole, string> = {
@@ -40,6 +42,7 @@ const ROLE_LABELS: Record<DashboardRole, string> = {
   manufacturer: 'Manufacturer',
   carrier: 'Carrier',
   inspector: 'Inspector',
+  'role-allocation': 'Role Allocation',
 };
 
 export default function Home() {
@@ -187,6 +190,7 @@ function Shell({
                 {view === 'manufacturer' && <ManufacturerDashboard />}
                 {view === 'carrier' && <TelemetryConsole />}
                 {view === 'inspector' && <PharmacyTerminal />}
+                {view === 'role-allocation' && <RoleAllocationDashboard />}
               </>
             )}
           </div>
@@ -257,7 +261,11 @@ function TopBar({
           </button>
           
           <nav className="hidden md:flex items-center gap-2 border-l-2 border-black dark:border-white/20 pl-8">
-            {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => (
+            {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
+              // Hide Role Allocation tab if not a Superior Head
+              if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
+              
+              return (
               <button
                 key={role}
                 onClick={() => onNavigate(role)}
@@ -270,7 +278,7 @@ function TopBar({
               >
                 {ROLE_LABELS[role]}
               </button>
-            ))}
+            )})}
           </nav>
         </div>
         

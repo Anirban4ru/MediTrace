@@ -6,6 +6,7 @@ ALTER TABLE telemetry_checkpoints ENABLE ROW LEVEL SECURITY;
 ALTER TABLE alerts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE audit_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE verifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 
 -- 2. Create a helper function to get the current user's role from the profiles table
 CREATE OR REPLACE FUNCTION public.get_user_role()
@@ -28,6 +29,9 @@ CREATE POLICY "Allow authenticated SELECT on audit_logs" ON audit_logs FOR SELEC
 
 DROP POLICY IF EXISTS "Allow authenticated SELECT on verifications" ON verifications;
 CREATE POLICY "Allow authenticated SELECT on verifications" ON verifications FOR SELECT TO authenticated USING (true);
+
+DROP POLICY IF EXISTS "Allow authenticated SELECT on profiles" ON profiles;
+CREATE POLICY "Allow authenticated SELECT on profiles" ON profiles FOR SELECT TO authenticated USING (true);
 
 -- 4. INSERT / UPDATE Policies keyed off profiles.role
 -- Manufacturer can insert batches
@@ -59,3 +63,15 @@ DROP POLICY IF EXISTS "Inspector can insert verifications" ON verifications;
 CREATE POLICY "Inspector can insert verifications" ON verifications
 FOR INSERT TO authenticated
 WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));
+
+-- Superior Head can update profiles (Role Allocation)
+DROP POLICY IF EXISTS "Superior Head can update profiles" ON profiles;
+CREATE POLICY "Superior Head can update profiles" ON profiles
+FOR UPDATE TO authenticated
+USING (public.get_user_role() = 'SUPERIOR_HEAD_ROLE');
+
+-- Users can insert their own profile during signup (triggered via handle_new_user, which uses SECURITY DEFINER, but if they hit it directly, we need this)
+DROP POLICY IF EXISTS "Users can insert own profile" ON profiles;
+CREATE POLICY "Users can insert own profile" ON profiles
+FOR INSERT TO authenticated
+WITH CHECK (auth.uid() = id);

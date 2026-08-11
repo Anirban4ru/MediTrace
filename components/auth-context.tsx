@@ -29,6 +29,7 @@ const ROLE_MAP: Record<string, Role> = {
   INSPECTOR_ROLE: 'INSPECTOR_ROLE',
   ADMIN_ROLE: 'ADMIN_ROLE',
   SUPERIOR_HEAD_ROLE: 'SUPERIOR_HEAD_ROLE',
+  VISITOR_ROLE: 'VISITOR_ROLE',
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
