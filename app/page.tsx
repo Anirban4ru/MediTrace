@@ -250,8 +250,8 @@ function TopBar({
         {/* Brand & Nav */}
         <div className="flex items-center gap-8">
           <button onClick={() => onNavigate('landing')} className="flex items-center gap-3 group text-left">
-            <div className="brutal-border flex h-9 w-9 items-center justify-center bg-black dark:bg-white dark:text-black text-white group-hover:scale-105 transition-transform">
-              <Hexagon className="h-5 w-5" strokeWidth={2.5} />
+            <div className="brutal-border flex h-9 w-9 items-center justify-center bg-white group-hover:scale-105 transition-transform">
+              <img src="/PharmaTrace.svg" alt="Logo" className="h-6 w-6 object-contain" />
             </div>
             <div className="leading-none">
               <div className="display-heavy text-[16px] uppercase tracking-[0.02em] dark:text-white">

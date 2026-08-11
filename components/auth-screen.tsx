@@ -26,11 +26,15 @@ export function AuthScreen() {
   }
 
   return (
-    <div className="grid-canvas flex min-h-screen items-center justify-center bg-[#F4F4F6] p-4">
-      <div className="w-full max-w-md">
+    <div 
+      className="grid-canvas flex min-h-screen items-center justify-center p-4 relative"
+      style={{ backgroundImage: 'url(/PharmaTrace.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}
+    >
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="w-full max-w-md relative z-10">
         <div className="mb-6 flex items-center justify-center gap-3">
-          <div className="brutal-border brutal-shadow-sm flex h-12 w-12 items-center justify-center bg-black text-white">
-            <Hexagon className="h-7 w-7" strokeWidth={2.5} />
+          <div className="brutal-border brutal-shadow-sm flex h-12 w-12 items-center justify-center bg-white">
+            <img src="/PharmaTrace.svg" alt="Logo" className="h-8 w-8 object-contain" />
           </div>
           <div className="leading-none">
             <div className="display-heavy text-[22px] uppercase tracking-[0.02em]">PharmaTrace</div>
