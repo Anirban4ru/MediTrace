@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, useRef } from 'react';
-import { ShieldCheck, Factory, Truck, ScanLine, Hexagon, Search, Bell, History, LogOut, Lock, ArrowLeft, Info, FileText, AlertTriangle, Fingerprint, Activity } from 'lucide-react';
+import { ShieldCheck, Factory, Truck, ScanLine, Hexagon, Search, Bell, History, LogOut, Lock, ArrowLeft, Info, FileText, AlertTriangle, Fingerprint, Activity, ExternalLink } from 'lucide-react';
 import { AuthProvider, useAuth } from '@/components/auth-context';
 import { LedgerProvider } from '@/components/ledger-context';
 import { ManufacturerDashboard } from '@/components/views/manufacturer-dashboard';
