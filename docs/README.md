@@ -7,6 +7,12 @@
 
 ---
 
+> ⚖️ **© 2026 PharmaTrace. All Rights Reserved.**
+> *This documentation, architecture, and associated software are strictly proprietary. Unauthorized use, copying, modification, or distribution is strictly prohibited without explicit written permission.*
+> 📩 **Contact Developer:** [Click here to email](mailto:your-email@gmail.com)
+
+---
+
 ## 🌍 The Global Crisis
 
 The global pharmaceutical supply chain is facing two life-threatening vulnerabilities:

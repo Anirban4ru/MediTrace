@@ -327,8 +327,9 @@ function Footer() {
   return (
     <footer className="border-t-2 border-black bg-[#F4F4F6] mt-auto">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-6 py-4">
-        <div className="mono-data text-[10px] uppercase tracking-[0.18em] text-black/55">
-          PharmaTrace · Solidity ^0.8.20 · Next.js 14 · Supabase · OpenCV.js
+        <div className="mono-data text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-black/55">
+          © 2026 PharmaTrace. All Rights Reserved. Proprietary software.<br />
+          Contact: <a href="mailto:your-email@gmail.com" className="hover:text-black hover:underline">your-email@gmail.com</a>
         </div>
         <div className="flex gap-4">
           <Dialog.Root>
