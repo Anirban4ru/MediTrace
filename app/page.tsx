@@ -251,7 +251,7 @@ function TopBar({
         <div className="flex items-center gap-8">
           <button onClick={() => onNavigate('landing')} className="flex items-center gap-3 group text-left">
             <div className="brutal-border flex h-9 w-9 items-center justify-center bg-white group-hover:scale-105 transition-transform">
-              <img src="/PharmaTrace.svg" alt="Logo" className="h-6 w-6 object-contain" />
+              <img src="/BrandLogo.png" alt="Logo" className="h-6 w-6 object-contain" />
             </div>
             <div className="leading-none">
               <div className="display-heavy text-[16px] uppercase tracking-[0.02em] dark:text-white">
@@ -334,7 +334,7 @@ function Footer() {
           <Dialog.Root>
             <Dialog.Trigger asChild>
               <button className="mono-data text-[10px] uppercase tracking-[0.18em] text-black font-bold hover:underline underline-offset-4 flex gap-1 items-center">
-                <FileText className="h-3 w-3" /> Terms & Conditions
+                <img src="/BrandLogo.png" alt="Logo" className="h-3 w-3 object-contain" /> Terms & Conditions
               </button>
             </Dialog.Trigger>
             <Dialog.Portal>
@@ -359,7 +359,7 @@ function Footer() {
           <Dialog.Root>
             <Dialog.Trigger asChild>
               <button className="mono-data text-[10px] uppercase tracking-[0.18em] text-black font-bold hover:underline underline-offset-4 flex gap-1 items-center">
-                <Info className="h-3 w-3" /> Privacy Policy
+                <img src="/BrandLogo.png" alt="Logo" className="h-3 w-3 object-contain" /> Privacy Policy
               </button>
             </Dialog.Trigger>
             <Dialog.Portal>
