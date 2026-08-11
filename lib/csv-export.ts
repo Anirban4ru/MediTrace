@@ -33,7 +33,7 @@ export function exportBatchesCSV(batches: Batch[]): void {
     .map((row) => row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(','))
     .join('\n');
 
-  downloadCSV(csv, 'pharmatrace-batches.csv');
+  downloadCSV(csv, 'meditrace-batches.csv');
 }
 
 export function exportTelemetryCSV(batch: Batch): void {
@@ -50,7 +50,7 @@ export function exportTelemetryCSV(batch: Batch): void {
 
   const csv = [`# Batch: ${batch.batchId} (${batch.productName})`, headers.join(','), ...rows.map((r) => r.map((c) => `"${c}"`).join(','))].join('\n');
 
-  downloadCSV(csv, `pharmatrace-telemetry-${batch.batchId}.csv`);
+  downloadCSV(csv, `meditrace-telemetry-${batch.batchId}.csv`);
 }
 
 function downloadCSV(content: string, filename: string): void {

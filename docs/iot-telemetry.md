@@ -1,9 +1,9 @@
 # 📡 IoT Telemetry & Security Alerts
 
-PharmaTrace relies on a hybrid Web2/Web3 architecture to handle high-frequency IoT data (like GPS and Temperature sensors) efficiently.
+MediTrace relies on a hybrid Web2/Web3 architecture to handle high-frequency IoT data (like GPS and Temperature sensors) efficiently.
 
 > ⚡ **Performance Optimization:** 
-> Writing temperature data to the blockchain every 10 seconds is too expensive and slow. Instead, PharmaTrace indexes high-frequency telemetry in **Supabase (PostgreSQL)** and only executes on-chain transactions when a critical state change occurs (e.g., a temperature breach).
+> Writing temperature data to the blockchain every 10 seconds is too expensive and slow. Instead, MediTrace indexes high-frequency telemetry in **Supabase (PostgreSQL)** and only executes on-chain transactions when a critical state change occurs (e.g., a temperature breach).
 
 ---
 
@@ -39,7 +39,7 @@ When a new telemetry checkpoint is inserted into the database, the React fronten
 
 ## 🚨 Dedaub Security Webhooks (Zero-Day Protection)
 
-To protect the smart contract from zero-day exploits and off-chain discrepancies, PharmaTrace integrates with the **Dedaub Security Suite**.
+To protect the smart contract from zero-day exploits and off-chain discrepancies, MediTrace integrates with the **Dedaub Security Suite**.
 
 Dedaub continuously monitors the deployed Arbitrum contract. If a catastrophic event occurs (e.g., an unauthorized wallet attempts to drain or hijack the contract, or a batch is spoiled), Dedaub fires a secure Webhook back to the Next.js backend.
 

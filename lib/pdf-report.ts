@@ -13,7 +13,7 @@ export function generatePDFReport(batch: Batch) {
 
   doc.setFontSize(22);
   doc.setFont("helvetica", "bold");
-  doc.text("PharmaTrace Audit Report", 20, 20);
+  doc.text("MediTrace Audit Report", 20, 20);
   
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
@@ -72,10 +72,10 @@ export function generatePDFReport(batch: Batch) {
     doc.setFontSize(8);
     doc.setTextColor(150);
     const dateStr = new Date().toLocaleString();
-    doc.text(`PharmaTrace Immutable Log - Generated ${dateStr} - Page ${i} of ${pageCount}`, 20, 285);
+    doc.text(`MediTrace Immutable Log - Generated ${dateStr} - Page ${i} of ${pageCount}`, 20, 285);
   }
 
-  doc.save(`PharmaTrace_Audit_${batch.batchId}.pdf`);
+  doc.save(`MediTrace_Audit_${batch.batchId}.pdf`);
 }
 
 export const generateBatchReport = generatePDFReport;

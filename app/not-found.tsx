@@ -38,7 +38,7 @@ export default function NotFound() {
         <div className="mt-12 border-t-4 border-black pt-6">
           <div className="flex items-center justify-between font-mono text-[10px] font-bold uppercase text-black/50 md:text-xs">
             <span>SYS.ERR.404</span>
-            <span>PHARMATRACE_NODE_OFFLINE</span>
+            <span>MEDITRACE_NODE_OFFLINE</span>
           </div>
         </div>
       </div>

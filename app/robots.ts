@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: 'https://pharmatrace.dev/sitemap.xml',
+    sitemap: 'https://meditrace.dev/sitemap.xml',
   };
 }

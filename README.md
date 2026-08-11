@@ -1,7 +1,7 @@
 <div align="center">
-  <img src="public/android-chrome-512x512.png" alt="PharmaTrace Logo" width="120" />
+  <img src="public/android-chrome-512x512.png" alt="MediTrace Logo" width="120" />
   
-  # PharmaTrace
+  # MediTrace
   **Enterprise-Grade Decentralized Pharmaceutical Supply Chain Ledger**
 
   [![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
@@ -16,9 +16,9 @@
 
 ## 🚀 Overview
 
-**PharmaTrace** is a highly secure, full-stack Web3 application designed to solve a critical real-world problem: pharmaceutical counterfeiting and cold-chain supply failures. 
+**MediTrace** is a highly secure, full-stack Web3 application designed to solve a critical real-world problem: pharmaceutical counterfeiting and cold-chain supply failures. 
 
-By bridging the gap between **Web3 Smart Contracts**, **IoT Telemetry**, **Computer Vision**, and a robust **Next.js** frontend, PharmaTrace ensures that vital medicine reaches patients safely, securely, and transparently. This project demonstrates an ability to architect complex, scalable, and secure systems that integrate emerging technologies into a seamless user experience.
+By bridging the gap between **Web3 Smart Contracts**, **IoT Telemetry**, **Computer Vision**, and a robust **Next.js** frontend, MediTrace ensures that vital medicine reaches patients safely, securely, and transparently. This project demonstrates an ability to architect complex, scalable, and secure systems that integrate emerging technologies into a seamless user experience.
 
 ---
 
@@ -32,7 +32,7 @@ By bridging the gap between **Web3 Smart Contracts**, **IoT Telemetry**, **Compu
 
 ## 🛠️ Tech Stack Highlights
 
-PharmaTrace was built to demonstrate proficiency across the modern full-stack ecosystem:
+MediTrace was built to demonstrate proficiency across the modern full-stack ecosystem:
 
 ### Frontend
 - **Framework:** Next.js 14 (App Router) & React

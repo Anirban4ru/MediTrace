@@ -60,7 +60,7 @@ function App() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#F4F4F6]">
         <div className="mono-data text-[12px] uppercase tracking-[0.2em] text-black/50">
-          Loading PharmaTrace...
+          Loading MediTrace...
         </div>
       </div>
     );
@@ -102,7 +102,7 @@ function Shell({
             {/* Hero Section */}
             <header className="text-center space-y-6">
               <h1 className="text-5xl md:text-7xl display-heavy uppercase tracking-tighter text-black">
-                PharmaTrace
+                MediTrace
               </h1>
               <p className="text-2xl md:text-3xl font-bold italic tracking-wide text-black/70">
                 &quot;Securing India&apos;s Health.&quot;
@@ -177,7 +177,7 @@ function Shell({
                 <p className="font-mono text-sm text-black/60">
                   Your current role ({user.role}) does not have permission to access the {ROLE_LABELS[view as DashboardRole]} dashboard.
                 </p>
-                <a href="https://pharmatrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer" className="mt-4 border-2 border-black px-6 py-2 font-bold uppercase hover:bg-[#F4F4F6] transition-colors">
+                <a href="https://meditrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer" className="mt-4 border-2 border-black px-6 py-2 font-bold uppercase hover:bg-[#F4F4F6] transition-colors">
                   Return Home
                 </a>
               </div>
@@ -252,7 +252,7 @@ function TopBar({
             </div>
             <div className="leading-none">
               <div className="display-heavy text-[16px] uppercase tracking-[0.02em] dark:text-white">
-                PharmaTrace
+                MediTrace
               </div>
             </div>
           </button>
@@ -299,7 +299,7 @@ function TopBar({
             <div className="flex gap-2">
               <JudgeModeTour />
               <a
-                href="https://pharmatrace-org.gitbook.io/docs"
+                href="https://meditrace-org.gitbook.io/docs"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 h-8 px-3 text-[11px] font-bold uppercase tracking-wider border-2 border-black dark:border-white bg-white dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
@@ -334,7 +334,7 @@ function Footer() {
     <footer className="border-t-2 border-black bg-[#F4F4F6] mt-auto">
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-6 py-4">
         <div className="mono-data text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-black/55">
-          © 2026 PharmaTrace. All Rights Reserved. Proprietary software.<br />
+          © 2026 MediTrace. All Rights Reserved. Proprietary software.<br />
           Contact: <a href="mailto:your-email@gmail.com" className="hover:text-black hover:underline">your-email@gmail.com</a>
         </div>
         <div className="flex gap-4">
@@ -349,9 +349,9 @@ function Footer() {
               <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white brutal-card p-6 z-50 w-[90vw] max-w-[600px] max-h-[80vh] overflow-y-auto">
                 <Dialog.Title className="display-heavy text-lg uppercase mb-4 border-b-2 border-black pb-2">Terms & Conditions</Dialog.Title>
                 <div className="space-y-4 text-[12px] mono-data leading-relaxed">
-                  <p><strong>1. Introduction</strong><br/>Welcome to PharmaTrace. By accessing this platform, you agree to be bound by these terms. This platform operates primarily within the jurisdiction of India.</p>
+                  <p><strong>1. Introduction</strong><br/>Welcome to MediTrace. By accessing this platform, you agree to be bound by these terms. This platform operates primarily within the jurisdiction of India.</p>
                   <p><strong>2. Compliance with Indian Laws</strong><br/>Users must comply with the Drugs and Cosmetics Act, 1940, and the Information Technology Act, 2000 of India. Any data uploaded must meet the compliance standards of the CDSCO.</p>
-                  <p><strong>3. Liability</strong><br/>PharmaTrace acts as an immutable ledger. We are not liable for spoiled batches resulting from carrier negligence. Smart contract status changes are final and cannot be appealed.</p>
+                  <p><strong>3. Liability</strong><br/>MediTrace acts as an immutable ledger. We are not liable for spoiled batches resulting from carrier negligence. Smart contract status changes are final and cannot be appealed.</p>
                   <p><strong>4. International Scope</strong><br/>While India is the first priority jurisdiction, cross-border shipments must comply with WHO GDP (Good Distribution Practices) guidelines.</p>
                 </div>
                 <div className="mt-6 flex justify-end">
@@ -375,7 +375,7 @@ function Footer() {
                 <Dialog.Title className="display-heavy text-lg uppercase mb-4 border-b-2 border-black pb-2">Privacy Policy</Dialog.Title>
                 <div className="space-y-4 text-[12px] mono-data leading-relaxed">
                   <p><strong>1. Data Collection</strong><br/>We collect telemetry data, carrier identities, and geolocation data. This information is written to the Arbitrum Sepolia L2 blockchain and is inherently public.</p>
-                  <p><strong>2. Digital Personal Data Protection Act (DPDP), 2023</strong><br/>PharmaTrace complies with India&apos;s DPDP Act. Enterprise user data (emails, display names) are stored securely and processed solely for supply-chain authentication.</p>
+                  <p><strong>2. Digital Personal Data Protection Act (DPDP), 2023</strong><br/>MediTrace complies with India&apos;s DPDP Act. Enterprise user data (emails, display names) are stored securely and processed solely for supply-chain authentication.</p>
                   <p><strong>3. Data Retention</strong><br/>Blockchain transactions are permanent. Off-chain data in Supabase may be retained for 7 years to comply with Indian pharmaceutical auditing requirements.</p>
                 </div>
                 <div className="mt-6 flex justify-end">

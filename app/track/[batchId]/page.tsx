@@ -89,7 +89,7 @@ export default function TrackPage({ params }: { params: { batchId: string } }) {
       <div className="border-b-2 border-black bg-[#102A43] text-white px-4 md:px-8 py-4 flex items-center justify-between sticky top-0 z-50">
         <div className="flex items-center gap-2">
           <Map className="h-5 w-5" />
-          <span className="text-[14px] font-bold uppercase tracking-[0.14em]">PharmaTrace Tracker</span>
+          <span className="text-[14px] font-bold uppercase tracking-[0.14em]">MediTrace Tracker</span>
         </div>
         <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 border border-white/20">
           <Eye className="h-4 w-4" />

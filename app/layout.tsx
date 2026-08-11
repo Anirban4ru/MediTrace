@@ -12,16 +12,16 @@ const jetbrains = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://pharmatrace.dev'),
+  metadataBase: new URL('https://meditrace.dev'),
   title: {
-    default: 'PharmaTrace | Pharmaceutical Integrity Ledger',
-    template: '%s | PharmaTrace',
+    default: 'MediTrace | Pharmaceutical Integrity Ledger',
+    template: '%s | MediTrace',
   },
   description: 'Immutable supply chain tracking for pharmaceutical integrity. Securing India\'s Health with Arbitrum L2 smart contracts, real-time IoT telemetry, and OpenCV computer vision.',
   keywords: ['Pharmaceutical Supply Chain', 'Blockchain', 'Arbitrum L2', 'IoT Telemetry', 'Medicine Tracker', 'Drug Authentication', 'India Healthcare', 'OpenCV'],
-  authors: [{ name: 'PharmaTrace Team', url: 'https://pharmatrace.dev' }],
-  creator: 'PharmaTrace',
-  publisher: 'PharmaTrace',
+  authors: [{ name: 'MediTrace Team', url: 'https://meditrace.dev' }],
+  creator: 'MediTrace',
+  publisher: 'MediTrace',
   category: 'Healthcare Technology',
   formatDetection: {
     email: false,
@@ -34,25 +34,25 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_IN',
-    url: 'https://pharmatrace.dev',
-    title: 'PharmaTrace | Pharmaceutical Integrity Ledger',
+    url: 'https://meditrace.dev',
+    title: 'MediTrace | Pharmaceutical Integrity Ledger',
     description: 'Immutable supply chain tracking for pharmaceutical integrity. Securing India\'s Health with Web3 and IoT.',
-    siteName: 'PharmaTrace',
+    siteName: 'MediTrace',
     images: [
       {
         url: '/Background.jpg',
         width: 1200,
         height: 630,
-        alt: 'PharmaTrace Enterprise Dashboard',
+        alt: 'MediTrace Enterprise Dashboard',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'PharmaTrace | Pharmaceutical Integrity Ledger',
+    title: 'MediTrace | Pharmaceutical Integrity Ledger',
     description: 'Securing India\'s Health with immutable blockchain tracking and zero-trust IoT telemetry.',
     images: ['/Background.jpg'],
-    creator: '@PharmaTrace',
+    creator: '@MediTrace',
   },
   robots: {
     index: true,
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     apple: '/favicon.ico',
   },
   appleWebApp: {
-    title: 'PharmaTrace',
+    title: 'MediTrace',
     statusBarStyle: 'black-translucent',
     capable: true,
   },

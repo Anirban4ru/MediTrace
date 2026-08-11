@@ -122,7 +122,7 @@ function generateReferenceImage(width: number, height: number): HTMLCanvasElemen
   ctx.fillStyle = '#c0c0c0';
   ctx.font = `bold ${Math.round(height * 0.08)}px monospace`;
   ctx.textAlign = 'center';
-  ctx.fillText('PHARMATRACE', width / 2, height * 0.45);
+  ctx.fillText('MEDITRACE', width / 2, height * 0.45);
   ctx.fillText('HOLOGRAM', width / 2, height * 0.58);
 
   ctx.strokeStyle = '#808080';

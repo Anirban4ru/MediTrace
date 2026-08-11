@@ -37,7 +37,7 @@ export function AuthScreen() {
             <img src="/BrandLogo.png" alt="Logo" className="h-8 w-8 object-contain" />
           </div>
           <div className="leading-none text-white drop-shadow-lg">
-            <div className="display-heavy text-[24px] sm:text-[28px] uppercase tracking-[0.02em]">PharmaTrace</div>
+            <div className="display-heavy text-[24px] sm:text-[28px] uppercase tracking-[0.02em]">MediTrace</div>
             <div className="mono-data text-[10px] sm:text-[12px] uppercase tracking-[0.18em] text-white/90 mt-1">
               Pharmaceutical Integrity Ledger
             </div>

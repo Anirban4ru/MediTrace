@@ -1,13 +1,13 @@
 <div align="center">
-  <img src="../public/BrandLogo.png" alt="PharmaTrace Logo" width="150" />
-  <h1>PharmaTrace</h1>
+  <img src="../public/BrandLogo.png" alt="MediTrace Logo" width="150" />
+  <h1>MediTrace</h1>
   <p><b>The Pharmaceutical Integrity Ledger</b></p>
   <p><i>Securing the global supply chain with Web3, IoT, and Computer Vision.</i></p>
 </div>
 
 ---
 
-> ⚖️ **© 2026 PharmaTrace. All Rights Reserved.**
+> ⚖️ **© 2026 MediTrace. All Rights Reserved.**
 > *This documentation, architecture, and associated software are strictly proprietary. Unauthorized use, copying, modification, or distribution is strictly prohibited without explicit written permission.*
 > 📩 **Contact Developer:** [Click here to email](mailto:your-email@gmail.com)
 
@@ -19,13 +19,13 @@ The global pharmaceutical supply chain is facing two life-threatening vulnerabil
 1. **Counterfeit Medicine:** Up to 20% of drugs in developing markets are counterfeit, leading to tragic outcomes.
 2. **Cold-Chain Failures:** Temperature excursions (e.g., a truck's refrigeration failing) can instantly render life-saving biologics and vaccines chemically inert or toxic.
 
-**PharmaTrace** was architected from the ground up to solve these exact problems by enforcing a **Zero-Trust** physical-to-digital bridge.
+**MediTrace** was architected from the ground up to solve these exact problems by enforcing a **Zero-Trust** physical-to-digital bridge.
 
 ---
 
 ## 🏗️ Enterprise Architecture
 
-PharmaTrace operates on a strict state-machine architecture. No single entity (not even system administrators) can secretly alter the history of a drug batch once it is minted on the blockchain.
+MediTrace operates on a strict state-machine architecture. No single entity (not even system administrators) can secretly alter the history of a drug batch once it is minted on the blockchain.
 
 ### 💻 The Technology Stack
 * **Frontend / Client:** Next.js 14, React, Tailwind CSS, Shadcn UI

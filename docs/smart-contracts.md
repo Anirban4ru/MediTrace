@@ -1,9 +1,9 @@
 # ⛓️ Web3 Smart Contracts
 
-At the absolute core of PharmaTrace is a bespoke Solidity smart contract deployed on the **Arbitrum Sepolia L2** network. This contract acts as the ultimate, immutable source of truth for the entire supply chain.
+At the absolute core of MediTrace is a bespoke Solidity smart contract deployed on the **Arbitrum Sepolia L2** network. This contract acts as the ultimate, immutable source of truth for the entire supply chain.
 
 > 🚀 **Why Arbitrum L2?** 
-> By leveraging an Ethereum Layer-2, PharmaTrace achieves enterprise-grade scalability and near-zero gas fees while fully inheriting the massive cryptographic security of the Ethereum mainnet.
+> By leveraging an Ethereum Layer-2, MediTrace achieves enterprise-grade scalability and near-zero gas fees while fully inheriting the massive cryptographic security of the Ethereum mainnet.
 
 ---
 

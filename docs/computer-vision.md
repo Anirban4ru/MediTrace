@@ -2,7 +2,7 @@
 
 The weakest link in any digital supply chain is the **physical-to-digital handoff**. 
 
-A blockchain can prove a digital token is authentic, but it cannot prove that the physical box of medicine sitting on a pharmacy counter matches that digital token. To solve this, PharmaTrace utilizes **client-side Computer Vision (OpenCV.js)** to verify physical anti-tamper holographic seals.
+A blockchain can prove a digital token is authentic, but it cannot prove that the physical box of medicine sitting on a pharmacy counter matches that digital token. To solve this, MediTrace utilizes **client-side Computer Vision (OpenCV.js)** to verify physical anti-tamper holographic seals.
 
 ---
 
@@ -19,7 +19,7 @@ When a Pharmacy Inspector receives a shipment, they open the Inspector Dashboard
 
 ## ⚙️ OpenCV Implementation
 
-To prevent blocking the main React UI thread during heavy matrix calculations, PharmaTrace offloads the OpenCV logic to a dedicated `cv.worker.js` Web Worker.
+To prevent blocking the main React UI thread during heavy matrix calculations, MediTrace offloads the OpenCV logic to a dedicated `cv.worker.js` Web Worker.
 
 ### Code Snippet: Sending Frames to the Web Worker
 ```typescript
