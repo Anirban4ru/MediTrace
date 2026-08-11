@@ -36,9 +36,9 @@ export function AuthScreen() {
           <div className="brutal-border brutal-shadow-sm flex h-12 w-12 items-center justify-center bg-white">
             <img src="/PharmaTrace.svg" alt="Logo" className="h-8 w-8 object-contain" />
           </div>
-          <div className="leading-none">
-            <div className="display-heavy text-[22px] uppercase tracking-[0.02em]">PharmaTrace</div>
-            <div className="mono-data text-[11px] uppercase tracking-[0.18em] text-black/55">
+          <div className="leading-none text-white drop-shadow-lg">
+            <div className="display-heavy text-[24px] sm:text-[28px] uppercase tracking-[0.02em]">PharmaTrace</div>
+            <div className="mono-data text-[10px] sm:text-[12px] uppercase tracking-[0.18em] text-white/90 mt-1">
               Pharmaceutical Integrity Ledger
             </div>
           </div>
@@ -142,7 +142,7 @@ export function AuthScreen() {
             </button>
           </form>
 
-          <p className="mt-4 text-center text-[10px] uppercase tracking-[0.12em] text-black/45">
+          <p className="mt-6 text-center text-[9px] sm:text-[10px] uppercase tracking-[0.12em] text-white/70 drop-shadow-md">
             Secure Terminal. All ledger operations are cryptographically signed.
           </p>
         </div>
