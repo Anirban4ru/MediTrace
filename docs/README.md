@@ -9,7 +9,7 @@
 
 > ⚖️ **© 2026 MediTrace. All Rights Reserved.**
 > *This documentation, architecture, and associated software are strictly proprietary. Unauthorized use, copying, modification, or distribution is strictly prohibited without explicit written permission.*
-> 📩 **Contact Developer:** [Click here to email](mailto:your-email@gmail.com)
+> 📩 **Contact Developer:** [Click here to email](https://mail.google.com/mail/?view=cm&fs=1&to=anirban4ru@gmail.com)
 
 ---
 

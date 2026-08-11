@@ -336,7 +336,7 @@ function Footer() {
       <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-between gap-4 px-6 py-4">
         <div className="mono-data text-[9px] sm:text-[10px] uppercase tracking-[0.18em] text-black/55">
           © 2026 MediTrace. All Rights Reserved. Proprietary software.<br />
-          Contact: <a href="mailto:your-email@gmail.com" className="hover:text-black hover:underline">your-email@gmail.com</a>
+          Contact: <a href="https://mail.google.com/mail/?view=cm&fs=1&to=anirban4ru@gmail.com" target="_blank" rel="noopener noreferrer" className="hover:text-black hover:underline">anirban4ru@gmail.com</a>
         </div>
         <div className="flex gap-4">
           <Dialog.Root>
