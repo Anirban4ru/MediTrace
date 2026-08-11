@@ -177,12 +177,9 @@ function Shell({
                 <p className="font-mono text-sm text-black/60">
                   Your current role ({user.role}) does not have permission to access the {ROLE_LABELS[view as DashboardRole]} dashboard.
                 </p>
-                <button 
-                  onClick={() => handleNavigate('landing')}
-                  className="mt-4 border-2 border-black px-6 py-2 font-bold uppercase hover:bg-[#F4F4F6] transition-colors"
-                >
+                <a href="https://pharmatrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer" className="mt-4 border-2 border-black px-6 py-2 font-bold uppercase hover:bg-[#F4F4F6] transition-colors">
                   Return Home
-                </button>
+                </a>
               </div>
             ) : (
               <>
@@ -301,6 +298,15 @@ function TopBar({
             </div>
             <div className="flex gap-2">
               <JudgeModeTour />
+              <a
+                href="https://pharmatrace-org.gitbook.io/docs"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 h-8 px-3 text-[11px] font-bold uppercase tracking-wider border-2 border-black dark:border-white bg-white dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                title="View Documentation"
+              >
+                Docs <ExternalLink className="h-3 w-3" />
+              </a>
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="flex h-8 w-8 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
