@@ -3,7 +3,12 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
+  images: {
+    formats: ['image/avif', 'image/webp'],
+  },
+  swcMinify: true,
+  poweredByHeader: false,
+  compress: true,
 };
 
 module.exports = nextConfig;

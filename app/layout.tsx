@@ -19,34 +19,45 @@ export const metadata: Metadata = {
   },
   description: 'Immutable supply chain tracking for pharmaceutical integrity. Securing India\'s Health with Arbitrum L2 smart contracts, real-time IoT telemetry, and OpenCV computer vision.',
   keywords: ['Pharmaceutical Supply Chain', 'Blockchain', 'Arbitrum L2', 'IoT Telemetry', 'Medicine Tracker', 'Drug Authentication', 'India Healthcare', 'OpenCV'],
-  authors: [{ name: 'PharmaTrace Team' }],
+  authors: [{ name: 'PharmaTrace Team', url: 'https://pharmatrace.dev' }],
   creator: 'PharmaTrace',
   publisher: 'PharmaTrace',
+  category: 'Healthcare Technology',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: '/',
+  },
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     url: 'https://pharmatrace.dev',
     title: 'PharmaTrace | Pharmaceutical Integrity Ledger',
-    description: 'Immutable supply chain tracking for pharmaceutical integrity. Securing India\'s Health.',
+    description: 'Immutable supply chain tracking for pharmaceutical integrity. Securing India\'s Health with Web3 and IoT.',
     siteName: 'PharmaTrace',
     images: [
       {
-        url: '/og-image.jpg',
+        url: '/Background.jpg',
         width: 1200,
         height: 630,
-        alt: 'PharmaTrace Platform',
+        alt: 'PharmaTrace Enterprise Dashboard',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'PharmaTrace | Pharmaceutical Integrity Ledger',
-    description: 'Securing India\'s Health with immutable blockchain tracking.',
-    images: ['/og-image.jpg'],
+    description: 'Securing India\'s Health with immutable blockchain tracking and zero-trust IoT telemetry.',
+    images: ['/Background.jpg'],
+    creator: '@PharmaTrace',
   },
   robots: {
     index: true,
     follow: true,
+    nocache: false,
     googleBot: {
       index: true,
       follow: true,
@@ -58,7 +69,24 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
     shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
+  appleWebApp: {
+    title: 'PharmaTrace',
+    statusBarStyle: 'black-translucent',
+    capable: true,
+  },
+};
+
+export const viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#000000' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
