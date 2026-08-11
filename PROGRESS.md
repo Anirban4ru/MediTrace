@@ -58,7 +58,7 @@
 - [x] Web Push
 
 ## Phase 9 — Final Pass
-- [ ] Re-run verification suite
-- [ ] Update README
-- [ ] Open PR
+- [x] Re-run verification suite
+- [x] Update README
+- [x] Open PR
 - [ ] Review and merge PR

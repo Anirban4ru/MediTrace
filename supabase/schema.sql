@@ -8,6 +8,26 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     display_name TEXT
 );
 
+-- AUTOMATIC PROFILE CREATION TRIGGER
+-- This automatically inserts a row into public.profiles when a new user signs up
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS trigger AS $$
+BEGIN
+  INSERT INTO public.profiles (id, role, display_name)
+  VALUES (
+    new.id,
+    COALESCE((new.raw_user_meta_data->>'role'), 'INSPECTOR_ROLE'),
+    COALESCE((new.raw_user_meta_data->>'display_name'), split_part(new.email, '@', 1))
+  );
+  RETURN new;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE PROCEDURE public.handle_new_user();
+
 -- BATCHES
 CREATE TABLE IF NOT EXISTS public.batches (
     batch_id TEXT PRIMARY KEY,

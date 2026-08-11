@@ -317,20 +317,24 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
           provision_block: batch.provisionBlock,
         });
 
-        if (!error) {
-          await supabase.from('audit_logs').insert({
-            batch_id: batch.batchId,
-            event_type: 'provisioned',
-            actor: user.email,
-            details: { product: batch.productName, units: batch.units, serial: batch.serial },
-          });
+        if (error) {
+          toast.error(`Database Error: ${error.message}`);
+          throw new Error(`Supabase insert failed: ${error.message}`);
         }
+
+        await supabase.from('audit_logs').insert({
+          batch_id: batch.batchId,
+          event_type: 'provisioned',
+          actor: user.email,
+          details: { product: batch.productName, units: batch.units, serial: batch.serial },
+        });
       }
 
       setBatches((prev) => [batch, ...prev]);
       return batch;
       } catch (err: any) {
         console.error("addBatch Error:", err);
+        toast.error(`Failed to provision batch: ${err.message}`);
       }
     },
     [user]
