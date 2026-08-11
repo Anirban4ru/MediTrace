@@ -343,10 +343,11 @@ function Footer() {
               <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white brutal-card p-6 z-50 w-[90vw] max-w-[600px] max-h-[80vh] overflow-y-auto">
                 <Dialog.Title className="display-heavy text-lg uppercase mb-4 border-b-2 border-black pb-2">Terms & Conditions</Dialog.Title>
                 <div className="space-y-4 text-[12px] mono-data leading-relaxed">
-                  <p><strong>1. Introduction</strong><br/>Welcome to MediTrace. By accessing this platform, you agree to be bound by these terms. This platform operates primarily within the jurisdiction of India.</p>
-                  <p><strong>2. Compliance with Indian Laws</strong><br/>Users must comply with the Drugs and Cosmetics Act, 1940, and the Information Technology Act, 2000 of India. Any data uploaded must meet the compliance standards of the CDSCO.</p>
-                  <p><strong>3. Liability</strong><br/>MediTrace acts as an immutable ledger. We are not liable for spoiled batches resulting from carrier negligence. Smart contract status changes are final and cannot be appealed.</p>
-                  <p><strong>4. International Scope</strong><br/>While India is the first priority jurisdiction, cross-border shipments must comply with WHO GDP (Good Distribution Practices) guidelines.</p>
+                  <p><strong>1. PROPRIETARY SOFTWARE & COPYRIGHT</strong><br/>MediTrace is proprietary software. All source code, architecture, smart contracts, and associated intellectual property are strictly protected under the Copyright Act, 1957. Unauthorized reproduction, modification, or distribution is strictly prohibited.</p>
+                  <p><strong>2. COMPLIANCE WITH INDIAN PHARMACEUTICAL LAWS</strong><br/>The platform operates in strict adherence to the Drugs and Cosmetics Act, 1940, and the Pharmacy Practice Regulations, 2015. All entities interacting with the ledger must hold valid CDSCO (Central Drugs Standard Control Organisation) licenses.</p>
+                  <p><strong>3. TELEMETRY & IOT INTEGRITY</strong><br/>Data ingested from IoT temperature sensors is written immutably to the Arbitrum Sepolia blockchain. Under the Information Technology Act, 2000, these cryptographic records serve as legally valid electronic evidence.</p>
+                  <p><strong>4. LIABILITY DISCLAIMER</strong><br/>MediTrace serves as a cryptographic verification layer. We are not liable for physical damages, spoiled batches, or carrier negligence. The automated smart contract triggers regarding spoilage are final and mathematically enforced.</p>
+                  <p><strong>5. CROSS-BORDER SHIPMENTS</strong><br/>While optimized for the Indian pharmaceutical ecosystem, cross-border logistics tracked on MediTrace must adhere to the World Health Organization (WHO) Good Distribution Practices (GDP).</p>
                 </div>
                 <div className="mt-6 flex justify-end">
                   <Dialog.Close asChild>
@@ -368,9 +369,11 @@ function Footer() {
               <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white brutal-card p-6 z-50 w-[90vw] max-w-[600px] max-h-[80vh] overflow-y-auto">
                 <Dialog.Title className="display-heavy text-lg uppercase mb-4 border-b-2 border-black pb-2">Privacy Policy</Dialog.Title>
                 <div className="space-y-4 text-[12px] mono-data leading-relaxed">
-                  <p><strong>1. Data Collection</strong><br/>We collect telemetry data, carrier identities, and geolocation data. This information is written to the Arbitrum Sepolia L2 blockchain and is inherently public.</p>
-                  <p><strong>2. Digital Personal Data Protection Act (DPDP), 2023</strong><br/>MediTrace complies with India&apos;s DPDP Act. Enterprise user data (emails, display names) are stored securely and processed solely for supply-chain authentication.</p>
-                  <p><strong>3. Data Retention</strong><br/>Blockchain transactions are permanent. Off-chain data in Supabase may be retained for 7 years to comply with Indian pharmaceutical auditing requirements.</p>
+                  <p><strong>1. DIGITAL PERSONAL DATA PROTECTION ACT (DPDP), 2023</strong><br/>MediTrace fully complies with India&apos;s DPDP Act, 2023. We collect only the minimum necessary enterprise data (emails, role designations, and public wallet addresses) required for platform functionality and RBAC enforcement.</p>
+                  <p><strong>2. PUBLIC BLOCKCHAIN DISCLOSURE</strong><br/>Users acknowledge that supply chain events, telemetry thresholds, and timestamps are written to a public Web3 ledger (Arbitrum L2). Once deployed, this data cannot be erased, edited, or modified by any party, including MediTrace.</p>
+                  <p><strong>3. INFORMATION TECHNOLOGY ACT, 2000</strong><br/>Under Section 43A of the IT Act, we implement reasonable security practices to protect off-chain enterprise identity data (such as emails) stored in our encrypted databases.</p>
+                  <p><strong>4. DATA RETENTION & AUDITING</strong><br/>To comply with Ministry of Health and Family Welfare (MoHFW) auditing standards, off-chain account data is retained for a minimum of 7 years. Blockchain transactions are retained perpetually on the decentralized network.</p>
+                  <p><strong>5. CONSENT & REVOCATION</strong><br/>By accessing the dashboard, you explicitly consent to these data practices as a Data Principal. While off-chain account deletion requests are honored within 30 days, on-chain ledger entries remain immutable.</p>
                 </div>
                 <div className="mt-6 flex justify-end">
                   <Dialog.Close asChild>
