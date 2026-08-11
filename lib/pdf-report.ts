@@ -18,7 +18,7 @@ export function generatePDFReport(batch: Batch) {
   doc.setFontSize(14);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100);
-  doc.text(`Official Record for Batch: `, 20, 30);
+  doc.text(`Official Record for Batch: ${batch.batchId}`, 20, 30);
   
   doc.setLineWidth(0.5);
   doc.line(20, 35, 190, 35);
@@ -29,9 +29,9 @@ export function generatePDFReport(batch: Batch) {
   doc.text("Batch Information", 20, 45);
   
   doc.setFont("helvetica", "normal");
-  doc.text(`Name: `, 20, 55);
-  doc.text(`Manufacturer: `, 20, 65);
-  doc.text(`Status: `, 20, 75);
+  doc.text(`Name: ${batch.productName}`, 20, 55);
+  doc.text(`Manufacturer: ${batch.manufacturerLabel}`, 20, 65);
+  doc.text(`Status: ${batch.currentStatus}`, 20, 75);
   
   let mfgStr = 'Unknown';
   if (batch.createdAt) {
@@ -39,9 +39,9 @@ export function generatePDFReport(batch: Batch) {
     if (!isNaN(d.getTime())) mfgStr = d.toLocaleDateString();
   }
   
-  doc.text(`Mfg Date: `, 110, 55);
-  doc.text(`Units: `, 110, 65);
-  doc.text(`Serial: `, 110, 75);
+  doc.text(`Mfg Date: ${mfgStr}`, 110, 55);
+  doc.text(`Units: ${batch.units}`, 110, 65);
+  doc.text(`Serial: ${batch.serial}`, 110, 75);
 
   doc.setFont("helvetica", "bold");
   doc.text("Telemetry Checkpoints", 20, 95);
@@ -59,8 +59,8 @@ export function generatePDFReport(batch: Batch) {
       
       const tsStr = new Date(cp.timestamp).toLocaleString();
       const status = cp.breached ? "BREACHED" : "OK";
-      doc.text(`. [] Temp: C - Status: `, 20, yPos);
-      doc.text(`   Location: [, ] | Reporter: `, 20, yPos + 7);
+      doc.text(`${index + 1}. [${tsStr}] Temp: ${cp.temperature}C - Status: ${status}`, 20, yPos);
+      doc.text(`   Location: [${cp.lat}, ${cp.lng}] | Reporter: ${cp.signer}`, 20, yPos + 7);
       
       yPos += 16;
     });
@@ -72,10 +72,10 @@ export function generatePDFReport(batch: Batch) {
     doc.setFontSize(8);
     doc.setTextColor(150);
     const dateStr = new Date().toLocaleString();
-    doc.text(`PharmaTrace Immutable Log - Generated  - Page  of `, 20, 285);
+    doc.text(`PharmaTrace Immutable Log - Generated ${dateStr} - Page ${i} of ${pageCount}`, 20, 285);
   }
 
-  doc.save(`PharmaTrace_Audit_.pdf`);
+  doc.save(`PharmaTrace_Audit_${batch.batchId}.pdf`);
 }
 
 export const generateBatchReport = generatePDFReport;
