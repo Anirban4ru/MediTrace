@@ -257,20 +257,18 @@ function TopBar({
             </div>
           </button>
           
-          <nav className="hidden md:flex items-center gap-2 border-l-2 border-black dark:border-white/20 pl-8">
+          <nav className="hidden xl:flex items-center gap-1 xl:gap-2 ml-4">
             {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
-              // Hide Role Allocation tab if not a Superior Head
               if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
-              
               return (
               <button
                 key={role}
                 onClick={() => onNavigate(role)}
                 className={cn(
-                  "px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] border-2 transition-colors",
+                  "px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-200 border-2",
                   view === role 
-                    ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white" 
-                    : "bg-white text-black border-transparent hover:border-black dark:bg-black dark:text-white dark:hover:border-white"
+                    ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-[3px_3px_0px_0px_rgba(0,0,0,0.1)] dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.2)]" 
+                    : "bg-transparent text-black/70 border-transparent hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white dark:hover:bg-white/10"
                 )}
               >
                 {ROLE_LABELS[role]}
@@ -280,46 +278,49 @@ function TopBar({
         </div>
         
         {/* Sync & User Profile */}
-        <div className="flex items-center gap-6">
-          <div className="hidden items-center gap-2 lg:flex">
+        <div className="flex items-center gap-4 xl:gap-8">
+          <div className="hidden items-center gap-2 2xl:flex">
             <span className="h-2 w-2 animate-pulse bg-[#0f5132] dark:bg-green-400" />
-            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-black/60 dark:text-white/60">
+            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-black/50 dark:text-white/50">
               RPC Synced · Blk 8,431,902
             </span>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="text-right dark:text-white">
-              <div className="flex items-center justify-end gap-1.5">
-                <div className="text-[11px] font-bold uppercase">{user.displayName}</div>
-                <div className="bg-black text-white dark:bg-white dark:text-black px-1.5 py-0.5 text-[8px] font-bold uppercase tracking-wider">{user.role.replace('_ROLE', '').replace('_', ' ')}</div>
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex items-center gap-3 border-r-2 border-black/10 dark:border-white/10 pr-6">
+              <div className="text-right">
+                <div className="text-[12px] font-black uppercase tracking-widest dark:text-white">{user.displayName}</div>
+                <div className="text-[9px] font-bold uppercase tracking-widest text-black/50 dark:text-white/50 mt-0.5">{user.role.replace('_ROLE', '').replace('_', ' ')}</div>
               </div>
-              <div className="mono-data text-[9px] text-black/50 dark:text-white/50">{user.email}</div>
+              <div className="h-9 w-9 bg-black dark:bg-white text-white dark:text-black flex items-center justify-center text-[14px] font-black brutal-border">
+                {user.displayName.charAt(0)}
+              </div>
             </div>
+
             <div className="flex gap-2">
               <JudgeModeTour />
               <a
                 href="https://meditrace-org.gitbook.io/docs"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1 h-8 px-3 text-[11px] font-bold uppercase tracking-wider border-2 border-black dark:border-white bg-white dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                className="flex items-center gap-1 h-9 px-3 text-[11px] font-bold uppercase tracking-wider border-2 border-black dark:border-white bg-white dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
                 title="View Documentation"
               >
                 Docs <ExternalLink className="h-3 w-3" />
               </a>
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-                className="flex h-8 w-8 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
+                className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"
                 title="Toggle Dark Mode"
               >
-                {theme === 'dark' ? <Sun className="h-3.5 w-3.5" strokeWidth={2.5} /> : <Moon className="h-3.5 w-3.5" strokeWidth={2.5} />}
+                {theme === 'dark' ? <Sun className="h-4 w-4" strokeWidth={2.5} /> : <Moon className="h-4 w-4" strokeWidth={2.5} />}
               </button>
               <button
                 onClick={onSignOut}
-                className="flex h-8 w-8 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-[#B91C1C] hover:text-white dark:hover:bg-[#B91C1C]"
+                className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-[#B91C1C] hover:text-white dark:hover:bg-[#B91C1C] hover:border-[#B91C1C] dark:hover:border-[#B91C1C]"
                 title="Sign out"
               >
-                <LogOut className="h-3.5 w-3.5" strokeWidth={2.5} />
+                <LogOut className="h-4 w-4" strokeWidth={2.5} />
               </button>
             </div>
           </div>
