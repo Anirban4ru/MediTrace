@@ -7,6 +7,7 @@ import { getSupabase, isSupabaseConfigured } from '@/lib/supabase-client';
 import { ethers } from 'ethers';
 import { MedicineTrackerABI } from '@/lib/abi';
 import { useAuth } from '@/components/auth-context';
+import { toast } from 'sonner';
 
 export interface Alert {
   id: string;
@@ -57,7 +58,7 @@ interface LedgerContextValue {
   refresh: () => Promise<void>;
   acknowledgeAlert: (alertId: string) => Promise<void>;
   fileAudit: (alertId: string, batchId: string, message: string) => Promise<void>;
-  saveVerification: (record: Omit<VerificationRecord, 'id'>) => Promise<void>;
+  saveVerification: (record: Omit<VerificationRecord, 'id'>, commentary?: string) => Promise<void>;
 }
 
 const LedgerContext = createContext<LedgerContextValue | null>(null);
@@ -202,6 +203,14 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
 
   // Supabase Realtime subscription for alerts (e.g., from Dedaub webhooks)
   useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator && 'Notification' in window) {
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        if (Notification.permission === 'default') {
+          Notification.requestPermission();
+        }
+      }).catch(console.error);
+    }
+
     const supabase = getSupabase();
     if (!supabase || !user) return;
 
@@ -218,6 +227,21 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
           const newAlert = payload.new as Alert;
           setAlerts((prev) => {
             if (prev.some((a) => a.id === newAlert.id)) return prev;
+            
+            // Trigger web push if backgrounded
+            if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted') {
+              if (document.hidden) {
+                navigator.serviceWorker.ready.then(reg => {
+                  reg.showNotification(`New ${newAlert.alert_type} Alert`, {
+                    body: newAlert.message,
+                    icon: '/favicon.ico'
+                  });
+                });
+              } else {
+                toast.error(`New ${newAlert.alert_type} Alert: ${newAlert.message}`);
+              }
+            }
+
             return [newAlert, ...prev].slice(0, 50);
           });
         }
@@ -448,16 +472,16 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
         const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
         const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
         
-        // Revoke the batch on-chain by logging an extreme temperature (999.00°C = 99900 cp)
+        // Revoke the batch on-chain
         let chainSuccess = false;
         try {
-          const tx = await contract.logTelemetry(batchId, 0, 0, 99900);
+          const tx = await contract.revokeBatch(batchId, message);
           await tx.wait(1);
           chainSuccess = true;
         } catch (contractErr: any) {
           console.warn("On-chain revocation failed, falling back to off-chain:", contractErr);
           if (contractErr.message && contractErr.message.includes("Batch does not exist")) {
-            window.alert(`Note: Batch ${batchId} was never registered on the blockchain. The alert has been resolved and the audit filed off-chain in the database instead.`);
+            toast.info(`Note: Batch ${batchId} was never registered on the blockchain. The alert has been resolved and the audit filed off-chain in the database instead.`);
           } else {
             throw contractErr; // Re-throw if it's a MetaMask rejection or something else
           }
@@ -490,7 +514,25 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
   );
 
   const saveVerification = useCallback(
-    async (record: Omit<VerificationRecord, 'id'>) => {
+    async (record: Omit<VerificationRecord, 'id'>, commentary?: string) => {
+      try {
+        if (typeof window !== 'undefined' && (window as any).ethereum) {
+          const ethereum = (window as any).ethereum;
+          const provider = new ethers.BrowserProvider(ethereum);
+          const signer = await provider.getSigner();
+          const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+          const contract = new ethers.Contract(contractAddress, MedicineTrackerABI, signer);
+          
+          const payloadString = JSON.stringify(record);
+          const payloadHash = ethers.keccak256(ethers.toUtf8Bytes(payloadString));
+          
+          const tx = await contract.recordVerificationHash(record.batch_id, payloadHash);
+          await tx.wait();
+        }
+      } catch (err) {
+        console.warn("Failed to anchor verification on-chain:", err);
+      }
+
       const supabase = getSupabase();
       if (supabase && user) {
         await supabase.from('verifications').insert({
@@ -518,10 +560,11 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
         });
 
         if (record.anomalies_detected) {
+          const msg = `Verification anomaly detected for ${record.batch_id} — score ${(record.authenticity_score * 100).toFixed(1)}%`;
           await supabase.from('alerts').insert({
             batch_id: record.batch_id,
             alert_type: 'anomaly',
-            message: `Verification anomaly detected for ${record.batch_id} — score ${(record.authenticity_score * 100).toFixed(1)}%`,
+            message: commentary ? `${msg} | Inspector: ${commentary}` : msg,
             severity: 'critical',
           });
         }

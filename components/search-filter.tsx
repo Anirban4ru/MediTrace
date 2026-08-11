@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { Search, Filter, X, ArrowUpDown } from 'lucide-react';
 import { Batch, BatchStatus, STATUS_ORDER } from '@/lib/types';
 import { StatusPill } from '@/components/primitives';
@@ -20,6 +20,18 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+
+  useEffect(() => {
+    const handleSearch = (e: any) => {
+      setQuery(e.detail);
+      // optionally reset filters if needed:
+      setStatusFilter('all');
+      setDateFrom('');
+      setDateTo('');
+    };
+    window.addEventListener('globalSearch', handleSearch);
+    return () => window.removeEventListener('globalSearch', handleSearch);
+  }, []);
 
   const filtered = useMemo(() => {
     let result = [...batches];

@@ -6,7 +6,11 @@ export async function POST(req: Request) {
     const authHeader = req.headers.get('authorization');
     const expectedSecret = process.env.DEDAUB_WEBHOOK_SECRET;
 
-    if (expectedSecret && authHeader !== `Bearer ${expectedSecret}`) {
+    if (!expectedSecret) {
+      return NextResponse.json({ error: 'Server misconfiguration: Webhook secret not set' }, { status: 500 });
+    }
+
+    if (authHeader !== `Bearer ${expectedSecret}`) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { useLedger } from '@/components/ledger-context';
 import { AlertTriangle, Bell, Check, X, AlertCircle } from 'lucide-react';
+import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 
 export function AlertsInbox() {
@@ -45,8 +46,9 @@ export function AlertsInbox() {
                 onAck={() => acknowledgeAlert(alert.id)}
                 onFileAudit={
                   alert.severity === 'critical'
-                    ? async () => {
-                        await fileAudit(alert.id, alert.batch_id, alert.message);
+                    ? async (commentary?: string) => {
+                        const finalMessage = commentary ? `${alert.message} | Commentary: ${commentary}` : alert.message;
+                        await fileAudit(alert.id, alert.batch_id, finalMessage);
                       }
                     : undefined
                 }
@@ -85,21 +87,28 @@ function AlertItem({
     created_at: string;
   };
   onAck?: () => void;
-  onFileAudit?: () => Promise<void>;
+  onFileAudit?: (comment?: string) => Promise<void>;
   acknowledged?: boolean;
 }) {
   const isCritical = alert.severity === 'critical';
   const isWarning = alert.severity === 'warning';
   const [isFiling, setIsFiling] = useState(false);
+  const [commentary, setCommentary] = useState("");
+  const [showCommentary, setShowCommentary] = useState(false);
 
   const handleFileAudit = async () => {
     if (!onFileAudit) return;
+    if (!showCommentary) {
+      setShowCommentary(true);
+      return;
+    }
+    
     try {
       setIsFiling(true);
-      await onFileAudit();
+      await onFileAudit(commentary);
     } catch (err) {
       console.error(err);
-      window.alert("Failed to file audit: " + (err as any).message);
+      toast.error("Failed to file audit: " + (err as any).message);
     } finally {
       setIsFiling(false);
     }
@@ -147,14 +156,36 @@ function AlertItem({
         </div>
         <div className="flex items-center gap-2">
           {onFileAudit && !acknowledged && (
-            <button
-              onClick={handleFileAudit}
-              disabled={isFiling}
-              className="flex h-6 items-center justify-center border-2 border-black bg-[#B91C1C] px-2 text-[10px] font-bold uppercase text-white transition-colors hover:bg-black disabled:opacity-50"
-              title="File Audit & Revoke Batch On-Chain"
-            >
-              {isFiling ? 'Mining...' : 'File Audit & Revoke'}
-            </button>
+            <div className="flex flex-col items-end gap-2">
+              {showCommentary && (
+                <input
+                  type="text"
+                  value={commentary}
+                  onChange={(e) => setCommentary(e.target.value)}
+                  placeholder="Add inspector commentary..."
+                  className="border border-black px-2 py-1 text-[10px] mono-data w-48 focus:outline-none"
+                  autoFocus
+                />
+              )}
+              <div className="flex gap-2">
+                {showCommentary && (
+                  <button
+                    onClick={() => setShowCommentary(false)}
+                    className="flex h-6 items-center justify-center border-2 border-black bg-white text-black px-2 text-[10px] font-bold uppercase hover:bg-black hover:text-white"
+                  >
+                    Cancel
+                  </button>
+                )}
+                <button
+                  onClick={handleFileAudit}
+                  disabled={isFiling}
+                  className="flex h-6 items-center justify-center border-2 border-black bg-[#B91C1C] px-2 text-[10px] font-bold uppercase text-white transition-colors hover:bg-black disabled:opacity-50"
+                  title="File Audit & Revoke Batch On-Chain"
+                >
+                  {isFiling ? 'Mining...' : (showCommentary ? 'Confirm Revoke' : 'File Audit & Revoke')}
+                </button>
+              </div>
+            </div>
           )}
           {onAck && (
             <button

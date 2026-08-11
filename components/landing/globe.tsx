@@ -5,13 +5,23 @@ import { useLedger } from '@/components/ledger-context';
 
 export function GlobeComponent() {
   const [Globe, setGlobe] = useState<any>(null);
+  const globeRef = useRef<any>(null);
   const { batches } = useLedger();
 
   useEffect(() => {
-    // react-globe.gl needs to be imported dynamically on the client side
-    // to avoid window/navigator SSR issues.
     import('react-globe.gl').then((mod) => setGlobe(() => mod.default));
   }, []);
+
+  useEffect(() => {
+    if (Globe) {
+      setTimeout(() => {
+        if (globeRef.current && globeRef.current.controls) {
+          globeRef.current.controls().autoRotate = true;
+          globeRef.current.controls().autoRotateSpeed = 1.0;
+        }
+      }, 500);
+    }
+  }, [Globe]);
 
   if (!Globe) {
     return (
@@ -36,6 +46,7 @@ export function GlobeComponent() {
         Live Global Network
       </div>
       <Globe
+        ref={globeRef}
         width={800}
         height={400}
         globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"

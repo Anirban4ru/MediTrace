@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
-contract MedicineTracker {
+import "@openzeppelin/contracts/access/AccessControl.sol";
+
+contract MedicineTracker is AccessControl {
+    bytes32 public constant MANUFACTURER_ROLE = keccak256("MANUFACTURER_ROLE");
+    bytes32 public constant CARRIER_ROLE = keccak256("CARRIER_ROLE");
+    bytes32 public constant INSPECTOR_ROLE = keccak256("INSPECTOR_ROLE");
+
     enum BatchStatus {
         Manufactured,
         InTransit,
@@ -40,10 +46,28 @@ contract MedicineTracker {
     event TelemetryLogged(string batchId, address indexed carrier, int256 temperatureCp, bool breached);
     event BatchSpoiled(string batchId, address indexed carrier, int256 temperatureCp);
     event BatchStatusChanged(string batchId, BatchStatus newStatus);
+    event BatchRevoked(string batchId, address indexed admin, string reason);
+    event VerificationRecorded(string batchId, address indexed inspector, bytes32 payloadHash);
 
     // Constants for safety bounds (2.0C to 8.0C) -> 200 to 800 in centi-degrees
     int256 public constant MIN_TEMP = 200;
     int256 public constant MAX_TEMP = 800;
+
+    constructor() {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    }
+
+    function registerManufacturer(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        grantRole(MANUFACTURER_ROLE, account);
+    }
+
+    function registerCarrier(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        grantRole(CARRIER_ROLE, account);
+    }
+
+    function registerInspector(address account) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        grantRole(INSPECTOR_ROLE, account);
+    }
 
     // Provision a new batch
     function provisionBatch(
@@ -54,7 +78,7 @@ contract MedicineTracker {
         string memory _serial,
         string memory _originLabel,
         string memory _destinationLabel
-    ) public {
+    ) public onlyRole(MANUFACTURER_ROLE) {
         require(!batches[_batchId].exists, "Batch already exists");
 
         batches[_batchId] = Batch({
@@ -80,7 +104,7 @@ contract MedicineTracker {
         int256 _latE6,
         int256 _lngE6,
         int256 _tempCp
-    ) public {
+    ) public onlyRole(CARRIER_ROLE) {
         require(batches[_batchId].exists, "Batch does not exist");
         require(batches[_batchId].currentStatus != BatchStatus.Spoiled, "Batch is already spoiled");
 
@@ -106,6 +130,18 @@ contract MedicineTracker {
             batches[_batchId].currentStatus = BatchStatus.InTransit;
             emit BatchStatusChanged(_batchId, BatchStatus.InTransit);
         }
+    }
+
+    function revokeBatch(string memory _batchId, string memory _reason) public onlyRole(DEFAULT_ADMIN_ROLE) {
+        require(batches[_batchId].exists, "Batch does not exist");
+        batches[_batchId].currentStatus = BatchStatus.Spoiled;
+        emit BatchRevoked(_batchId, msg.sender, _reason);
+        emit BatchStatusChanged(_batchId, BatchStatus.Spoiled);
+    }
+
+    function recordVerificationHash(string memory _batchId, bytes32 _payloadHash) public onlyRole(INSPECTOR_ROLE) {
+        require(batches[_batchId].exists, "Batch does not exist");
+        emit VerificationRecorded(_batchId, msg.sender, _payloadHash);
     }
 
     function getBatch(string memory _batchId) public view returns (Batch memory) {

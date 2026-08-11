@@ -24,7 +24,10 @@ PharmaTrace is a highly secure, enterprise-grade decentralized pharmaceutical su
 - 👁️ **Computer Vision Verification (OpenCV):** The Pharmacy Terminal uses client-side OpenCV.js to verify physical holographic seals and packaging integrity before dispensation.
 - 🌐 **Anti-Phishing Handoff:** Strict domain verification protects the physical-to-digital handoff, ensuring the Inspector terminal is not running on a lookalike spoofed domain.
 - ⚡ **Zero-Lag Architecture:** Built on Next.js App Router for extreme performance, scoring highly across SEO and performance metrics.
-- 📄 **Automated Audit Reports:** One-click generation of beautifully formatted, finalized PDF audit reports for regulatory compliance.
+- 📄 **Automated Audit Reports & Web Push:** One-click generation of beautifully formatted, finalized PDF audit reports for regulatory compliance, alongside Service Worker-based Web Push Notifications for instant anomaly alerts.
+- 🔍 **Consumer Tracking:** Dedicated public `/track/[batchId]` route allowing end consumers to verify product provenance with live 3D visualization and real-time viewership counts powered by Supabase Presence.
+- 🎨 **Dynamic Brutalist UI:** Highly interactive interface powered by Framer Motion, Cmdk global search, and Canvas Confetti, ensuring high user engagement and flawless responsive design.
+- 📦 **GS1 QR Code Integration:** Automatically generates and prints standardized GS1 QR Code shipping labels directly from the Manufacturer dashboard.
 
 ---
 

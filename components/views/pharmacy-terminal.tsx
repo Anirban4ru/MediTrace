@@ -11,6 +11,7 @@ import { runCVPipeline, runMultiImagePipeline, verifyDigitalHandoff, type CVResu
 import { findReferenceForProduct, generateReferenceDataUrl } from '@/lib/reference-library';
 import { decodeBarcodeFromDataUrl, parseGS1 } from '@/lib/barcode';
 import { txExplorerUrl, blockExplorerUrl, contractExplorerUrl } from '@/lib/explorer';
+import confetti from 'canvas-confetti';
 import {
   ScanLine,
   Upload,
@@ -192,6 +193,31 @@ export function PharmacyTerminal() {
         setCvResult(result.combined);
         setMultiResult(result);
         setPhase('done');
+
+        if (verdict === 'AUTHENTIC') {
+          const duration = 3000;
+          const end = Date.now() + duration;
+          const frame = () => {
+            confetti({
+              particleCount: 5,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0 },
+              colors: ['#0f5132', '#000000', '#ffffff']
+            });
+            confetti({
+              particleCount: 5,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1 },
+              colors: ['#0f5132', '#000000', '#ffffff']
+            });
+            if (Date.now() < end) {
+              requestAnimationFrame(frame);
+            }
+          };
+          frame();
+        }
       } catch (err) {
         clearInterval(progressInterval);
         if (!cancelled) {
@@ -386,7 +412,8 @@ export function PharmacyTerminal() {
                     {Math.round(progress)}% · {stage}
                   </div>
                   {images.length > 0 && (
-                    <div className="mt-3 border-2 border-black">
+                    <div className="mt-3 border-2 border-black relative overflow-hidden">
+                      <div className="absolute inset-0 z-10 bg-black/10 animate-pulse backdrop-blur-[1px]" />
                       <Image src={images[0].dataUrl} alt="processing" width={400} height={300} className="h-32 w-full object-cover opacity-60" unoptimized />
                     </div>
                   )}

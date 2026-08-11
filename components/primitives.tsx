@@ -1,7 +1,9 @@
 'use client';
 
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { BatchStatus } from '@/lib/types';
+import { motion } from 'framer-motion';
 import { statusBg } from '@/lib/format';
 
 export function StatusPill({
@@ -24,8 +26,10 @@ export function StatusPill({
         color: isLight ? '#000' : '#fff',
       }}
     >
-      <span
-        className="h-1.5 w-1.5"
+      <motion.div
+        animate={{ opacity: [1, 0.4, 1] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        className="h-1.5 w-1.5 rounded-full"
         style={{ background: isLight ? '#000' : '#fff' }}
       />
       {status}

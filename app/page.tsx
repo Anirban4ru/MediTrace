@@ -17,19 +17,22 @@ import { useLedger } from '@/components/ledger-context';
 import { cn } from '@/lib/utils';
 import { RealtimeGraph } from '@/components/landing/realtime-graph';
 import { NewsTicker } from '@/components/landing/news-ticker';
-import { GlobeComponent } from '@/components/landing/globe';
+import nextDynamic from 'next/dynamic';
+const GlobeComponent = nextDynamic(() => import('@/components/landing/globe').then(mod => mod.GlobeComponent), { ssr: false });
 import { useTheme } from 'next-themes';
 import { Sun, Moon } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
+import { CommandPalette } from '@/components/command-palette';
+import { JudgeModeTour } from '@/components/judge-mode-tour';
 
 type DashboardRole = 'admin' | 'manufacturer' | 'carrier' | 'inspector';
 type ViewState = 'landing' | DashboardRole;
 
-const PASSWORDS: Record<DashboardRole, string> = {
-  admin: 'admin123',
-  manufacturer: 'mfg123',
-  carrier: 'car123',
-  inspector: 'ins123',
+const REQUIRED_ROLES: Record<DashboardRole, string[]> = {
+  admin: ['INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin'],
+  manufacturer: ['MANUFACTURER_ROLE'],
+  carrier: ['CARRIER_ROLE'],
+  inspector: ['INSPECTOR_ROLE'],
 };
 
 const ROLE_LABELS: Record<DashboardRole, string> = {
@@ -79,50 +82,14 @@ function Shell({
   onSignOut: () => void;
 }) {
   const [view, setView] = useState<ViewState>('landing');
-  const [sessions, setSessions] = useState<Record<DashboardRole, number>>({} as any);
-  
-  // Password modal state
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [pendingRole, setPendingRole] = useState<DashboardRole | null>(null);
-  const [pwdInput, setPwdInput] = useState('');
-  const [pwdError, setPwdError] = useState(false);
 
   const handleNavigate = (targetRole: ViewState) => {
-    if (view !== 'landing') {
-      setSessions((prev) => ({ ...prev, [view as DashboardRole]: Date.now() }));
-    }
-
-    if (targetRole === 'landing') {
-      setView('landing');
-      return;
-    }
-
-    const lastActive = sessions[targetRole];
-    const isExpired = !lastActive || (Date.now() - lastActive > 5 * 60 * 1000);
-
-    if (isExpired) {
-      setPendingRole(targetRole);
-      setPwdInput('');
-      setPwdError(false);
-      setShowPasswordModal(true);
-    } else {
-      setView(targetRole);
-    }
-  };
-
-  const submitPassword = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (pendingRole && pwdInput === PASSWORDS[pendingRole]) {
-      setSessions((prev) => ({ ...prev, [pendingRole]: Date.now() }));
-      setView(pendingRole);
-      setShowPasswordModal(false);
-    } else {
-      setPwdError(true);
-    }
+    setView(targetRole);
   };
 
   return (
     <main className="min-h-screen bg-white text-black flex flex-col">
+      <CommandPalette onNavigate={handleNavigate} />
       <TopBar user={user} onSignOut={onSignOut} view={view} onNavigate={handleNavigate} />
       
       <div className="flex-1 w-full bg-[#F4F4F6]">
@@ -193,81 +160,42 @@ function Shell({
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
               <GlobeComponent />
-              <RealtimeGraph />
+              <div className="hidden md:block w-full">
+                <RealtimeGraph />
+              </div>
             </div>
           </div>
         ) : (
           <div className="mx-auto max-w-[1440px] px-6 pb-24 pt-6">
-            {view === 'admin' && <AdminDashboard />}
-            {view === 'manufacturer' && <ManufacturerDashboard />}
-            {view === 'carrier' && <TelemetryConsole />}
-            {view === 'inspector' && <PharmacyTerminal />}
+            {!REQUIRED_ROLES[view as DashboardRole]?.includes(user.role) ? (
+              <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4 text-center">
+                <Lock className="h-16 w-16 text-[#B91C1C]" strokeWidth={1.5} />
+                <h2 className="display-heavy text-3xl uppercase text-black">Access Restricted</h2>
+                <p className="font-mono text-sm text-black/60">
+                  Your current role ({user.role}) does not have permission to access the {ROLE_LABELS[view as DashboardRole]} dashboard.
+                </p>
+                <button 
+                  onClick={() => handleNavigate('landing')}
+                  className="mt-4 border-2 border-black px-6 py-2 font-bold uppercase hover:bg-[#F4F4F6] transition-colors"
+                >
+                  Return Home
+                </button>
+              </div>
+            ) : (
+              <>
+                {view === 'admin' && <AdminDashboard />}
+                {view === 'manufacturer' && <ManufacturerDashboard />}
+                {view === 'carrier' && <TelemetryConsole />}
+                {view === 'inspector' && <PharmacyTerminal />}
+              </>
+            )}
           </div>
         )}
       </div>
 
       <Footer />
 
-      {/* Password Modal */}
-      <Dialog.Root open={showPasswordModal} onOpenChange={setShowPasswordModal}>
-        <Dialog.Portal>
-          <Dialog.Overlay className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" />
-          <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 brutal-card bg-white p-6 z-50 w-[90vw] max-w-[400px]">
-            <Dialog.Title className="display-heavy text-xl uppercase mb-4 flex items-center gap-2">
-              <Lock className="h-5 w-5" />
-              Authentication Required
-            </Dialog.Title>
-            <Dialog.Description className="text-[12px] uppercase tracking-[0.1em] text-black/60 mb-4">
-              Please enter the password to access the {pendingRole && ROLE_LABELS[pendingRole]} dashboard.
-            </Dialog.Description>
-            <form onSubmit={submitPassword} className="space-y-4">
-              <div>
-                <input
-                  type="password"
-                  value={pwdInput}
-                  onChange={(e) => setPwdInput(e.target.value)}
-                  className={cn(
-                    "w-full brutal-border px-4 py-2 bg-[#F4F4F6] focus:outline-none focus:ring-2 focus:ring-black mono-data",
-                    pwdError && "border-[#B91C1C] text-[#B91C1C]"
-                  )}
-                  placeholder="Password"
-                  autoFocus
-                />
-                {pwdError && <span className="text-[#B91C1C] text-[10px] uppercase font-bold mt-1 block">Incorrect password</span>}
 
-                {pendingRole && (
-                  <div className="mt-4 flex items-start gap-3 border-2 border-black bg-[#F4F4F6] p-3 brutal-shadow-sm">
-                    <AlertTriangle className="h-5 w-5 shrink-0 text-black" strokeWidth={2} />
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.1em] text-black">
-                        Demo Mode Active
-                      </span>
-                      <span className="mt-0.5 font-mono text-[11px] text-black/70">
-                        Use test passcode: <strong className="text-black text-[13px] tracking-wider bg-black/10 px-1 py-0.5 rounded-sm">{PASSWORDS[pendingRole]}</strong>
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordModal(false)}
-                  className="flex-1 border-2 border-black px-4 py-2 font-bold uppercase text-[12px] hover:bg-[#F4F4F6]"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 bg-black text-white px-4 py-2 font-bold uppercase text-[12px] border-2 border-black hover:bg-black/90 brutal-shadow-sm brutal-press"
-                >
-                  Unlock
-                </button>
-              </div>
-            </form>
-          </Dialog.Content>
-        </Dialog.Portal>
-      </Dialog.Root>
     </main>
   );
 }
@@ -276,9 +204,15 @@ function AdminDashboard() {
   const { alerts, batches } = useLedger();
   const unackCount = alerts.filter((a) => !a.acknowledged).length;
   const [subTab, setSubTab] = useState<'alerts' | 'audit' | 'search'>('alerts');
+  const isDemo = !process.env.NEXT_PUBLIC_CONTRACT_ADDRESS || process.env.NEXT_PUBLIC_CONTRACT_ADDRESS === '0xF279C66A37afe2f5d5C029D53655235f14e16204';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      {isDemo && (
+        <div className="sticky top-[72px] z-30 mb-4 bg-[#B91C1C] text-white px-4 py-2 text-center text-[12px] font-bold uppercase tracking-[0.15em] brutal-shadow-sm border-2 border-black">
+          DEMO MODE: USING HARDCODED CONTRACT ADDRESS
+        </div>
+      )}
       <div className="flex gap-2 border-b-2 border-black pb-2">
         <button onClick={() => setSubTab('alerts')} className={cn("px-4 py-2 font-bold uppercase text-[12px] flex gap-2 items-center", subTab === 'alerts' ? "bg-black text-white" : "border-2 border-black hover:bg-[#F4F4F6]")}>
           Alerts {unackCount > 0 && <span className="bg-[#B91C1C] text-white px-1.5 py-0.5 text-[10px]">{unackCount}</span>}
@@ -355,6 +289,7 @@ function TopBar({
               <div className="mono-data text-[9px] text-black/50 dark:text-white/50">{user.email}</div>
             </div>
             <div className="flex gap-2">
+              <JudgeModeTour />
               <button
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                 className="flex h-8 w-8 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black"

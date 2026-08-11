@@ -13,7 +13,6 @@ export function RouteMap({ batch, height = 360 }: { batch: Batch; height?: numbe
 
     (async () => {
       const L = (await import('leaflet')).default;
-      // @ts-expect-error -- CSS import for Leaflet styles
       await import('leaflet/dist/leaflet.css');
 
       if (cancelled || !containerRef.current) return;

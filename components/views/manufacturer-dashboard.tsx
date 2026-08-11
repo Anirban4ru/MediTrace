@@ -25,6 +25,7 @@ import {
   Clock,
 } from 'lucide-react';
 import dynamic from 'next/dynamic';
+import { QrLabelGenerator } from '@/components/qr-generator';
 
 const ResponsiveGridLayout = dynamic(
   () => import('react-grid-layout/legacy').then((mod) => mod.WidthProvider(mod.Responsive)),
@@ -162,6 +163,9 @@ export function ManufacturerDashboard() {
               </div>
               <Row k="Block" v={`#${lastProvisioned.provisionBlock.toLocaleString()}`} />
               <Row k="Manufacturer" v={shortAddr(lastProvisioned.manufacturer)} />
+              <div className="mt-4">
+                <QrLabelGenerator batchId={lastProvisioned.batchId} productName={lastProvisioned.productName} serial={lastProvisioned.serial} />
+              </div>
             </div>
           )}
           
