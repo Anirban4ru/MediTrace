@@ -89,7 +89,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser({
       id: userId,
       email,
-      role: ROLE_MAP[data?.role ?? 'INSPECTOR_ROLE'] ?? 'INSPECTOR_ROLE',
+      role: ROLE_MAP[data?.role ?? 'VISITOR_ROLE'] ?? 'VISITOR_ROLE',
       displayName: data?.display_name ?? email.split('@')[0],
     });
     setLoading(false);
@@ -131,7 +131,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser({
         id: 'mock-id-123',
         email,
-        role: 'INSPECTOR_ROLE',
+        role: 'VISITOR_ROLE',
         displayName: displayName ?? email.split('@')[0],
       });
       return { error: null };
@@ -149,13 +149,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser({
           id: data.user.id,
           email,
-          role: 'INSPECTOR_ROLE',
+          role: 'VISITOR_ROLE',
           displayName: displayName ?? email.split('@')[0],
         });
         
         supabase.from('profiles').upsert({
           id: data.user.id,
-          role: 'INSPECTOR_ROLE',
+          role: 'VISITOR_ROLE',
           display_name: displayName ?? email.split('@')[0],
         }).then(() => {}, () => {});
       }
@@ -165,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser({
           id: 'mock-id-123',
           email,
-          role: 'INSPECTOR_ROLE',
+          role: 'VISITOR_ROLE',
           displayName: displayName ?? email.split('@')[0],
         });
         return { error: null };

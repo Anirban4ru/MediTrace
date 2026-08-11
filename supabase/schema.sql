@@ -4,7 +4,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 -- PROFILES
 CREATE TABLE IF NOT EXISTS public.profiles (
     id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
-    role TEXT NOT NULL DEFAULT 'INSPECTOR_ROLE',
+    role TEXT NOT NULL DEFAULT 'VISITOR_ROLE',
     display_name TEXT
 );
 
@@ -16,7 +16,7 @@ BEGIN
   INSERT INTO public.profiles (id, role, display_name)
   VALUES (
     new.id,
-    COALESCE((new.raw_user_meta_data->>'role'), 'INSPECTOR_ROLE'),
+    COALESCE((new.raw_user_meta_data->>'role'), 'VISITOR_ROLE'),
     COALESCE((new.raw_user_meta_data->>'display_name'), split_part(new.email, '@', 1))
   );
   RETURN new;
