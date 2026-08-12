@@ -243,12 +243,13 @@ function TopBar({
   
   return (
     <header className="sticky top-0 z-40 border-b-2 border-black bg-white dark:bg-black dark:border-white/20">
-      <div className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-3">
-        {/* Brand & Nav */}
-        <div className="flex items-center gap-8">
-          <button onClick={() => onNavigate('landing')} className="flex items-center gap-3 group text-left">
+      <div className="mx-auto flex max-w-[1440px] flex-col xl:flex-row xl:items-center justify-between px-6 py-3 gap-3 xl:gap-0">
+        
+        {/* Left Side (Desktop) / Top Row (Mobile) */}
+        <div className="flex items-center justify-between w-full xl:w-auto xl:gap-8">
+          <button onClick={() => onNavigate('landing')} className="flex-shrink-0 flex items-center gap-3 group text-left">
             <div className="brutal-border flex h-9 w-9 items-center justify-center bg-white group-hover:scale-105 transition-transform">
-              <img src="/BrandLogo.png" alt="Logo" className="h-6 w-6 object-contain" />
+              <img fetchPriority="high" src="/BrandLogo.png" alt="Logo" className="h-6 w-6 object-contain" />
             </div>
             <div className="leading-none">
               <div className="display-heavy text-[16px] uppercase tracking-[0.02em] dark:text-white">
@@ -257,6 +258,17 @@ function TopBar({
             </div>
           </button>
           
+          {/* Mobile Profile Actions */}
+          <div className="flex xl:hidden items-center gap-2">
+            <JudgeModeTour />
+            <a href="https://meditrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer" className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-white dark:bg-black dark:text-white transition-colors hover:bg-black hover:text-white">
+              <ExternalLink className="h-4 w-4" />
+            </a>
+            <button onClick={onSignOut} className="flex h-9 w-9 items-center justify-center border-2 border-black dark:border-white bg-[#F4F4F6] dark:bg-black dark:text-white transition-colors hover:bg-[#B91C1C] hover:text-white">
+              <LogOut className="h-4 w-4" strokeWidth={2.5} />
+            </button>
+          </div>
+
           <nav className="hidden xl:flex items-center gap-1 xl:gap-2 ml-4">
             {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
               if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
@@ -276,9 +288,29 @@ function TopBar({
             )})}
           </nav>
         </div>
+
+        {/* Mobile Nav Links */}
+        <nav className="flex xl:hidden overflow-x-auto items-center gap-1 pb-1 w-full flex-nowrap whitespace-nowrap scroll-smooth" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
+              if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
+              return (
+              <button
+                key={role}
+                onClick={() => onNavigate(role)}
+                className={cn(
+                  "px-4 py-2 text-[11px] font-bold uppercase tracking-[0.14em] transition-all duration-200 border-2",
+                  view === role 
+                    ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)]" 
+                    : "bg-transparent text-black/70 border-transparent hover:text-black hover:bg-black/5 dark:text-white/70 dark:hover:text-white"
+                )}
+              >
+                {ROLE_LABELS[role]}
+              </button>
+            )})}
+        </nav>
         
-        {/* Sync & User Profile */}
-        <div className="flex items-center gap-4 xl:gap-8">
+        {/* Sync & User Profile (Desktop) */}
+        <div className="hidden xl:flex items-center gap-4 xl:gap-8">
           <div className="hidden items-center gap-2 2xl:flex">
             <span className="h-2 w-2 animate-pulse bg-[#0f5132] dark:bg-green-400" />
             <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-black/50 dark:text-white/50">
