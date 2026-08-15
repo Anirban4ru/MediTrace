@@ -25,34 +25,34 @@ export function fmtTemp(t: number): string {
 export function statusColor(status: BatchStatus): string {
   switch (status) {
     case 'Manufactured':
-      return '#000000';
+      return 'var(--ink-muted)';
     case 'InTransit':
-      return '#102A43';
+      return 'var(--accent)';
     case 'Distributed':
-      return '#1E3A8A';
+      return 'var(--accent)';
     case 'Verified':
-      return '#0f5132';
+      return 'var(--success)';
     case 'Spoiled':
-      return '#B91C1C';
+      return 'var(--danger)';
     default:
-      return '#000000';
+      return 'var(--ink)';
   }
 }
 
 export function statusBg(status: BatchStatus): string {
   switch (status) {
     case 'Manufactured':
-      return '#FFFFFF';
+      return 'var(--border-faint)';
     case 'InTransit':
-      return '#102A43';
+      return 'var(--accent-faint)';
     case 'Distributed':
-      return '#1E3A8A';
+      return 'var(--accent-faint)';
     case 'Verified':
-      return '#0f5132';
+      return 'var(--success-faint)';
     case 'Spoiled':
-      return '#B91C1C';
+      return 'var(--danger-faint)';
     default:
-      return '#FFFFFF';
+      return 'var(--border-faint)';
   }
 }
 

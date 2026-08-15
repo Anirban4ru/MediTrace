@@ -50,14 +50,14 @@ const ROLE_LABELS: Record<DashboardRole, string> = {
   'role-allocation': 'Role Allocation',
 };
 
-// ─── Theme toggle hook (persisted, respects prefers-color-scheme) ───
+// ─── Theme Toggle Hook ───
 function useThemeToggle() {
   const [theme, setThemeState] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     const stored = localStorage.getItem('meditrace-theme') as 'light' | 'dark' | null;
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const resolved = stored ?? preferred;
+    const resolved = stored || preferred;
     setThemeState(resolved);
     document.documentElement.setAttribute('data-theme', resolved);
   }, []);
@@ -72,7 +72,6 @@ function useThemeToggle() {
   return { theme, toggle };
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
 export default function Home() {
   return (
     <AuthProvider>
@@ -102,97 +101,351 @@ function App() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Main Shell with Unified TOP NAVIGATION BAR ───
 function Shell({ user, onSignOut }: {
   user: { email: string; role: string; displayName: string };
   onSignOut: () => void;
 }) {
   const [view, setView] = useState<ViewState>('landing');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { theme, toggle } = useThemeToggle();
   const isLanding = view === 'landing';
 
-  const navigate = (v: ViewState) => { setView(v); setSidebarOpen(false); };
+  const navigate = (v: ViewState) => {
+    setView(v);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
-    <main style={{ background: 'var(--bg)', color: 'var(--ink)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ background: 'var(--bg)', color: 'var(--ink)', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <CommandPalette onNavigate={navigate} />
 
-      {/* ── Navigation ── */}
-      {isLanding ? (
-        <MarketingNav user={user} onSignOut={onSignOut} navigate={navigate} theme={theme} toggle={toggle} />
-      ) : (
-        <DashboardTopBar user={user} navigate={navigate} setSidebarOpen={setSidebarOpen} theme={theme} toggle={toggle} />
-      )}
+      {/* TOP NAVIGATION BAR — ALWAYS VISIBLE ON TOP FOR ALL VIEWS */}
+      <TopNavigation 
+        user={user} 
+        currentView={view} 
+        onNavigate={navigate} 
+        onSignOut={onSignOut} 
+        theme={theme} 
+        toggleTheme={toggle} 
+      />
 
-      <div className={cn('flex flex-1', !isLanding && 'pt-14')}>
-        {!isLanding && (
-          <DashboardSidebar
-            user={user} view={view} navigate={navigate}
-            isOpen={sidebarOpen} setIsOpen={setSidebarOpen}
-            onSignOut={onSignOut}
-          />
-        )}
-
-        <div className={cn('flex-1 min-w-0', !isLanding && 'xl:pl-60')}>
-          {isLanding ? (
-            <>
-              <LandingHero user={user} navigate={navigate} />
-              <LandingProblemSolution />
-              <LandingData />
-              <SiteFooter onSignOut={onSignOut} />
-            </>
-          ) : (
-            <div className="mx-auto max-w-[1440px] px-4 sm:px-6 pb-20 pt-6 animate-editorial-fade">
-              {!REQUIRED_ROLES[view as DashboardRole]?.includes(user.role) ? (
-                <AccessDenied role={user.role} view={view as DashboardRole} />
-              ) : (
-                <>
-                  {view === 'admin' && <AdminDashboard />}
-                  {view === 'manufacturer' && <ManufacturerDashboard />}
-                  {view === 'carrier' && <TelemetryConsole />}
-                  {view === 'inspector' && <PharmacyTerminal />}
-                  {view === 'role-allocation' && <RoleAllocationDashboard />}
-                </>
-              )}
+      {/* Main Content Area */}
+      <main className="flex-1 w-full pt-16">
+        {isLanding ? (
+          <>
+            <LandingHero navigate={navigate} />
+            <LandingProblemSolution />
+            <LandingData />
+            <SiteFooter onSignOut={onSignOut} />
+          </>
+        ) : (
+          <div className="mx-auto max-w-[1440px] px-4 sm:px-8 py-8 animate-editorial-fade w-full">
+            {/* View Breadcrumb / Active Header */}
+            <div className="mb-6 pb-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--border)' }}>
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => navigate('landing')} 
+                  className="text-xs font-semibold uppercase tracking-wider hover:underline"
+                  style={{ color: 'var(--ink-muted)' }}
+                >
+                  ← Home
+                </button>
+                <span style={{ color: 'var(--border)' }}>/</span>
+                <span className="text-sm font-bold uppercase tracking-wider" style={{ color: 'var(--ink)' }}>
+                  {ROLE_LABELS[view as DashboardRole]} Dashboard
+                </span>
+              </div>
+              <div className="mono-data text-[11px] uppercase tracking-wider" style={{ color: 'var(--ink-muted)' }}>
+                Role: <span className="font-bold" style={{ color: 'var(--ink)' }}>{user.role}</span>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
-    </main>
+
+            {!REQUIRED_ROLES[view as DashboardRole]?.includes(user.role) ? (
+              <AccessDenied role={user.role} view={view as DashboardRole} onReturnHome={() => navigate('landing')} />
+            ) : (
+              <>
+                {view === 'admin' && <AdminDashboard />}
+                {view === 'manufacturer' && <ManufacturerDashboard />}
+                {view === 'carrier' && <TelemetryConsole />}
+                {view === 'inspector' && <PharmacyTerminal />}
+                {view === 'role-allocation' && <RoleAllocationDashboard />}
+              </>
+            )}
+          </div>
+        )}
+      </main>
+    </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// LANDING — asymmetric, left-anchored, deliberate spacing hierarchy
-// ─────────────────────────────────────────────────────────────────────────────
-function LandingHero({ user, navigate }: any) {
-  return (
-    <section style={{ paddingTop: '6rem', paddingBottom: '4rem', borderBottom: '1px solid var(--border)' }}>
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10">
-        {/* Deliberately asymmetric — NOT centered */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 lg:gap-20 items-end">
+// ─────────────────────────────────────────────────────────────
+// UNIFIED TOP NAVIGATION BAR (Top navbar across all views)
+// ─────────────────────────────────────────────────────────────
+function TopNavigation({
+  user,
+  currentView,
+  onNavigate,
+  onSignOut,
+  theme,
+  toggleTheme,
+}: {
+  user: { email: string; role: string; displayName: string };
+  currentView: ViewState;
+  onNavigate: (v: ViewState) => void;
+  onSignOut: () => void;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const roles = Object.keys(ROLE_LABELS) as DashboardRole[];
 
-          {/* Left column — headline */}
+  return (
+    <header 
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 50,
+        height: '3.75rem',
+        background: 'var(--bg-overlay)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
+        borderBottom: '1px solid var(--border)',
+        display: 'flex',
+        alignItems: 'center',
+      }}
+    >
+      <div className="mx-auto max-w-[1440px] w-full px-4 sm:px-8 flex items-center justify-between gap-4">
+        
+        {/* Left: Brand Logo & Wordmark */}
+        <button
+          onClick={() => onNavigate('landing')}
+          className="flex items-center gap-3 group shrink-0"
+          style={{ background: 'none', border: 'none', cursor: 'pointer' }}
+        >
+          <div className="flex h-8 w-8 items-center justify-center rounded border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
+            <img src="/BrandLogo.png" alt="Logo" className="h-5 w-5 object-contain" />
+          </div>
+          <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
+            MediTrace
+          </span>
+          <span className="live-dot" />
+        </button>
+
+        {/* Center: TOP NAVIGATION LINKS (Visible for all pages on desktop) */}
+        <nav className="hidden lg:flex items-center gap-1.5">
+          <button
+            onClick={() => onNavigate('landing')}
+            className={cn(
+              "px-3 py-1.5 text-xs font-semibold rounded transition-all",
+              currentView === 'landing' 
+                ? "bg-[var(--accent)] text-[var(--bg)] shadow-sm" 
+                : "text-[var(--ink-muted)] hover:text-[var(--ink)] hover:bg-[var(--accent-faint)]"
+            )}
+            style={{ border: currentView === 'landing' ? '1px solid var(--accent)' : '1px solid transparent' }}
+          >
+            Overview
+          </button>
+
+          {roles.map((role) => {
+            if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
+            const isActive = currentView === role;
+            return (
+              <button
+                key={role}
+                onClick={() => onNavigate(role)}
+                className={cn(
+                  "px-3 py-1.5 text-xs font-semibold rounded transition-all",
+                  isActive 
+                    ? "bg-[var(--accent)] text-[var(--bg)] shadow-sm" 
+                    : "text-[var(--ink-muted)] hover:text-[var(--ink)] hover:bg-[var(--accent-faint)]"
+                )}
+                style={{ border: isActive ? '1px solid var(--accent)' : '1px solid transparent' }}
+              >
+                {ROLE_LABELS[role]}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Right: Actions, Theme Toggle, Tour, Profile & Sign Out */}
+        <div className="flex items-center gap-3">
+          {/* RPC Status */}
+          <div className="hidden xl:flex items-center gap-1.5 mono-data text-[10px] uppercase tracking-wider px-2 py-1 rounded" style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--ink-muted)' }}>
+            <span className="live-dot" style={{ width: 5, height: 5 }} />
+            RPC Synced
+          </div>
+
+          <JudgeModeTour />
+
+          {/* Theme Toggle Button */}
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded transition-all"
+            style={{
+              background: 'var(--bg-surface)',
+              border: '1px solid var(--border)',
+              color: 'var(--ink)',
+            }}
+            title="Toggle Light / Dark Mode"
+          >
+            <span>{theme === 'dark' ? '☀' : '☽'}</span>
+            <span className="hidden sm:inline">{theme === 'dark' ? 'Light' : 'Dark'}</span>
+          </button>
+
+          {/* User Profile Pill */}
+          <div className="hidden sm:flex items-center gap-2 pl-1">
+            <div className="text-right">
+              <div className="text-xs font-bold leading-tight" style={{ color: 'var(--ink)' }}>{user.displayName}</div>
+              <div className="mono-data text-[9px] uppercase tracking-wider" style={{ color: 'var(--ink-muted)' }}>
+                {user.role.replace('_ROLE', '').replace(/_/g, ' ')}
+              </div>
+            </div>
+            <div 
+              className="h-8 w-8 rounded-full flex items-center justify-center font-bold text-xs shrink-0"
+              style={{ background: 'var(--accent)', color: 'var(--bg)' }}
+            >
+              {user.displayName.charAt(0)}
+            </div>
+          </div>
+
+          {/* Sign Out Button */}
+          <button
+            type="button"
+            onClick={onSignOut}
+            className="hidden sm:flex items-center gap-1 px-3 py-1.5 text-xs font-semibold rounded transition-all"
+            style={{
+              background: 'var(--danger-faint)',
+              border: '1px solid var(--danger)',
+              color: 'var(--danger)',
+            }}
+            title="Sign Out"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span>Sign Out</span>
+          </button>
+
+          {/* Mobile Hamburger */}
+          <button
+            type="button"
+            className="lg:hidden p-1.5 rounded"
+            onClick={() => setMobileOpen(true)}
+            style={{ color: 'var(--ink)', border: '1px solid var(--border)' }}
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Drawer Navigation */}
+      {mobileOpen && (
+        <div 
+          className="fixed inset-0 z-50 flex flex-col animate-editorial-fade"
+          style={{ background: 'var(--bg)', color: 'var(--ink)' }}
+        >
+          <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
+            <div className="flex items-center gap-2">
+              <img src="/BrandLogo.png" alt="Logo" className="h-6 w-6 object-contain" />
+              <span className="font-bold text-base">MediTrace Menu</span>
+            </div>
+            <button 
+              onClick={() => setMobileOpen(false)}
+              className="p-2 rounded"
+              style={{ color: 'var(--ink)' }}
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-2">
+            <div className="label-caps mb-2">Navigation</div>
+            <button
+              onClick={() => { onNavigate('landing'); setMobileOpen(false); }}
+              className="w-full text-left py-3 px-4 text-base font-semibold rounded"
+              style={{
+                background: currentView === 'landing' ? 'var(--accent)' : 'var(--bg-surface)',
+                color: currentView === 'landing' ? 'var(--bg)' : 'var(--ink)',
+                border: '1px solid var(--border)',
+              }}
+            >
+              Overview / Home
+            </button>
+
+            {roles.map((role) => {
+              if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
+              const isActive = currentView === role;
+              return (
+                <button
+                  key={role}
+                  onClick={() => { onNavigate(role); setMobileOpen(false); }}
+                  className="w-full text-left py-3 px-4 text-base font-semibold rounded"
+                  style={{
+                    background: isActive ? 'var(--accent)' : 'var(--bg-surface)',
+                    color: isActive ? 'var(--bg)' : 'var(--ink)',
+                    border: '1px solid var(--border)',
+                  }}
+                >
+                  {ROLE_LABELS[role]} Dashboard
+                </button>
+              );
+            })}
+
+            <div className="label-caps mt-6 mb-2">Preferences</div>
+            <button
+              onClick={() => { toggleTheme(); }}
+              className="w-full text-left py-3 px-4 text-sm font-semibold rounded flex items-center justify-between"
+              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', color: 'var(--ink)' }}
+            >
+              <span>Color Theme</span>
+              <span className="font-bold">{theme === 'dark' ? '☀ Dark Mode' : '☽ Light Mode'}</span>
+            </button>
+          </div>
+
+          <div className="p-6 flex flex-col gap-3" style={{ borderTop: '1px solid var(--border)' }}>
+            <div className="text-xs" style={{ color: 'var(--ink-muted)' }}>
+              Logged in as <strong style={{ color: 'var(--ink)' }}>{user.displayName}</strong> ({user.role})
+            </div>
+            <button
+              onClick={() => { onSignOut(); setMobileOpen(false); }}
+              className="w-full py-3 text-sm font-bold uppercase rounded flex items-center justify-center gap-2"
+              style={{ background: 'var(--danger)', color: '#fff' }}
+            >
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </button>
+          </div>
+        </div>
+      )}
+    </header>
+  );
+}
+
+// ─────────────────────────────────────────────────────────────
+// LANDING PAGE SECTIONS
+// ─────────────────────────────────────────────────────────────
+function LandingHero({ navigate }: { navigate: (v: ViewState) => void }) {
+  return (
+    <section className="py-12 sm:py-16" style={{ borderBottom: '1px solid var(--border)' }}>
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 lg:gap-16 items-end">
           <div>
-            {/* Eyebrow — very small, mono, left-anchored */}
-            <div className="flex items-center gap-3 mb-8">
+            <div className="flex items-center gap-2 mb-6">
               <span className="live-dot" />
-              <span className="mono-data label-caps" style={{ color: 'var(--ink-muted)' }}>
+              <span className="mono-data label-caps">
                 Pharmaceutical Integrity Ledger · Arbitrum L2
               </span>
             </div>
 
-            {/* Primary headline — NOT centered, NOT generic */}
             <h1 className="display-hero mb-6" style={{ color: 'var(--ink)', maxWidth: '18ch' }}>
               The drug supply chain has no memory.
             </h1>
 
-            {/* Supporting — offset from headline with deliberate gap, narrower column */}
             <p style={{
               fontSize: '1.0625rem', lineHeight: '1.65',
               color: 'var(--ink-muted)', maxWidth: '52ch',
-              marginBottom: '2.5rem',
+              marginBottom: '2rem',
             }}>
               MediTrace writes every custody event — from synthesis to dispensary —
               immutably onto blockchain. Spoilage is automatic. Counterfeits are impossible.
@@ -200,28 +453,16 @@ function LandingHero({ user, navigate }: any) {
             </p>
 
             <div className="flex flex-wrap items-center gap-4">
-              <button
-                onClick={() => navigate('manufacturer')}
-                className="btn-primary"
-              >
-                Open Dashboard
+              <button onClick={() => navigate('manufacturer')} className="btn-primary">
+                Open Manufacturer Terminal
               </button>
-              <a
-                href="https://meditrace-org.gitbook.io/docs"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-ghost"
-              >
-                Technical Docs <ExternalLink className="h-3.5 w-3.5" />
-              </a>
+              <button onClick={() => navigate('admin')} className="btn-ghost">
+                Admin Console
+              </button>
             </div>
           </div>
 
-          {/* Right column — telemetry stat strip, NOT decorative */}
-          <div style={{
-            display: 'flex', flexDirection: 'column', gap: '1px',
-            borderTop: '1px solid var(--border)',
-          }}>
+          <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>
             {[
               { label: 'Batches on chain', value: '4,821', unit: '' },
               { label: 'Temp violations caught', value: '38', unit: 'this quarter' },
@@ -231,7 +472,7 @@ function LandingHero({ user, navigate }: any) {
               <div
                 key={label}
                 style={{
-                  padding: '1rem 0',
+                  padding: '0.875rem 0',
                   borderBottom: '1px solid var(--border)',
                   display: 'grid',
                   gridTemplateColumns: '1fr auto',
@@ -255,8 +496,7 @@ function LandingHero({ user, navigate }: any) {
           </div>
         </div>
 
-        {/* News ticker — full width below the split */}
-        <div className="mt-10">
+        <div className="mt-8">
           <NewsTicker />
         </div>
       </div>
@@ -265,7 +505,6 @@ function LandingHero({ user, navigate }: any) {
 }
 
 function LandingProblemSolution() {
-  // Numbered-list format — not icon-blob cards
   const problems = [
     {
       index: '01',
@@ -305,26 +544,24 @@ function LandingProblemSolution() {
   return (
     <section style={{ borderBottom: '1px solid var(--border)' }}>
       {/* Problems */}
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 py-16 lg:py-20">
-        <div className="mb-10" style={{ paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
-          <span className="label-caps" style={{ color: 'var(--danger)' }}>The problem</span>
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8 py-16">
+        <div className="mb-8" style={{ paddingBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
+          <span className="label-caps" style={{ color: 'var(--danger)' }}>The Problem</span>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0" style={{ borderTop: '1px solid var(--border)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {problems.map(({ index, heading, body }) => (
             <div
               key={index}
-              style={{
-                padding: '2rem 1.75rem',
-                borderRight: '1px solid var(--border)',
-              }}
+              className="p-6 rounded-xl"
+              style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)' }}
             >
-              <div className="mono-data mb-5" style={{ fontSize: '0.65rem', color: 'var(--ink-faint)', letterSpacing: '0.1em' }}>
+              <div className="mono-data mb-3" style={{ fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em' }}>
                 {index}
               </div>
-              <h3 style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.35, marginBottom: '0.75rem', color: 'var(--ink)' }}>
+              <h3 style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.35, marginBottom: '0.5rem', color: 'var(--ink)' }}>
                 {heading}
               </h3>
-              <p style={{ fontSize: '0.8125rem', lineHeight: 1.65, color: 'var(--ink-muted)' }}>
+              <p style={{ fontSize: '0.8125rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
                 {body}
               </p>
             </div>
@@ -334,26 +571,24 @@ function LandingProblemSolution() {
 
       {/* Solutions */}
       <div style={{ background: 'var(--bg-surface)', borderTop: '1px solid var(--border)' }}>
-        <div className="mx-auto max-w-[1440px] px-6 sm:px-10 py-16 lg:py-20">
-          <div className="mb-10" style={{ paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)' }}>
-            <span className="label-caps" style={{ color: 'var(--success)' }}>The fix</span>
+        <div className="mx-auto max-w-[1440px] px-4 sm:px-8 py-16">
+          <div className="mb-8" style={{ paddingBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
+            <span className="label-caps" style={{ color: 'var(--success)' }}>The Technological Solution</span>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0" style={{ borderTop: '1px solid var(--border)' }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {solutions.map(({ index, heading, body }) => (
               <div
                 key={index}
-                style={{
-                  padding: '2rem 1.75rem',
-                  borderRight: '1px solid var(--border)',
-                }}
+                className="p-6 rounded-xl"
+                style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
               >
-                <div className="mono-data mb-5" style={{ fontSize: '0.65rem', color: 'var(--ink-faint)', letterSpacing: '0.1em' }}>
+                <div className="mono-data mb-3" style={{ fontSize: '0.7rem', color: 'var(--ink-faint)', letterSpacing: '0.1em' }}>
                   {index}
                 </div>
-                <h3 style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.35, marginBottom: '0.75rem', color: 'var(--ink)' }}>
+                <h3 style={{ fontSize: '1rem', fontWeight: 600, lineHeight: 1.35, marginBottom: '0.5rem', color: 'var(--ink)' }}>
                   {heading}
                 </h3>
-                <p style={{ fontSize: '0.8125rem', lineHeight: 1.65, color: 'var(--ink-muted)' }}>
+                <p style={{ fontSize: '0.8125rem', lineHeight: 1.6, color: 'var(--ink-muted)' }}>
                   {body}
                 </p>
               </div>
@@ -367,15 +602,14 @@ function LandingProblemSolution() {
 
 function LandingData() {
   return (
-    <section className="mx-auto max-w-[1440px] px-6 sm:px-10 py-16 lg:py-20">
-      {/* Two-column — globe left, graph right. Not equal weight. */}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8 lg:gap-12">
+    <section className="mx-auto max-w-[1440px] px-4 sm:px-8 py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-[2fr_3fr] gap-8">
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-          <div className="label-caps mb-6">Global distribution network</div>
+          <div className="label-caps mb-4">Global Distribution Network</div>
           <GlobeComponent />
         </div>
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
-          <div className="label-caps mb-6">Live telemetry stream</div>
+          <div className="label-caps mb-4">Live Telemetry Stream</div>
           <RealtimeGraph />
         </div>
       </div>
@@ -383,369 +617,9 @@ function LandingData() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// MARKETING NAV
-// ─────────────────────────────────────────────────────────────────────────────
-function MarketingNav({ user, onSignOut, navigate, theme, toggle }: any) {
-  const [mobileOpen, setMobileOpen] = useState(false);
-
-  return (
-    <>
-      <header style={{
-        position: 'fixed', top: 0, left: 0, right: 0, zIndex: 40,
-        background: 'var(--bg-overlay)',
-        backdropFilter: 'blur(10px)',
-        WebkitBackdropFilter: 'blur(10px)',
-        borderBottom: '1px solid var(--border)',
-        height: '3.25rem',
-        display: 'flex', alignItems: 'center',
-      }}>
-        <div className="mx-auto max-w-[1440px] w-full px-6 flex items-center justify-between">
-          {/* Wordmark */}
-          <button
-            onClick={() => navigate('landing')}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <span style={{ fontSize: '0.9375rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-              MediTrace
-            </span>
-            <span className="live-dot" />
-          </button>
-
-          {/* Desktop nav */}
-          <nav className="hidden xl:flex items-center gap-1">
-            {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
-              if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
-              return (
-                <button
-                  key={role}
-                  onClick={() => navigate(role)}
-                  style={{
-                    padding: '0.375rem 0.875rem',
-                    fontSize: '0.8rem',
-                    fontWeight: 500,
-                    color: 'var(--ink-muted)',
-                    background: 'none',
-                    border: 'none',
-                    borderRadius: 'var(--radius)',
-                    cursor: 'pointer',
-                    transition: 'color 120ms',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-muted)')}
-                >
-                  {ROLE_LABELS[role]}
-                </button>
-              );
-            })}
-          </nav>
-
-          <div className="flex items-center gap-3">
-            <JudgeModeTour />
-            {/* Theme toggle */}
-            <button
-              onClick={toggle}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              style={{
-                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
-                padding: '0.3rem 0.625rem',
-                background: 'none', border: '1px solid var(--border)',
-                borderRadius: 'var(--radius)', cursor: 'pointer',
-                color: 'var(--ink-muted)',
-                fontSize: '0.7rem', fontWeight: 500,
-                whiteSpace: 'nowrap',
-              }}
-            >
-              {theme === 'dark' ? '☀ Light' : '☽ Dark'}
-            </button>
-            <button
-              onClick={onSignOut}
-              className="hidden xl:block"
-              style={{
-                padding: '0.375rem 0.75rem', fontSize: '0.8rem', fontWeight: 500,
-                color: 'var(--ink-muted)', background: 'none', border: 'none', cursor: 'pointer',
-              }}
-            >
-              Sign out
-            </button>
-            {/* Mobile hamburger */}
-            <button
-              className="xl:hidden"
-              onClick={() => setMobileOpen(true)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink)', padding: '0.25rem' }}
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      {/* Full-screen mobile overlay — marketing site only */}
-      {mobileOpen && (
-        <div
-          className="animate-editorial-fade"
-          style={{
-            position: 'fixed', inset: 0, zIndex: 50,
-            background: 'var(--bg)',
-            display: 'flex', flexDirection: 'column',
-          }}
-        >
-          {/* Top bar of overlay */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '0.875rem 1.5rem',
-            borderBottom: '1px solid var(--border)',
-          }}>
-            <span style={{ fontSize: '0.9375rem', fontWeight: 700, color: 'var(--ink)' }}>MediTrace</span>
-            <button
-              onClick={() => setMobileOpen(false)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink)', padding: '0.25rem' }}
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Large nav links — stacked, left-aligned */}
-          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '2rem 2.5rem', gap: '0.25rem' }}>
-            {(Object.keys(ROLE_LABELS) as DashboardRole[]).map((role) => {
-              if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
-              return (
-                <button
-                  key={role}
-                  onClick={() => { navigate(role); setMobileOpen(false); }}
-                  style={{
-                    textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer',
-                    fontSize: 'clamp(1.75rem, 6vw, 2.5rem)',
-                    fontWeight: 600, letterSpacing: '-0.025em',
-                    color: 'var(--ink-muted)',
-                    padding: '0.625rem 0',
-                    borderBottom: '1px solid var(--border)',
-                    transition: 'color 120ms',
-                  }}
-                  onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink)')}
-                  onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-muted)')}
-                >
-                  {ROLE_LABELS[role]}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Footer of overlay */}
-          <div style={{ padding: '1.5rem 2.5rem', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '0.875rem' }}>
-            <a
-              href="https://meditrace-org.gitbook.io/docs"
-              target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: '0.875rem', color: 'var(--ink-muted)', display: 'flex', alignItems: 'center', gap: '0.375rem' }}
-            >
-              Documentation <ExternalLink className="h-3.5 w-3.5" />
-            </a>
-            <button
-              onClick={() => { onSignOut(); setMobileOpen(false); }}
-              style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.875rem', color: 'var(--danger)', fontWeight: 500 }}
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      )}
-      {/* Push content below fixed nav */}
-      <div style={{ height: '3.25rem' }} />
-    </>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// DASHBOARD TOPBAR
-// ─────────────────────────────────────────────────────────────────────────────
-function DashboardTopBar({ user, navigate, setSidebarOpen, theme, toggle }: any) {
-  return (
-    <header style={{
-      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 30, height: '3.5rem',
-      background: 'var(--bg-surface)',
-      borderBottom: '1px solid var(--border)',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      padding: '0 1.5rem',
-    }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        <button
-          className="xl:hidden"
-          onClick={() => setSidebarOpen(true)}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)', padding: '0.25rem' }}
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <button
-          onClick={() => navigate('landing')}
-          style={{ background: 'none', border: 'none', cursor: 'pointer', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '-0.015em', color: 'var(--ink)' }}
-        >
-          MediTrace
-        </button>
-      </div>
-
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        {/* RPC status */}
-        <div className="hidden sm:flex items-center gap-2 mono-data"
-          style={{ fontSize: '0.625rem', color: 'var(--ink-muted)', padding: '0.25rem 0.625rem', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}>
-          <span className="live-dot" style={{ width: 5, height: 5 }} />
-          RPC Synced
-        </div>
-
-        <JudgeModeTour />
-
-        {/* Theme toggle */}
-        <button
-          onClick={toggle}
-          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
-          style={{
-            display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
-            padding: '0.3rem 0.5rem',
-            background: 'none', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)', cursor: 'pointer',
-            color: 'var(--ink-muted)',
-            fontSize: '0.7rem', fontWeight: 500,
-          }}
-        >
-          {theme === 'dark' ? '☀ Light' : '☽ Dark'}
-        </button>
-
-        {/* Sign out — always visible in topbar */}
-        <button
-          onClick={() => navigate('landing')}
-          title="Back to home"
-          style={{
-            background: 'none', border: '1px solid var(--border)',
-            borderRadius: 'var(--radius)', cursor: 'pointer',
-            padding: '0.3rem 0.625rem',
-            fontSize: '0.75rem', fontWeight: 500,
-            color: 'var(--ink-muted)',
-          }}
-        >
-          ← Home
-        </button>
-
-        {/* User chip */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <div className="hidden sm:block" style={{ textAlign: 'right' }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--ink)' }}>{user.displayName}</div>
-            <div className="mono-data" style={{ fontSize: '0.6rem', color: 'var(--ink-muted)', letterSpacing: '0.08em' }}>
-              {user.role.replace('_ROLE', '').replace(/_/g, ' ')}
-            </div>
-          </div>
-          <div style={{
-            width: '1.875rem', height: '1.875rem', borderRadius: '50%',
-            background: 'var(--accent)', color: 'var(--bg)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            fontWeight: 700, fontSize: '0.75rem',
-          }}>
-            {user.displayName.charAt(0)}
-          </div>
-        </div>
-      </div>
-    </header>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// DASHBOARD SIDEBAR — slide-out drawer, dashboard only
-// ─────────────────────────────────────────────────────────────────────────────
-function DashboardSidebar({ user, view, navigate, isOpen, setIsOpen, onSignOut }: any) {
-  const roles = Object.keys(ROLE_LABELS) as DashboardRole[];
-
-  return (
-    <>
-      {isOpen && (
-        <div
-          className="xl:hidden animate-editorial-fade"
-          onClick={() => setIsOpen(false)}
-          style={{
-            position: 'fixed', inset: 0, zIndex: 40,
-            background: 'rgba(42,42,42,0.4)',
-            backdropFilter: 'blur(3px)',
-          }}
-        />
-      )}
-      <aside className={isOpen ? 'sidebar-open' : 'sidebar-closed'} style={{
-        position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
-        width: '15rem',
-        background: 'var(--bg-surface)',
-        borderRight: '1px solid var(--border)',
-        display: 'flex', flexDirection: 'column',
-        paddingTop: '3.5rem',
-      }}>
-        {/* Mobile close */}
-        <div className="xl:hidden" style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--ink)' }}>MediTrace</span>
-          <button onClick={() => setIsOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--ink-muted)' }}>
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* Nav */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.25rem 0.75rem', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <div className="label-caps" style={{ marginBottom: '0.5rem', paddingLeft: '0.75rem' }}>Dashboards</div>
-          {roles.map((role) => {
-            if (role === 'role-allocation' && user.role !== 'SUPERIOR_HEAD_ROLE') return null;
-            const active = view === role;
-            return (
-              <button
-                key={role}
-                onClick={() => navigate(role)}
-                style={{
-                  width: '100%', textAlign: 'left',
-                  padding: '0.5rem 0.75rem',
-                  borderRadius: 'var(--radius)',
-                  fontSize: '0.8375rem', fontWeight: active ? 600 : 400,
-                  color: active ? 'var(--bg)' : 'var(--ink-muted)',
-                  background: active ? 'var(--accent)' : 'none',
-                  border: 'none', cursor: 'pointer',
-                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  transition: 'background 120ms, color 120ms',
-                }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--accent-faint)'; e.currentTarget.style.color = 'var(--ink)'; } }}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--ink-muted)'; } }}
-              >
-                {ROLE_LABELS[role]}
-                {active && <ChevronRight className="h-3.5 w-3.5 opacity-60" />}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Footer actions */}
-        <div style={{ padding: '0.75rem', borderTop: '1px solid var(--border)', display: 'flex', flexDirection: 'column', gap: '2px' }}>
-          <a
-            href="https://meditrace-org.gitbook.io/docs"
-            target="_blank" rel="noopener noreferrer"
-            style={{
-              display: 'flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.5rem 0.75rem', borderRadius: 'var(--radius)',
-              fontSize: '0.8rem', color: 'var(--ink-muted)', textDecoration: 'none',
-            }}
-          >
-            <ExternalLink className="h-3.5 w-3.5" /> Docs
-          </a>
-          <button
-            onClick={onSignOut}
-            style={{
-              textAlign: 'left', width: '100%',
-              display: 'flex', alignItems: 'center', gap: '0.5rem',
-              padding: '0.5rem 0.75rem', borderRadius: 'var(--radius)',
-              fontSize: '0.8rem', color: 'var(--danger)',
-              background: 'none', border: 'none', cursor: 'pointer',
-            }}
-          >
-            <LogOut className="h-3.5 w-3.5" /> Sign out
-          </button>
-        </div>
-      </aside>
-    </>
-  );
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
 // ADMIN DASHBOARD
-// ─────────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────
 function AdminDashboard() {
   const { alerts, batches } = useLedger();
   const unackCount = alerts.filter((a) => !a.acknowledged).length;
@@ -753,54 +627,45 @@ function AdminDashboard() {
   const isDemo = !process.env.NEXT_PUBLIC_CONTRACT_ADDRESS
     || process.env.NEXT_PUBLIC_CONTRACT_ADDRESS === '0xF279C66A37afe2f5d5C029D53655235f14e16204';
 
-  const tabs: { key: 'alerts'|'audit'|'search'; label: string; badge?: number }[] = [
+  const tabs: { key: 'alerts' | 'audit' | 'search'; label: string; badge?: number }[] = [
     { key: 'alerts', label: 'Alerts', badge: unackCount },
     { key: 'audit', label: 'Audit Trail' },
-    { key: 'search', label: 'Search' },
+    { key: 'search', label: 'Search & Ledger' },
   ];
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+    <div className="space-y-6">
       {isDemo && (
-        <div style={{
-          padding: '0.5rem 1rem', fontSize: '0.7rem', fontWeight: 700,
-          letterSpacing: '0.12em', textTransform: 'uppercase',
-          background: 'var(--danger-faint)', color: 'var(--danger)',
-          border: '1px solid var(--border)', borderRadius: 'var(--radius)',
-        }} className="mono-data">
-          Demo mode — hardcoded contract address
+        <div 
+          className="mono-data px-4 py-2 text-xs font-bold uppercase tracking-wider rounded"
+          style={{ background: 'var(--danger-faint)', color: 'var(--danger)', border: '1px solid var(--danger)' }}
+        >
+          Demo Mode · Using Hardcoded Sepolia Contract Address
         </div>
       )}
-      <div style={{ display: 'flex', gap: '0.5rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
+      
+      <div className="flex gap-2 pb-3" style={{ borderBottom: '1px solid var(--border)' }}>
         {tabs.map(({ key, label, badge }) => (
           <button
             key={key}
             onClick={() => setSubTab(key)}
+            className="px-4 py-2 text-xs font-bold uppercase tracking-wider rounded transition-all flex items-center gap-2"
             style={{
-              padding: '0.4rem 0.875rem',
-              fontSize: '0.775rem', fontWeight: 500,
-              borderRadius: 'var(--radius)',
-              cursor: 'pointer',
-              background: subTab === key ? 'var(--accent)' : 'none',
+              background: subTab === key ? 'var(--accent)' : 'var(--bg-surface)',
               color: subTab === key ? 'var(--bg)' : 'var(--ink-muted)',
-              border: subTab === key ? '1px solid var(--accent)' : '1px solid var(--border)',
-              display: 'inline-flex', alignItems: 'center', gap: '0.5rem',
-              transition: 'all 120ms',
+              border: '1px solid var(--border)',
             }}
           >
             {label}
-            {badge && badge > 0 && (
-              <span style={{
-                background: 'var(--danger)', color: 'var(--bg)',
-                padding: '0 0.375rem', borderRadius: '999px',
-                fontSize: '0.6rem', fontWeight: 700, lineHeight: '1.4rem',
-              }}>
+            {badge && badge > 0 ? (
+              <span className="px-1.5 py-0.5 rounded-full text-[10px] font-bold" style={{ background: 'var(--danger)', color: '#fff' }}>
                 {badge}
               </span>
-            )}
+            ) : null}
           </button>
         ))}
       </div>
+
       {subTab === 'alerts' && <AlertsInbox />}
       {subTab === 'audit' && <AuditLog />}
       {subTab === 'search' && <SearchFilter batches={batches} />}
@@ -808,180 +673,86 @@ function AdminDashboard() {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// ACCESS DENIED
-// ─────────────────────────────────────────────────────────────────────────────
-function AccessDenied({ role, view }: { role: string; view: DashboardRole }) {
+function AccessDenied({ role, view, onReturnHome }: { role: string; view: DashboardRole; onReturnHome: () => void }) {
   return (
-    <div style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', justifyContent: 'center', gap: '1rem' }}>
-      <div className="chip chip-danger">Access restricted</div>
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, letterSpacing: '-0.025em', color: 'var(--ink)' }}>
-        Insufficient permissions.
-      </h2>
-      <p style={{ fontSize: '0.875rem', color: 'var(--ink-muted)', maxWidth: '42ch', lineHeight: 1.6 }}>
-        Your current role <span className="mono-data">{role}</span> does not grant access to the{' '}
+    <div className="min-h-[50vh] flex flex-col items-center justify-center text-center gap-4">
+      <div className="p-3 rounded-full" style={{ background: 'var(--danger-faint)', color: 'var(--danger)' }}>
+        <Lock className="h-8 w-8" />
+      </div>
+      <h2 className="text-2xl font-bold tracking-tight" style={{ color: 'var(--ink)' }}>Access Restricted</h2>
+      <p className="text-sm max-w-md" style={{ color: 'var(--ink-muted)' }}>
+        Your account role (<strong style={{ color: 'var(--ink)' }}>{role}</strong>) does not have permission to access the{' '}
         <strong>{ROLE_LABELS[view]}</strong> dashboard.
       </p>
-      <a
-        href="https://meditrace-org.gitbook.io/docs"
-        target="_blank" rel="noopener noreferrer"
-        className="btn-ghost"
-        style={{ marginTop: '0.5rem', textDecoration: 'none' }}
-      >
-        View permission model <ExternalLink className="h-3.5 w-3.5" />
-      </a>
+      <button onClick={onReturnHome} className="btn-primary mt-2">
+        Return to Overview
+      </button>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// FOOTER — multi-column, left-anchored, no centered text
-// ─────────────────────────────────────────────────────────────────────────────
 function SiteFooter({ onSignOut }: { onSignOut: () => void }) {
   return (
     <footer style={{ borderTop: '1px solid var(--border)', background: 'var(--bg-surface)' }}>
-      <div className="mx-auto max-w-[1440px] px-6 sm:px-10 py-12 lg:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
-          {/* Brand column */}
-          <div className="col-span-2 md:col-span-1" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <div style={{ fontWeight: 700, fontSize: '0.9375rem', letterSpacing: '-0.02em', color: 'var(--ink)' }}>
-              MediTrace
-            </div>
-            <p style={{ fontSize: '0.8rem', lineHeight: 1.65, color: 'var(--ink-muted)', maxWidth: '26ch' }}>
-              Pharmaceutical integrity ledger. Arbitrum L2. Built for India.
+      <div className="mx-auto max-w-[1440px] px-4 sm:px-8 py-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="col-span-2 md:col-span-1 space-y-2">
+            <div className="font-bold text-base" style={{ color: 'var(--ink)' }}>MediTrace</div>
+            <p className="text-xs leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
+              Cryptographic supply chain ledger built for pharmaceutical integrity.
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingTop: '0.25rem' }}>
+            <div className="flex items-center gap-2 pt-2">
               <span className="live-dot" />
-              <span className="mono-data" style={{ fontSize: '0.6rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Systems operational
+              <span className="mono-data text-[10px] uppercase tracking-wider" style={{ color: 'var(--ink-muted)' }}>
+                Systems Operational
               </span>
             </div>
           </div>
 
-          {/* Legal column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            <div className="label-caps" style={{ marginBottom: '0.25rem' }}>Legal</div>
-            <LegalDialog title="Terms & Conditions" trigger="Terms">
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>1. PROPRIETARY SOFTWARE & COPYRIGHT</h5>
-                <p>MediTrace is proprietary software. All source code, architecture, smart contracts, and associated intellectual property are strictly protected under the Copyright Act, 1957. Unauthorized reproduction, modification, or distribution is strictly prohibited.</p>
-              </section>
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>2. COMPLIANCE</h5>
-                <p>The platform operates in strict adherence to the Drugs and Cosmetics Act, 1940, and the Pharmacy Practice Regulations, 2015. All entities must hold valid CDSCO licenses.</p>
-              </section>
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>3. TELEMETRY & IOT INTEGRITY</h5>
-                <p>Data ingested from IoT temperature sensors is written immutably to the Arbitrum Sepolia blockchain. Under the Information Technology Act, 2000, these records serve as legally valid electronic evidence.</p>
-              </section>
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>4. LIABILITY DISCLAIMER</h5>
-                <p>MediTrace serves as a cryptographic verification layer. The automated smart contract triggers regarding spoilage are final and mathematically enforced.</p>
-              </section>
-            </LegalDialog>
-            <LegalDialog title="Privacy Policy" trigger="Privacy">
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>1. DIGITAL PERSONAL DATA PROTECTION ACT (DPDP), 2023</h5>
-                <p>MediTrace fully complies with India's DPDP Act, 2023. We collect only the minimum necessary enterprise data required for platform functionality and RBAC enforcement.</p>
-              </section>
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>2. PUBLIC BLOCKCHAIN DISCLOSURE</h5>
-                <p>Users acknowledge that supply chain events written to the public Web3 ledger cannot be erased, edited, or modified by any party, including MediTrace.</p>
-              </section>
-              <section>
-                <h5 style={{ fontWeight: 600, color: 'var(--ink)', marginBottom: '0.5rem' }}>3. DATA RETENTION</h5>
-                <p>To comply with MoHFW auditing standards, off-chain account data is retained for a minimum of 7 years. Blockchain transactions are retained perpetually on the decentralized network.</p>
-              </section>
-            </LegalDialog>
+          <div>
+            <div className="label-caps mb-3">Documentation</div>
+            <ul className="space-y-2 text-xs" style={{ color: 'var(--ink-muted)' }}>
+              <li>
+                <a href="https://meditrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  GitBook Documentation
+                </a>
+              </li>
+              <li>
+                <a href="https://sepolia.arbiscan.io" target="_blank" rel="noopener noreferrer" className="hover:underline">
+                  Arbitrum Explorer
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Contact column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            <div className="label-caps" style={{ marginBottom: '0.25rem' }}>Contact</div>
-            <a href="mailto:anirban4ru@gmail.com"
-              style={{ fontSize: '0.8rem', color: 'var(--ink-muted)', textDecoration: 'none' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-muted)')}>
-              Support
-            </a>
-            <a href="https://meditrace-org.gitbook.io/docs" target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: '0.8rem', color: 'var(--ink-muted)', textDecoration: 'none' }}
-              onMouseEnter={e => (e.currentTarget.style.color = 'var(--accent)')}
-              onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-muted)')}>
-              Documentation
-            </a>
+          <div>
+            <div className="label-caps mb-3">Contact</div>
+            <ul className="space-y-2 text-xs" style={{ color: 'var(--ink-muted)' }}>
+              <li>
+                <a href="mailto:anirban4ru@gmail.com" className="hover:underline">
+                  Support & Auditing
+                </a>
+              </li>
+            </ul>
           </div>
 
-          {/* Session column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
-            <div className="label-caps" style={{ marginBottom: '0.25rem' }}>Session</div>
+          <div>
+            <div className="label-caps mb-3">Session</div>
             <button
               onClick={onSignOut}
-              style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--danger)', fontWeight: 500 }}
+              className="text-xs font-semibold hover:underline flex items-center gap-1"
+              style={{ color: 'var(--danger)' }}
             >
-              Sign out
+              <LogOut className="h-3.5 w-3.5" /> Sign Out
             </button>
           </div>
         </div>
 
-        {/* Bottom strip */}
-        <div style={{
-          marginTop: '2.5rem', paddingTop: '1.5rem',
-          borderTop: '1px solid var(--border)',
-          display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-          gap: '1rem', flexWrap: 'wrap',
-        }}>
-          <span className="mono-data" style={{ fontSize: '0.6875rem', color: 'var(--ink-faint)' }}>
-            © 2026 MediTrace. All Rights Reserved. Proprietary Software.
-          </span>
-          <span className="mono-data" style={{ fontSize: '0.6875rem', color: 'var(--ink-faint)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-            Arbitrum Sepolia Testnet
-          </span>
+        <div className="mt-8 pt-6 flex items-center justify-between text-[10px] mono-data" style={{ borderTop: '1px solid var(--border)', color: 'var(--ink-muted)' }}>
+          <div>© 2026 MediTrace · All Rights Reserved.</div>
+          <div>Arbitrum Sepolia Testnet</div>
         </div>
       </div>
     </footer>
-  );
-}
-
-function LegalDialog({ title, trigger, children }: { title: string; trigger: string; children: React.ReactNode }) {
-  return (
-    <Dialog.Root>
-      <Dialog.Trigger asChild>
-        <button style={{ textAlign: 'left', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.8rem', color: 'var(--ink-muted)', fontWeight: 400 }}
-          onMouseEnter={e => (e.currentTarget.style.color = 'var(--ink)')}
-          onMouseLeave={e => (e.currentTarget.style.color = 'var(--ink-muted)')}>
-          {trigger}
-        </button>
-      </Dialog.Trigger>
-      <Dialog.Portal>
-        <Dialog.Overlay style={{
-          position: 'fixed', inset: 0, zIndex: 50,
-          background: 'rgba(42,42,42,0.5)',
-          backdropFilter: 'blur(4px)',
-        }} />
-        <Dialog.Content style={{
-          position: 'fixed', top: '50%', left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 51, width: '90vw', maxWidth: '40rem',
-          background: 'var(--bg-surface)',
-          border: '1px solid var(--border)',
-          borderRadius: 'var(--radius)',
-          padding: '2rem',
-          maxHeight: '85vh', overflowY: 'auto',
-        }}>
-          <Dialog.Title style={{ fontSize: '1.125rem', fontWeight: 700, letterSpacing: '-0.02em', color: 'var(--ink)', marginBottom: '1.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--border)' }}>
-            {title}
-          </Dialog.Title>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', fontSize: '0.8125rem', lineHeight: 1.7, color: 'var(--ink-muted)' }}>
-            {children}
-          </div>
-          <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
-            <Dialog.Close asChild>
-              <button className="btn-primary">Acknowledge</button>
-            </Dialog.Close>
-          </div>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
   );
 }

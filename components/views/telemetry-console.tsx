@@ -280,7 +280,7 @@ export function TelemetryConsole() {
             </ResponsiveContainer>
           </div>
 
-          <div className="mt-4 grid grid-cols-5 border-2 border-black">
+          <div className="mt-4 grid grid-cols-5 rounded overflow-hidden" style={{ border: "1px solid var(--border)" }}>
             <Stat label="Readings" value={String(selected.telemetry.length)} />
             <Stat label="Min / Max" value={`${fmtTemp(minTemp)} / ${fmtTemp(maxTemp)}`} />
             <Stat label="Mean" value={fmtTemp(avgTemp)} />
@@ -502,14 +502,18 @@ function Stat({
 }) {
   return (
     <div
-      className="border-r-2 border-black p-3 last:border-r-0"
-      style={{ background: danger ? 'var(--danger)' : '#fff', color: danger ? '#fff' : 'var(--ink)' }}
+      className="p-3"
+      style={{
+        background: danger ? 'var(--danger-faint)' : 'var(--bg-surface)',
+        color: danger ? 'var(--danger)' : 'var(--ink)',
+        borderRight: '1px solid var(--border)',
+      }}
     >
-      <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.14em] opacity-70">
-        {Icon && <Icon className="h-3 w-3" strokeWidth={2.5} />}
+      <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.14em] opacity-75">
+        {Icon && <Icon className="h-3 w-3 shrink-0" />}
         {label}
       </div>
-      <div className="mt-1 mono-data text-[16px] font-bold">{value}</div>
+      <div className="mt-1 mono-data text-[15px] font-bold">{value}</div>
     </div>
   );
 }

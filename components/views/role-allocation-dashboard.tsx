@@ -79,8 +79,8 @@ export function RoleAllocationDashboard() {
          <span className="mono-data text-[10px] uppercase text-ink/50 dark:text-[var(--bg)]/50">SUPERIOR HEAD PRIVILEGES</span>
       </div>
 
-      <div className="border shadow-ambient bg-card rounded-xl flex flex-col h-full bg-base dark:bg-[var(--ink)] dark:border-white">
-        <div className="flex items-center justify-between border-b-2 border-black dark:border-white px-4 py-3 bg-[var(--bg-surface)] dark:bg-[var(--ink)]/90">
+      <div className="border shadow-ambient bg-card rounded-xl flex flex-col h-full bg-base  ">
+        <div className="flex items-center justify-between border-b border-[var(--border)]  px-4 py-3 bg-[var(--bg-surface)] /90">
           <div className="flex items-center gap-2">
             <Users className="h-5 w-5 dark:text-[var(--bg)]" strokeWidth={2.5} />
             <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Registered Users</h2>
@@ -91,7 +91,7 @@ export function RoleAllocationDashboard() {
         </div>
         
         {error && (
-          <div className="bg-[var(--danger)] text-[var(--bg)] p-3 text-[12px] font-bold uppercase tracking-wider text-center border-b-2 border-black">
+          <div className="bg-[var(--danger)] text-[var(--bg)] p-3 text-[12px] font-bold uppercase tracking-wider text-center border-b border-[var(--border)]">
             {error}
           </div>
         )}
@@ -102,7 +102,7 @@ export function RoleAllocationDashboard() {
           ) : (
             <table className="w-full border-collapse text-left">
               <thead>
-                <tr className="border-b-2 border-black dark:border-white text-[10px] uppercase tracking-[0.14em] text-ink/60 dark:text-[var(--bg)]/60">
+                <tr className="border-b border-[var(--border)]  text-[10px] uppercase tracking-[0.14em] text-ink/60 dark:text-[var(--bg)]/60">
                   <th className="px-4 py-3">User ID / Profile</th>
                   <th className="px-4 py-3">Display Name</th>
                   <th className="px-4 py-3">Current Role</th>
@@ -127,7 +127,7 @@ export function RoleAllocationDashboard() {
                           <span className="mono-data text-[10px] uppercase animate-pulse text-ink/50 dark:text-[var(--bg)]/50">Updating...</span>
                         ) : (
                           <select 
-                            className="border bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-2 py-1.5 text-[10px] mono-data font-bold uppercase cursor-pointer hover:bg-surface focus:outline-none focus:ring-2 focus:ring-black"
+                            className="border bg-base  dark:text-[var(--bg)] px-2 py-1.5 text-[10px] mono-data font-bold uppercase cursor-pointer hover:bg-surface focus:outline-none focus:ring-2 focus:ring-black"
                             value={profile.role}
                             onChange={(e) => handleRoleChange(profile.id, e.target.value as Role)}
                           >

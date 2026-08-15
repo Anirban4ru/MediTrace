@@ -87,15 +87,15 @@ export function ManufacturerDashboard() {
         rowHeight={150}
         draggableHandle=".drag-handle"
       >
-        <div key="stats" className="border-2 border-black dark:border-white shadow-ambient flex w-full h-full overflow-hidden">
-          <div className="grid grid-cols-2 md:grid-cols-6 w-full h-full">
+        <div key="stats" className="grid grid-cols-2 md:grid-cols-6 gap-3 w-full h-full">
+          
             <StatCell label="Total Batches" value={stats.total} icon={Package} />
             <StatCell label="In Transit" value={stats.inTransit} icon={Activity} accent />
             <StatCell label="Verified" value={stats.verified} icon={CheckCircle2} />
             <StatCell label="Spoiled" value={stats.spoiled} icon={AlertTriangle} danger />
             <StatCell label="Total Units" value={stats.totalUnits} icon={Hash} />
             <StatCell label="Excursion Hrs" value={Number(stats.excursionHours)} icon={Clock} />
-          </div>
+          
         </div>
 
         <div key="provision" className="flex flex-col h-full glass border dark:border-white shadow-ambient p-5 dark:bg-[var(--ink)]">
@@ -360,20 +360,22 @@ function StatCell({
   accent?: boolean;
   danger?: boolean;
 }) {
-  const bg = danger ? 'var(--danger)' : accent ? '#102A43' : 'var(--bg)';
-  const fg = danger || accent ? '#fff' : 'var(--ink)';
+  const bg = danger ? 'var(--danger-faint)' : accent ? 'var(--accent-faint)' : 'var(--bg-surface)';
+  const fg = danger ? 'var(--danger)' : accent ? 'var(--accent)' : 'var(--ink)';
+  const border = danger ? 'var(--danger)' : accent ? 'var(--accent)' : 'var(--border)';
+
   return (
     <div
-      className="border-b-2 border-black p-4 md:border-b-0 md:border-r-2 last:border-r-0"
-      style={{ background: bg, color: fg }}
+      className="p-4 flex flex-col justify-between rounded"
+      style={{ background: bg, color: fg, border: `1px solid ${border}` }}
     >
       <div className="flex items-center justify-between">
-        <span className="text-[10px] font-bold uppercase tracking-[0.16em] opacity-70">
+        <span className="text-[10px] font-bold uppercase tracking-[0.14em] opacity-80">
           {label}
         </span>
-        <Icon className="h-4 w-4" strokeWidth={2.5} />
+        <Icon className="h-4 w-4" />
       </div>
-      <div className="mt-2 mono-data text-[34px] font-bold leading-none">
+      <div className="mt-2 mono-data text-[28px] font-bold leading-none">
         {value.toLocaleString()}
       </div>
     </div>

@@ -96,7 +96,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
 
   return (
     <div className="border shadow-ambient bg-card rounded-xl">
-      <div className="flex items-center gap-2 border-b-2 border-black bg-base px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-[var(--border)] bg-base px-4 py-3">
         <Search className="h-4 w-4 shrink-0 text-ink/50" strokeWidth={2.5} />
         <input
           value={query}
@@ -112,7 +112,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
         <button
           onClick={() => setShowFilters(!showFilters)}
           className={cn(
-            'flex items-center gap-1 border-2 border-black px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors',
+            'flex items-center gap-1 border border-[var(--border)] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors',
             showFilters ? 'bg-[var(--ink)] text-[var(--bg)]' : 'bg-base hover:bg-[var(--ink)]/5'
           )}
         >
@@ -122,7 +122,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
       </div>
 
       {showFilters && (
-        <div className="flex flex-wrap items-center gap-3 border-b-2 border-black/15 bg-[var(--bg-surface)] px-4 py-3">
+        <div className="flex flex-wrap items-center gap-3 border-b border-[var(--border)]/15 bg-[var(--bg-surface)] px-4 py-3">
           <div className="flex items-center gap-1.5">
             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">Status:</span>
             <button
@@ -154,14 +154,14 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="border-2 border-black/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border border-[var(--border)]/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
             />
             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">To:</span>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="border-2 border-black/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border border-[var(--border)]/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
             />
             {(dateFrom || dateTo) && (
               <button
@@ -178,7 +178,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
       <div className="max-h-[520px] overflow-y-auto">
         <table className="w-full border-collapse text-left">
           <thead className="sticky top-0 bg-[var(--bg-surface)]">
-            <tr className="border-b-2 border-black text-[10px] uppercase tracking-[0.14em] text-ink/60">
+            <tr className="border-b border-[var(--border)] text-[10px] uppercase tracking-[0.14em] text-ink/60">
               <Th onClick={() => toggleSort('batchId')} active={sortField === 'batchId'} dir={sortDir}>
                 Batch ID
               </Th>
