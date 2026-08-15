@@ -287,7 +287,7 @@ export function PharmacyTerminal() {
 
       {/* Batch selector */}
       <section className="col-span-12 lg:col-span-4">
-        <div className="border shadow-ambient bg-card rounded-xl p-4">
+        <div className="border shadow-ambient  rounded-xl p-4">
           <h3 className="mb-3 display-heavy text-[13px] uppercase">Select Batch</h3>
           <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
             {batches.map((b) => {

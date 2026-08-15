@@ -13,7 +13,7 @@ export function AlertsInbox() {
   const acked = alerts.filter((a) => a.acknowledged);
 
   return (
-    <div className="border shadow-ambient bg-card rounded-xl">
+    <div className="border shadow-ambient  rounded-xl">
       <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="flex items-center gap-2">
           <Bell className="h-4 w-4" strokeWidth={2.5} />

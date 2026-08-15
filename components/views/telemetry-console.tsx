@@ -95,7 +95,7 @@ export function TelemetryConsole() {
 
   if (!selected) {
     return (
-      <div className="border shadow-ambient bg-card rounded-xl p-8 text-center text-[13px] uppercase tracking-[0.14em] text-ink/60">
+      <div className="border shadow-ambient  rounded-xl p-8 text-center text-[13px] uppercase tracking-[0.14em] text-ink/60">
         No batches available for telemetry ingestion.
       </div>
     );
@@ -127,7 +127,7 @@ export function TelemetryConsole() {
 
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="col-span-12 flex items-center gap-3 overflow-x-auto no-scrollbar border-2 border-black shadow-ambient bg-base p-2">
+      <div className="col-span-12 flex items-center gap-3 overflow-x-auto no-scrollbar border-2 border-black shadow-ambient  p-2">
         {inTransitBatches.slice(0, 12).map((b) => {
           const active = b.batchId === selectedId;
           return (
@@ -138,7 +138,7 @@ export function TelemetryConsole() {
                 'flex shrink-0 items-center gap-2 border-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] transition-colors',
                 active
                   ? 'border-black bg-[var(--ink)] text-[var(--bg)]'
-                  : 'border-black/30 bg-base text-ink/70 hover:border-black'
+                  : 'border-black/30  text-ink/70 hover:border-black'
               )}
             >
               <Thermometer className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -171,7 +171,7 @@ export function TelemetryConsole() {
                 onClick={() => setLiveMode(!liveMode)}
                 className={cn(
                   'flex items-center gap-1.5 border-2 border-black px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] transition-colors',
-                  liveMode ? 'bg-[var(--danger)] text-[var(--bg)]' : 'bg-base hover:bg-[var(--ink)]/5'
+                  liveMode ? 'bg-[var(--danger)] text-[var(--bg)]' : ' hover:bg-[var(--ink)]/5'
                 )}
               >
                 {liveMode ? <Square className="h-3 w-3" strokeWidth={2.5} /> : <Radio className="h-3 w-3" strokeWidth={2.5} />}
@@ -204,7 +204,7 @@ export function TelemetryConsole() {
             </span>
           </div>
 
-          <div className="h-[340px] w-full border-2 border-black bg-base/60">
+          <div className="h-[340px] w-full border-2 border-black /60">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 16, right: 20, bottom: 8, left: 0 }}>
                 <CartesianGrid stroke="#E5E5E9" strokeDasharray="2 2" />
@@ -291,7 +291,7 @@ export function TelemetryConsole() {
 
         {/* Route Map */}
         {selected.telemetry.length > 0 && (
-          <div className="border shadow-ambient bg-card rounded-xl p-4">
+          <div className="border shadow-ambient  rounded-xl p-4">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" strokeWidth={2.5} />
@@ -316,7 +316,7 @@ export function TelemetryConsole() {
 
       {/* Ingestion form + route grid */}
       <aside className="col-span-12 lg:col-span-4 space-y-4">
-        <div className="border shadow-ambient bg-card rounded-xl p-5">
+        <div className="border shadow-ambient  rounded-xl p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="display-heavy text-[13px] uppercase">Ingest Telemetry</h3>
             <Activity className="h-4 w-4" strokeWidth={2.5} />
@@ -392,7 +392,7 @@ export function TelemetryConsole() {
 
         <button
           onClick={() => exportTelemetryCSV(selected)}
-          className="border shadow-sm active:scale-[0.98] transition-transform flex w-full items-center justify-center gap-2 bg-base py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)]"
+          className="border shadow-sm active:scale-[0.98] transition-transform flex w-full items-center justify-center gap-2  py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)]"
         >
           <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
           Export Telemetry CSV
@@ -404,7 +404,7 @@ export function TelemetryConsole() {
 
 function RouteGrid({ batch }: { batch: Batch }) {
   return (
-    <div className="border shadow-ambient bg-card rounded-xl">
+    <div className="border shadow-ambient  rounded-xl">
       <div className="border-b-2 border-black px-4 py-3">
         <h3 className="display-heavy text-[13px] uppercase">Route Checkpoints</h3>
       </div>

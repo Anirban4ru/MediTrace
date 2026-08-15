@@ -18,7 +18,7 @@ export function AuditLog() {
   const { auditLog, getBatch } = useLedger();
 
   return (
-    <div className="border shadow-ambient bg-card rounded-xl">
+    <div className="border shadow-ambient  rounded-xl">
       <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="flex items-center gap-2">
           <History className="h-4 w-4" strokeWidth={2.5} />

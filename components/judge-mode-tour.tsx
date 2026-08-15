@@ -39,7 +39,7 @@ export function JudgeModeTour() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className="flex items-center gap-1.5 border-2 border-black dark:border-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] hover:bg-[var(--ink)] hover:text-[var(--bg)] dark:hover:bg-base dark:hover:text-ink transition-colors">
+        <button className="flex items-center gap-1.5 border-2 border-black dark:border-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] hover:bg-[var(--ink)] hover:text-[var(--bg)] dark:hover: dark:hover:text-ink transition-colors">
           <Map className="h-3.5 w-3.5" strokeWidth={2.5} />
           Tour
         </button>
@@ -47,7 +47,7 @@ export function JudgeModeTour() {
       
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--ink)]/40 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2 bg-base border shadow-ambient bg-card rounded-xl p-0 outline-none">
+        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2  border shadow-ambient  rounded-xl p-0 outline-none">
           <div className="flex items-center justify-between border-b-2 border-black bg-[var(--bg-surface)] px-4 py-3">
             <div className="flex items-center gap-2">
               <Play className="h-4 w-4" strokeWidth={2.5} />
@@ -63,7 +63,7 @@ export function JudgeModeTour() {
           <div className="p-6">
             <div className="mb-6 flex gap-2">
               {steps.map((_, i) => (
-                <div key={i} className={cn("h-2 flex-1 border-2 border-black", i <= step ? "bg-[var(--ink)]" : "bg-base")} />
+                <div key={i} className={cn("h-2 flex-1 border-2 border-black", i <= step ? "bg-[var(--ink)]" : "")} />
               ))}
             </div>
 
@@ -92,13 +92,13 @@ export function JudgeModeTour() {
               {step < steps.length - 1 ? (
                 <button 
                   onClick={() => setStep(step + 1)}
-                  className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover:bg-base hover:text-ink"
+                  className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover: hover:text-ink"
                 >
                   Next <ChevronRight className="h-4 w-4" />
                 </button>
               ) : (
                 <Dialog.Close asChild>
-                  <button onClick={() => setStep(0)} className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover:bg-base hover:text-ink">
+                  <button onClick={() => setStep(0)} className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover: hover:text-ink">
                     Finish
                   </button>
                 </Dialog.Close>

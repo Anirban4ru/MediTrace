@@ -95,7 +95,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
   }
 
   return (
-    <div className="border shadow-ambient bg-card rounded-xl">
+    <div className="border shadow-ambient  rounded-xl">
       <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <Search className="h-4 w-4 shrink-0 text-ink/50" strokeWidth={2.5} />
         <input

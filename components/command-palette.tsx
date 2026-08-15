@@ -26,7 +26,7 @@ export function CommandPalette({ onNavigate }: { onNavigate: (view: any) => void
       open={open}
       onOpenChange={setOpen}
       label="Global Command Menu"
-      className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[640px] -translate-x-1/2 -translate-y-1/2 overflow-hidden bg-base border shadow-ambient bg-card rounded-xl border-4 border-black shadow-ambient outline-none"
+      className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[640px] -translate-x-1/2 -translate-y-1/2 overflow-hidden  border shadow-ambient  rounded-xl border-4 border-black shadow-ambient outline-none"
     >
       <div className="flex items-center border-b-2 border-black px-4" cmdk-input-wrapper="">
         <Search className="h-5 w-5 text-ink/50" />
