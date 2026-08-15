@@ -12,79 +12,135 @@ export function JudgeModeTour() {
   const steps = [
     {
       title: "1. Manufacturer",
-      description: "Registers the product batch on the blockchain, attaching metadata and GS1 serials. This sets the initial root of trust.",
+      description: "Registers the product batch on the blockchain, attaching metadata and GS1 serials. This sets the initial cryptographic root of trust.",
       role: "MANUFACTURER_ROLE",
-      color: "bg-[var(--accent-faint)]",
+      color: "var(--accent)",
     },
     {
-      title: "2. Carrier (IoT)",
-      description: "Transports the batch while IoT sensors stream live temperature data to Supabase. Smart contracts automatically spoil the batch if temperatures breach the safe band.",
+      title: "2. Carrier (IoT Telemetry)",
+      description: "Transports the batch while IoT sensors stream live temperature telemetry. Smart contracts automatically spoil the batch if temperatures breach the safe [2.0°C, 8.0°C] band.",
       role: "CARRIER_ROLE",
-      color: "bg-[var(--danger-faint)]",
+      color: "var(--danger)",
     },
     {
       title: "3. Inspector (Pharmacy)",
-      description: "Upon arrival, the pharmacy uses computer vision (OpenCV) to verify the physical hologram against the blockchain record. They submit a final verification hash on-chain.",
+      description: "Upon arrival, the pharmacy uses computer vision (OpenCV.js) to verify physical hologram security features against the on-chain record before dispensing.",
       role: "INSPECTOR_ROLE",
-      color: "bg-[var(--success-faint)]",
+      color: "var(--success)",
     },
     {
       title: "4. Administrator",
-      description: "Has a birds-eye view of all alerts, audits, and real-time operations across the entire supply chain.",
+      description: "Birds-eye view of all temperature breach alerts, immutable audit logs, and real-time operations across the entire decentralized supply chain.",
       role: "ADMIN_ROLE",
-      color: "bg-[var(--danger)]",
+      color: "var(--accent)",
     }
   ];
 
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger asChild>
-        <button className="flex items-center gap-1.5 border-2 border-black dark:border-white px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] hover:bg-[var(--ink)] hover:text-[var(--bg)] dark:hover: dark:hover:text-ink transition-colors">
-          <Map className="h-3.5 w-3.5" strokeWidth={2.5} />
-          Tour
+        <button 
+          className="flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded transition-all hover:bg-[var(--accent-faint)]"
+          style={{
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--border)',
+            color: 'var(--ink)',
+          }}
+          title="Interactive Tour"
+        >
+          <Map className="h-3.5 w-3.5" />
+          <span>Tour</span>
         </button>
       </Dialog.Trigger>
       
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-50 bg-[var(--ink)]/40 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[500px] -translate-x-1/2 -translate-y-1/2  border shadow-ambient  rounded-xl p-0 outline-none">
-          <div className="flex items-center justify-between border-b-2 border-black bg-[var(--bg-surface)] px-4 py-3">
+        {/* Solid dimming backdrop */}
+        <Dialog.Overlay className="fixed inset-0 z-50 bg-black/65 backdrop-blur-md animate-editorial-fade" />
+        
+        {/* Opaque Modal Card */}
+        <Dialog.Content 
+          className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-2xl overflow-hidden outline-none animate-editorial-fade"
+          style={{
+            background: 'var(--bg-surface)',
+            border: '1px solid var(--border)',
+            boxShadow: '0 24px 64px rgba(0,0,0,0.35)',
+            color: 'var(--ink)',
+          }}
+        >
+          {/* Header */}
+          <div 
+            className="flex items-center justify-between px-6 py-4"
+            style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}
+          >
             <div className="flex items-center gap-2">
-              <Play className="h-4 w-4" strokeWidth={2.5} />
-              <span className="text-[14px] font-bold uppercase tracking-[0.1em]">Judge Mode Tour</span>
+              <Play className="h-4 w-4" style={{ color: 'var(--accent)' }} />
+              <span className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--ink)' }}>
+                Judge Mode Interactive Tour
+              </span>
             </div>
             <Dialog.Close asChild>
-              <button className="text-ink/50 hover:text-ink">
-                <X className="h-5 w-5" strokeWidth={2.5} />
+              <button 
+                className="p-1 rounded text-xs transition-colors hover:bg-[var(--accent-faint)]"
+                style={{ color: 'var(--ink-muted)' }}
+              >
+                <X className="h-4 w-4" />
               </button>
             </Dialog.Close>
           </div>
           
-          <div className="p-6">
-            <div className="mb-6 flex gap-2">
+          {/* Body */}
+          <div className="p-6 sm:p-8 space-y-6">
+            {/* Step Progress Indicators */}
+            <div className="flex gap-2">
               {steps.map((_, i) => (
-                <div key={i} className={cn("h-2 flex-1 border-2 border-black", i <= step ? "bg-[var(--ink)]" : "")} />
+                <div 
+                  key={i} 
+                  className="h-1.5 flex-1 rounded-full transition-all duration-300"
+                  style={{
+                    background: i <= step ? 'var(--accent)' : 'var(--border)',
+                  }}
+                />
               ))}
             </div>
 
-            <div className="min-h-[160px]">
-              <div className="mb-2 flex items-center gap-2">
-                <div className={cn("h-3 w-3 border border-black", steps[step].color)} />
-                <h3 className="display-heavy text-[20px] uppercase">{steps[step].title}</h3>
+            {/* Step Content */}
+            <div className="min-h-[140px] space-y-3">
+              <div className="flex items-center gap-2">
+                <div 
+                  className="h-2.5 w-2.5 rounded-full shrink-0" 
+                  style={{ background: steps[step].color }}
+                />
+                <h3 className="display-heavy text-xl uppercase tracking-tight" style={{ color: 'var(--ink)' }}>
+                  {steps[step].title}
+                </h3>
               </div>
-              <div className="mono-data mb-4 inline-block bg-[var(--ink)] px-2 py-0.5 text-[10px] uppercase text-[var(--bg)]">
+
+              <div 
+                className="mono-data inline-block px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider rounded"
+                style={{
+                  background: 'var(--border-faint)',
+                  color: 'var(--ink-muted)',
+                  border: '1px solid var(--border)',
+                }}
+              >
                 {steps[step].role}
               </div>
-              <p className="mono-data text-[13px] leading-relaxed text-ink/80">
+
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--ink-muted)' }}>
                 {steps[step].description}
               </p>
             </div>
 
-            <div className="mt-8 flex items-center justify-between border-t-2 border-black pt-4">
+            {/* Footer Controls */}
+            <div 
+              className="flex items-center justify-between pt-4"
+              style={{ borderTop: '1px solid var(--border)' }}
+            >
               <button 
                 onClick={() => setStep(Math.max(0, step - 1))}
                 disabled={step === 0}
-                className="disabled:opacity-50 flex items-center gap-1 text-[11px] font-bold uppercase tracking-[0.1em] hover:underline"
+                className="disabled:opacity-30 flex items-center gap-1 text-xs font-bold uppercase tracking-wider transition-opacity"
+                style={{ color: 'var(--ink)' }}
               >
                 <ChevronLeft className="h-4 w-4" /> Prev
               </button>
@@ -92,14 +148,18 @@ export function JudgeModeTour() {
               {step < steps.length - 1 ? (
                 <button 
                   onClick={() => setStep(step + 1)}
-                  className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover: hover:text-ink"
+                  className="btn-primary py-2 px-5 text-xs font-bold uppercase tracking-wider rounded-lg flex items-center gap-1.5"
                 >
-                  Next <ChevronRight className="h-4 w-4" />
+                  <span>Next</span>
+                  <ChevronRight className="h-4 w-4" />
                 </button>
               ) : (
                 <Dialog.Close asChild>
-                  <button onClick={() => setStep(0)} className="flex items-center gap-1 border-2 border-black bg-[var(--ink)] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.1em] text-[var(--bg)] hover: hover:text-ink">
-                    Finish
+                  <button 
+                    onClick={() => setStep(0)} 
+                    className="btn-primary py-2 px-5 text-xs font-bold uppercase tracking-wider rounded-lg"
+                  >
+                    Finish Tour
                   </button>
                 </Dialog.Close>
               )}

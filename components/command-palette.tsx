@@ -26,21 +26,32 @@ export function CommandPalette({ onNavigate }: { onNavigate: (view: any) => void
       open={open}
       onOpenChange={setOpen}
       label="Global Command Menu"
-      className="fixed top-1/2 left-1/2 z-50 w-[90vw] max-w-[640px] -translate-x-1/2 -translate-y-1/2 overflow-hidden  border shadow-ambient  rounded-xl border-4 border-black shadow-ambient outline-none"
+      className="fixed top-1/2 left-1/2 z-50 w-[92vw] max-w-[580px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl outline-none animate-editorial-fade"
+      style={{
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border)',
+        boxShadow: '0 24px 64px rgba(0,0,0,0.35)',
+        color: 'var(--ink)',
+      }}
     >
-      <div className="flex items-center border-b-2 border-black px-4" cmdk-input-wrapper="">
-        <Search className="h-5 w-5 text-ink/50" />
+      <div 
+        className="flex items-center px-4" 
+        style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}
+        cmdk-input-wrapper=""
+      >
+        <Search className="h-4 w-4 shrink-0" style={{ color: 'var(--ink-muted)' }} />
         <Command.Input
           placeholder="Search batches by ID, product, or serial..."
-          className="flex h-14 w-full bg-transparent px-3 py-3 text-[14px] mono-data placeholder:text-ink/50 focus:outline-none"
+          className="flex h-12 w-full bg-transparent px-3 text-xs mono-data focus:outline-none"
+          style={{ color: 'var(--ink)' }}
         />
       </div>
       <Command.List className="max-h-[300px] overflow-y-auto overflow-x-hidden p-2">
-        <Command.Empty className="py-6 text-center text-[12px] mono-data text-ink/50">
-          No results found.
+        <Command.Empty className="py-8 text-center text-xs mono-data" style={{ color: 'var(--ink-muted)' }}>
+          No batches found matching query.
         </Command.Empty>
         
-        <Command.Group heading="Batches" className="text-[10px] font-bold uppercase tracking-[0.1em] text-ink/50 p-2">
+        <Command.Group heading="Batches" className="text-[10px] font-bold uppercase tracking-wider p-2" style={{ color: 'var(--ink-muted)' }}>
           {batches.map((batch) => (
             <Command.Item
               key={batch.batchId}
@@ -52,11 +63,11 @@ export function CommandPalette({ onNavigate }: { onNavigate: (view: any) => void
                   window.dispatchEvent(new CustomEvent('globalSearch', { detail: batch.batchId }));
                 }, 100);
               }}
-              className="flex cursor-pointer items-center justify-between border-2 border-transparent px-3 py-2 data-[selected='true']:border-black data-[selected='true']:bg-[var(--bg-surface)] outline-none transition-colors"
+              className="flex cursor-pointer items-center justify-between px-3 py-2.5 rounded-lg outline-none transition-colors hover:bg-[var(--accent-faint)]"
             >
               <div>
-                <div className="mono-data text-[12px] font-bold text-ink">{batch.batchId}</div>
-                <div className="text-[11px] text-ink/70">{batch.productName}</div>
+                <div className="mono-data text-xs font-bold" style={{ color: 'var(--ink)' }}>{batch.batchId}</div>
+                <div className="text-[11px]" style={{ color: 'var(--ink-muted)' }}>{batch.productName}</div>
               </div>
               <StatusPill status={batch.currentStatus} />
             </Command.Item>
