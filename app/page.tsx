@@ -445,18 +445,18 @@ function MarketingNav({ user, onSignOut, navigate, theme, toggle }: any) {
             {/* Theme toggle */}
             <button
               onClick={toggle}
-              title="Toggle theme"
+              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
               style={{
-                width: '1.875rem', height: '1.875rem',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                display: 'inline-flex', alignItems: 'center', gap: '0.375rem',
+                padding: '0.3rem 0.625rem',
                 background: 'none', border: '1px solid var(--border)',
                 borderRadius: 'var(--radius)', cursor: 'pointer',
                 color: 'var(--ink-muted)',
-                fontSize: '0.75rem',
-                fontFamily: 'var(--font-jetbrains), monospace',
+                fontSize: '0.7rem', fontWeight: 500,
+                whiteSpace: 'nowrap',
               }}
             >
-              {theme === 'dark' ? '○' : '●'}
+              {theme === 'dark' ? '☀ Light' : '☽ Dark'}
             </button>
             <button
               onClick={onSignOut}
@@ -596,17 +596,32 @@ function DashboardTopBar({ user, navigate, setSidebarOpen, theme, toggle }: any)
         {/* Theme toggle */}
         <button
           onClick={toggle}
-          title="Toggle theme"
+          title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
           style={{
-            width: '1.75rem', height: '1.75rem',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            display: 'inline-flex', alignItems: 'center', gap: '0.3rem',
+            padding: '0.3rem 0.5rem',
             background: 'none', border: '1px solid var(--border)',
             borderRadius: 'var(--radius)', cursor: 'pointer',
-            color: 'var(--ink-muted)', fontSize: '0.75rem',
-            fontFamily: 'var(--font-jetbrains), monospace',
+            color: 'var(--ink-muted)',
+            fontSize: '0.7rem', fontWeight: 500,
           }}
         >
-          {theme === 'dark' ? '○' : '●'}
+          {theme === 'dark' ? '☀ Light' : '☽ Dark'}
+        </button>
+
+        {/* Sign out — always visible in topbar */}
+        <button
+          onClick={() => navigate('landing')}
+          title="Back to home"
+          style={{
+            background: 'none', border: '1px solid var(--border)',
+            borderRadius: 'var(--radius)', cursor: 'pointer',
+            padding: '0.3rem 0.625rem',
+            fontSize: '0.75rem', fontWeight: 500,
+            color: 'var(--ink-muted)',
+          }}
+        >
+          ← Home
         </button>
 
         {/* User chip */}
@@ -650,18 +665,14 @@ function DashboardSidebar({ user, view, navigate, isOpen, setIsOpen, onSignOut }
           }}
         />
       )}
-      <aside style={{
+      <aside className={isOpen ? 'sidebar-open' : 'sidebar-closed'} style={{
         position: 'fixed', top: 0, left: 0, bottom: 0, zIndex: 50,
         width: '15rem',
         background: 'var(--bg-surface)',
         borderRight: '1px solid var(--border)',
         display: 'flex', flexDirection: 'column',
-        transform: isOpen ? 'translateX(0)' : 'translateX(-100%)',
-        transition: 'transform 250ms cubic-bezier(0.22, 1, 0.36, 1)',
-        paddingTop: '3.5rem', // below topbar
-      }}
-        className="xl:translate-x-0"
-      >
+        paddingTop: '3.5rem',
+      }}>
         {/* Mobile close */}
         <div className="xl:hidden" style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <span style={{ fontWeight: 700, fontSize: '0.875rem', color: 'var(--ink)' }}>MediTrace</span>

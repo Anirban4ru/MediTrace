@@ -2,117 +2,117 @@
 
 import { useState, useEffect, useRef } from 'react';
 import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  ResponsiveContainer,
-  Tooltip,
+  AreaChart, Area, XAxis, YAxis, CartesianGrid, ResponsiveContainer, Tooltip,
 } from 'recharts';
-
 import { useLedger } from '@/components/ledger-context';
+
+// Ink Wash Palette for Recharts (must be literal strings)
+const C_INK    = '#4A4A4A';
+const C_ACCENT = '#6D8196';
+const C_BORDER = '#CBCBCB';
+const C_BG     = '#FFFFE3';
 
 export function RealtimeGraph() {
   const { batches } = useLedger();
   const [data, setData] = useState<{ time: string; avgTemp: number; pings: number }[]>([]);
-  const prevTelemetryCountRef = useRef(0);
+  const prevRef = useRef(0);
 
   useEffect(() => {
-    let totalTemp = 0;
-    let tempCount = 0;
-    let currentTelemetryCount = 0;
-
+    let totalTemp = 0, tempCount = 0, currentCount = 0;
     batches.forEach(b => {
-      currentTelemetryCount += b.telemetry.length;
+      currentCount += b.telemetry.length;
       if (b.currentStatus === 'InTransit' && b.telemetry.length > 0) {
         totalTemp += b.telemetry[b.telemetry.length - 1].temperature;
         tempCount++;
       }
     });
-
-    const avgTemp = tempCount > 0 ? Number((totalTemp / tempCount).toFixed(1)) : 0;
-    const pings = currentTelemetryCount - prevTelemetryCountRef.current;
-    
-    // Ignore massive jump on first load
-    const finalPings = prevTelemetryCountRef.current === 0 ? 0 : Math.max(0, pings);
-    prevTelemetryCountRef.current = currentTelemetryCount;
+    const avgTemp  = tempCount > 0 ? Number((totalTemp / tempCount).toFixed(1)) : 0;
+    const rawPings = currentCount - prevRef.current;
+    const pings    = prevRef.current === 0 ? 0 : Math.max(0, rawPings);
+    prevRef.current = currentCount;
 
     const now = new Date();
     const timeLabel = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
     setData(prev => {
-      if (prev.length > 0 && prev[prev.length - 1].time === timeLabel) {
-        return prev;
-      }
-      const next = [...prev, { time: timeLabel, avgTemp, pings: finalPings }];
-      if (next.length > 20) return next.slice(next.length - 20);
-      return next;
+      if (prev.length > 0 && prev[prev.length - 1].time === timeLabel) return prev;
+      const next = [...prev, { time: timeLabel, avgTemp, pings }];
+      return next.length > 20 ? next.slice(next.length - 20) : next;
     });
   }, [batches]);
 
   if (data.length === 0) {
     return (
-      <div className="border shadow-ambient bg-card rounded-xl p-6 h-[400px] w-full flex items-center justify-center">
-        <span className="mono-data text-[12px] uppercase tracking-[0.1em] text-ink/50">Waiting for live network telemetry...</span>
+      <div style={{
+        border: '1px solid var(--border)', background: 'var(--bg-surface)',
+        borderRadius: 'var(--radius)', padding: '1.5rem',
+        height: 400, width: '100%',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+      }}>
+        <span className="mono-data label-caps" style={{ color: 'var(--ink-faint)' }}>
+          Waiting for live network telemetry…
+        </span>
       </div>
     );
   }
 
   return (
-    <div className="border shadow-ambient bg-card rounded-xl p-6 h-[400px] w-full flex flex-col">
-      <div className="mb-4 flex items-center justify-between">
-        <h3 className="display-heavy text-[16px] uppercase">Live Network Telemetry</h3>
-        <div className="flex gap-4 text-[10px] uppercase font-bold tracking-[0.1em]">
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[var(--ink)]"></span> Avg Temp (°C)</span>
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#102A43]"></span> Ping Volume</span>
+    <div style={{
+      border: '1px solid var(--border)', background: 'var(--bg-surface)',
+      borderRadius: 'var(--radius)', padding: '1.5rem',
+      height: 400, width: '100%', display: 'flex', flexDirection: 'column',
+    }}>
+      <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <h3 className="mono-data" style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink)' }}>
+          Live Network Telemetry
+        </h3>
+        <div style={{ display: 'flex', gap: '1rem', fontSize: '0.6rem', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--ink-muted)' }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ width: 10, height: 10, background: C_INK, display: 'inline-block' }} />
+            Avg Temp (°C)
+          </span>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+            <span style={{ width: 10, height: 10, background: C_ACCENT, display: 'inline-block' }} />
+            Ping Volume
+          </span>
         </div>
       </div>
-      <div className="flex-1 w-full border-2 border-black bg-base/60">
+      <div style={{ flex: 1, width: '100%' }}>
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <CartesianGrid stroke="#E5E5E9" strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="time" 
-              stroke="var(--ink)" 
-              tick={{ fontSize: 10, fontFamily: 'monospace' }}
-              tickLine={{ stroke: 'var(--ink)' }}
+            <CartesianGrid stroke={C_BORDER} strokeDasharray="3 3" />
+            <XAxis
+              dataKey="time"
+              stroke={C_INK}
+              tick={{ fontSize: 9, fontFamily: 'monospace', fill: C_INK }}
+              tickLine={{ stroke: C_INK }}
             />
-            <YAxis 
-              stroke="var(--ink)" 
-              tick={{ fontSize: 10, fontFamily: 'monospace' }}
-              tickLine={{ stroke: 'var(--ink)' }}
+            <YAxis
+              stroke={C_INK}
+              tick={{ fontSize: 9, fontFamily: 'monospace', fill: C_INK }}
+              tickLine={{ stroke: C_INK }}
               domain={[0, 'auto']}
             />
             <Tooltip
               contentStyle={{
-                border: '2px solid var(--ink)',
-                borderRadius: 0,
-                background: 'rgba(255,255,255,0.95)',
+                border: `1px solid ${C_BORDER}`,
+                borderRadius: 2,
+                background: C_BG,
                 fontFamily: 'monospace',
-                fontSize: 11,
+                fontSize: 10,
+                color: C_INK,
               }}
-              labelStyle={{ fontWeight: 700, marginBottom: '4px' }}
+              labelStyle={{ fontWeight: 700, marginBottom: 4, color: C_INK }}
             />
-            <Area 
-              type="monotone" 
-              dataKey="avgTemp" 
-              name="Avg Temp (°C)"
-              stroke="var(--ink)" 
-              fill="var(--ink)" 
-              fillOpacity={0.1} 
-              strokeWidth={2.5}
-              isAnimationActive={true}
+            <Area
+              type="monotone" dataKey="avgTemp" name="Avg Temp (°C)"
+              stroke={C_INK} fill={C_INK} fillOpacity={0.08} strokeWidth={2}
+              isAnimationActive
             />
-            <Area 
-              type="stepAfter" 
-              dataKey="pings" 
-              name="Ping Volume"
-              stroke="#102A43" 
-              fill="#102A43" 
-              fillOpacity={0.3} 
-              strokeWidth={2}
-              isAnimationActive={true}
+            <Area
+              type="stepAfter" dataKey="pings" name="Ping Volume"
+              stroke={C_ACCENT} fill={C_ACCENT} fillOpacity={0.18} strokeWidth={2}
+              isAnimationActive
             />
           </AreaChart>
         </ResponsiveContainer>

@@ -237,3 +237,20 @@
   .shadow-ink        { box-shadow: 0 4px 24px rgba(74,74,74,0.09); }
   .shadow-ink-lg     { box-shadow: 0 12px 48px rgba(74,74,74,0.12); }
 }
+
+/* ── Dashboard Sidebar — class-controlled transform (inline style overrides Tailwind) ── */
+.sidebar-open {
+  transform: translateX(0) !important;
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sidebar-closed {
+  transform: translateX(-100%);
+  transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+@media (min-width: 1280px) {
+  .sidebar-open,
+  .sidebar-closed {
+    transform: translateX(0) !important;
+    transition: none;
+  }
+}
