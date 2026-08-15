@@ -19,7 +19,7 @@ export function AuditLog() {
 
   return (
     <div className="border shadow-ambient bg-card rounded-xl">
-      <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-3">
+      <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="flex items-center gap-2">
           <History className="h-4 w-4" strokeWidth={2.5} />
           <h3 className="display-heavy text-[13px] uppercase">Audit Trail</h3>
@@ -43,15 +43,15 @@ export function AuditLog() {
                 <li
                   key={entry.id}
                   className={cn(
-                    'border-b border-black/15 px-4 py-3 transition-colors hover:bg-[var(--bg-surface)]',
+                    'border-b border-[var(--border)] px-4 py-3 transition-colors hover:bg-[var(--bg-surface)]',
                     isSpoiled && 'bg-[var(--danger)]/5'
                   )}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={cn(
-                        'flex h-7 w-7 shrink-0 items-center justify-center border-2 border-black',
-                        isSpoiled ? 'bg-[var(--danger)] text-[var(--bg)]' : 'bg-base'
+                        'flex h-7 w-7 shrink-0 items-center justify-center border border-[var(--border)]',
+                        isSpoiled ? 'bg-[var(--danger)] text-[var(--bg)]' : 'bg-[var(--bg-surface)]'
                       )}
                     >
                       <Icon className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -97,7 +97,7 @@ export function AuditLog() {
                           const b = getBatch(entry.batch_id!);
                           if (b) generatePDFReport(b);
                         }}
-                        className="flex h-7 shrink-0 items-center gap-1 border-2 border-black bg-base px-2 transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)]"
+                        className="flex h-7 shrink-0 items-center gap-1 border border-[var(--border)] bg-[var(--bg-surface)] px-2 transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                         title="Download PDF Report"
                       >
                         <FileText className="h-3 w-3" strokeWidth={2.5} />

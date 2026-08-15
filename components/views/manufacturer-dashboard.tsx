@@ -75,8 +75,8 @@ export function ManufacturerDashboard() {
   return (
     <div className="w-full">
       <div className="mb-4 flex items-center justify-between">
-         <h1 className="display-heavy text-[24px] uppercase dark:text-[var(--bg)]">Manufacturer Control Center</h1>
-         <span className="mono-data text-[10px] uppercase text-ink/50 dark:text-[var(--bg)]/50">Drag widgets to customize layout</span>
+         <h1 className="display-heavy text-[24px] uppercase text-[var(--ink)]">Manufacturer Control Center</h1>
+         <span className="mono-data text-[10px] uppercase text-ink/50 text-[var(--ink)]/50">Drag widgets to customize layout</span>
       </div>
 
       <ResponsiveGridLayout
@@ -100,7 +100,7 @@ export function ManufacturerDashboard() {
 
         <div key="provision" className="flex flex-col h-full glass border dark:border-white shadow-ambient p-5 dark:bg-[var(--ink)]">
           <div className="drag-handle cursor-move mb-4 flex items-center justify-between hover:bg-[var(--ink)]/5 dark:hover:bg-base/5 p-2 -m-2">
-            <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Provision Batch</h2>
+            <h2 className="display-heavy text-[15px] uppercase text-[var(--ink)]">Provision Batch</h2>
             <BrutalTag>MANUFACTURER_ROLE</BrutalTag>
           </div>
           <div className="flex-1 overflow-y-auto pr-2">
@@ -109,7 +109,7 @@ export function ManufacturerDashboard() {
               <input
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
-                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="w-full px-3 py-2 text-[13px] mono-data rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent)]" style={{ background: "var(--bg)", color: "var(--ink)", border: "1px solid var(--border)" }}
                 placeholder="e.g. Insulin Glargine 100IU"
               />
             </Field>
@@ -119,14 +119,14 @@ export function ManufacturerDashboard() {
                 min={1}
                 value={units}
                 onChange={(e) => setUnits(Number(e.target.value))}
-                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="w-full px-3 py-2 text-[13px] mono-data rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent)]" style={{ background: "var(--bg)", color: "var(--ink)", border: "1px solid var(--border)" }}
               />
             </Field>
             <Field label="Provisioning Seed (optional)">
               <input
                 value={seedKey}
                 onChange={(e) => setSeedKey(e.target.value)}
-                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="w-full px-3 py-2 text-[13px] mono-data rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent)]" style={{ background: "var(--bg)", color: "var(--ink)", border: "1px solid var(--border)" }}
                 placeholder="auto-generated if blank"
               />
             </Field>
@@ -143,14 +143,14 @@ export function ManufacturerDashboard() {
             <div className="mt-5 animate-editorial-fade border-2 border-black dark:border-white bg-base dark:bg-[var(--ink)] p-3">
               <div className="mb-2 flex items-center gap-2">
                 <CheckCircle2 className="h-4 w-4 text-[var(--success)] dark:text-[var(--success)]" strokeWidth={2.5} />
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] dark:text-[var(--bg)]">
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] text-[var(--ink)]">
                   On-Chain Confirmed
                 </span>
               </div>
               <Row k="Batch ID" v={lastProvisioned.batchId} />
               <Row k="Serial" v={lastProvisioned.serial} />
               <div className="flex items-center justify-between py-1 text-[11px]">
-                <span className="uppercase tracking-[0.1em] text-ink/50 dark:text-[var(--bg)]/50">Tx Hash</span>
+                <span className="uppercase tracking-[0.1em] text-ink/50 text-[var(--ink)]/50">Tx Hash</span>
                 <a
                   href={txExplorerUrl(lastProvisioned.provisionTx)}
                   target="_blank"
@@ -172,7 +172,7 @@ export function ManufacturerDashboard() {
           <div className="mt-4 flex gap-2 pb-4">
             <button
               onClick={() => exportBatchesCSV(batches)}
-              className="border shadow-sm active:scale-[0.98] transition-transform flex flex-1 items-center justify-center gap-2 bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)] dark:hover:bg-base/10"
+              className="border shadow-sm active:scale-[0.98] transition-transform flex flex-1 items-center justify-center gap-2 bg-base dark:bg-[var(--ink)] text-[var(--ink)] py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)] dark:hover:bg-base/10"
             >
               <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
               Export CSV
@@ -183,15 +183,15 @@ export function ManufacturerDashboard() {
 
         <div key="ledger" className="border shadow-ambient bg-card rounded-xl flex flex-col h-full bg-base dark:bg-[var(--ink)] dark:border-white">
           <div className="drag-handle cursor-move flex items-center justify-between border-b-2 border-black dark:border-white px-4 py-3 hover:bg-[var(--ink)]/5 dark:hover:bg-base/5">
-            <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Batch Ledger</h2>
-            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-ink/55 dark:text-[var(--bg)]/55">
+            <h2 className="display-heavy text-[15px] uppercase text-[var(--ink)]">Batch Ledger</h2>
+            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-ink/55 text-[var(--ink)]/55">
               {batches.length} records · newest first
             </span>
           </div>
           <div className="flex-1 overflow-y-auto">
             <table className="w-full border-collapse text-left">
               <thead className="sticky top-0 bg-[var(--bg-surface)] dark:bg-[var(--ink)]/90 backdrop-blur z-10">
-                <tr className="border-b-2 border-black dark:border-white text-[10px] uppercase tracking-[0.14em] text-ink/60 dark:text-[var(--bg)]/60">
+                <tr className="border-b-2 border-black dark:border-white text-[10px] uppercase tracking-[0.14em] text-ink/60 text-[var(--ink)]/60">
                   <Th>Batch ID</Th>
                   <Th>Product</Th>
                   <Th>Status</Th>

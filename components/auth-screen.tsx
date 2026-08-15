@@ -28,19 +28,27 @@ export function AuthScreen() {
   return (
     <div 
       className="flex min-h-screen items-center justify-center p-4 relative"
-      style={{ background: 'var(--bg)', color: 'var(--ink)' }}
+      style={{
+        backgroundImage: 'url(/Background.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: 'var(--bg)',
+      }}
     >
+      {/* Background backdrop blur & tint overlay */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]" />
+
       <div className="w-full max-w-md relative z-10 animate-editorial-fade">
         {/* Brand Header */}
         <div className="mb-6 flex flex-col items-center text-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-            <img src="/BrandLogo.png" alt="Logo" className="h-8 w-8 object-contain" />
+          <div className="flex h-14 w-14 items-center justify-center rounded-xl border shadow-lg" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
+            <img src="/BrandLogo.png" alt="Logo" className="h-9 w-9 object-contain" />
           </div>
           <div>
-            <div className="display-heavy text-[24px] sm:text-[26px] tracking-tight" style={{ color: 'var(--ink)' }}>
+            <div className="display-heavy text-[26px] sm:text-[28px] tracking-tight text-white drop-shadow-md">
               MediTrace
             </div>
-            <div className="mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.16em]" style={{ color: 'var(--ink-muted)' }}>
+            <div className="mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-white/90 drop-shadow">
               Pharmaceutical Integrity Ledger
             </div>
           </div>
@@ -48,19 +56,19 @@ export function AuthScreen() {
 
         {/* Card */}
         <div 
-          className="rounded-xl p-6 sm:p-8"
+          className="rounded-2xl p-6 sm:p-8"
           style={{
             background: 'var(--bg-surface)',
             border: '1px solid var(--border)',
-            boxShadow: '0 8px 32px rgba(74,74,74,0.06)',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.25)',
           }}
         >
           {/* Mode Switcher */}
-          <div className="mb-6 flex gap-1 p-1 rounded" style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
+          <div className="mb-6 flex gap-1 p-1 rounded-lg" style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}>
             <button
               type="button"
               onClick={() => { setMode('signin'); setError(null); }}
-              className="flex-1 py-2 text-[12px] font-bold uppercase tracking-[0.1em] rounded transition-all"
+              className="flex-1 py-2 text-[12px] font-bold uppercase tracking-[0.1em] rounded-md transition-all"
               style={{
                 background: mode === 'signin' ? 'var(--accent)' : 'transparent',
                 color: mode === 'signin' ? 'var(--bg)' : 'var(--ink-muted)',
@@ -71,7 +79,7 @@ export function AuthScreen() {
             <button
               type="button"
               onClick={() => { setMode('signup'); setError(null); }}
-              className="flex-1 py-2 text-[12px] font-bold uppercase tracking-[0.1em] rounded transition-all"
+              className="flex-1 py-2 text-[12px] font-bold uppercase tracking-[0.1em] rounded-md transition-all"
               style={{
                 background: mode === 'signup' ? 'var(--accent)' : 'transparent',
                 color: mode === 'signup' ? 'var(--bg)' : 'var(--ink-muted)',
@@ -82,7 +90,7 @@ export function AuthScreen() {
           </div>
 
           {!configured && (
-            <div className="mb-4 flex items-start gap-2 p-3 rounded" style={{ background: 'var(--danger-faint)', border: '1px solid var(--danger)', color: 'var(--danger)' }}>
+            <div className="mb-4 flex items-start gap-2 p-3 rounded-lg" style={{ background: 'var(--danger-faint)', border: '1px solid var(--danger)', color: 'var(--danger)' }}>
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span className="text-[11px] font-medium">
                 Supabase not configured. Please set credentials in .env
@@ -91,7 +99,7 @@ export function AuthScreen() {
           )}
 
           {error && (
-            <div className="mb-4 flex items-start gap-2 p-3 rounded" style={{ background: 'var(--danger-faint)', border: '1px solid var(--danger)', color: 'var(--danger)' }}>
+            <div className="mb-4 flex items-start gap-2 p-3 rounded-lg" style={{ background: 'var(--danger-faint)', border: '1px solid var(--danger)', color: 'var(--danger)' }}>
               <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
               <span className="text-[11px] font-medium">{error}</span>
             </div>
@@ -104,7 +112,7 @@ export function AuthScreen() {
                   Display Name
                 </label>
                 <div 
-                  className="flex items-center rounded px-3 py-2" 
+                  className="flex items-center rounded-lg px-3 py-2.5" 
                   style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
                 >
                   <User className="h-4 w-4 mr-2.5 shrink-0" style={{ color: 'var(--ink-muted)' }} />
@@ -121,10 +129,10 @@ export function AuthScreen() {
 
             <div>
               <label className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em]" style={{ color: 'var(--ink-muted)' }}>
-                Email
+                Email Address
               </label>
               <div 
-                className="flex items-center rounded px-3 py-2" 
+                className="flex items-center rounded-lg px-3 py-2.5" 
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
               >
                 <Mail className="h-4 w-4 mr-2.5 shrink-0" style={{ color: 'var(--ink-muted)' }} />
@@ -145,7 +153,7 @@ export function AuthScreen() {
                 Password
               </label>
               <div 
-                className="flex items-center rounded px-3 py-2" 
+                className="flex items-center rounded-lg px-3 py-2.5" 
                 style={{ background: 'var(--bg)', border: '1px solid var(--border)' }}
               >
                 <Lock className="h-4 w-4 mr-2.5 shrink-0" style={{ color: 'var(--ink-muted)' }} />
@@ -165,7 +173,7 @@ export function AuthScreen() {
             <button
               type="submit"
               disabled={loading}
-              className="btn-primary w-full mt-2 py-2.5"
+              className="btn-primary w-full mt-2 py-3 text-xs uppercase tracking-wider rounded-lg font-bold"
             >
               {loading && <Loader2 className="h-4 w-4 animate-spin" />}
               {mode === 'signin' ? 'Sign In to Ledger' : 'Create Account'}

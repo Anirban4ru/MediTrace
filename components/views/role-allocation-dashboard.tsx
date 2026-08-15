@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { getSupabase } from '@/lib/supabase-client';
 import { Role } from '@/lib/types';
-import { Users, Shield, Save } from 'lucide-react';
+import { Users, Shield } from 'lucide-react';
 import { BrutalTag } from '@/components/primitives';
 
 interface UserProfile {
@@ -66,77 +66,109 @@ export function RoleAllocationDashboard() {
       console.error(updateError);
       setError(`Failed to update role for user ID: ${userId}`);
     } else {
-      // Update local state
       setProfiles(prev => prev.map(p => p.id === userId ? { ...p, role: newRole } : p));
     }
     setUpdating(null);
   }
 
   return (
-    <div className="w-full">
-      <div className="mb-4 flex items-center justify-between">
-         <h1 className="display-heavy text-[24px] uppercase dark:text-[var(--bg)]">Role Allocation & Access Control</h1>
-         <span className="mono-data text-[10px] uppercase text-ink/50 dark:text-[var(--bg)]/50">SUPERIOR HEAD PRIVILEGES</span>
+    <div className="w-full space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="display-heavy text-2xl uppercase" style={{ color: 'var(--ink)' }}>
+            Role Allocation & Access Control
+          </h1>
+          <p className="text-xs mt-1" style={{ color: 'var(--ink-muted)' }}>
+            Assign cryptographic privileges and dashboard access across organizations.
+          </p>
+        </div>
+        <span className="mono-data text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded" style={{ background: 'var(--accent-faint)', color: 'var(--accent)', border: '1px solid var(--accent)' }}>
+          SUPERIOR HEAD PRIVILEGES
+        </span>
       </div>
 
-      <div className="border shadow-ambient bg-card rounded-xl flex flex-col h-full bg-base  ">
-        <div className="flex items-center justify-between border-b border-[var(--border)]  px-4 py-3 bg-[var(--bg-surface)] /90">
+      <div 
+        className="rounded-xl overflow-hidden" 
+        style={{ background: 'var(--bg-surface)', border: '1px solid var(--border)', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}
+      >
+        <div className="flex items-center justify-between px-6 py-4" style={{ borderBottom: '1px solid var(--border)', background: 'var(--bg)' }}>
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 dark:text-[var(--bg)]" strokeWidth={2.5} />
-            <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Registered Users</h2>
+            <Users className="h-5 w-5" style={{ color: 'var(--accent)' }} />
+            <h2 className="font-bold text-sm uppercase tracking-wide" style={{ color: 'var(--ink)' }}>
+              Registered Personnel
+            </h2>
           </div>
-          <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-ink/55 dark:text-[var(--bg)]/55">
+          <span className="mono-data text-xs font-bold" style={{ color: 'var(--ink-muted)' }}>
             {profiles.length} TOTAL
           </span>
         </div>
         
         {error && (
-          <div className="bg-[var(--danger)] text-[var(--bg)] p-3 text-[12px] font-bold uppercase tracking-wider text-center border-b border-[var(--border)]">
+          <div className="p-3 text-xs font-bold uppercase tracking-wider text-center" style={{ background: 'var(--danger-faint)', color: 'var(--danger)', borderBottom: '1px solid var(--border)' }}>
             {error}
           </div>
         )}
 
-        <div className="flex-1 overflow-x-auto">
+        <div className="overflow-x-auto">
           {loading ? (
-            <div className="p-8 text-center mono-data text-ink/50 text-[12px] uppercase">Loading profiles...</div>
+            <div className="p-12 text-center mono-data text-xs uppercase" style={{ color: 'var(--ink-muted)' }}>
+              Loading cryptographic identities…
+            </div>
           ) : (
             <table className="w-full border-collapse text-left">
               <thead>
-                <tr className="border-b border-[var(--border)]  text-[10px] uppercase tracking-[0.14em] text-ink/60 dark:text-[var(--bg)]/60">
-                  <th className="px-4 py-3">User ID / Profile</th>
-                  <th className="px-4 py-3">Display Name</th>
-                  <th className="px-4 py-3">Current Role</th>
-                  <th className="px-4 py-3 text-right">Assign New Role</th>
+                <tr className="text-[10px] uppercase font-bold tracking-[0.14em]" style={{ borderBottom: '1px solid var(--border)', color: 'var(--ink-muted)', background: 'var(--bg)' }}>
+                  <th className="px-6 py-3.5">User ID / Profile</th>
+                  <th className="px-6 py-3.5">Display Name</th>
+                  <th className="px-6 py-3.5">Current Role</th>
+                  <th className="px-6 py-3.5 text-right">Assign Role</th>
                 </tr>
               </thead>
               <tbody>
                 {profiles.map((profile) => (
-                  <tr key={profile.id} className="border-b border-black/15 text-[12px] transition-colors hover:bg-[var(--bg-surface)] dark:hover:bg-base/5">
-                    <td className="px-4 py-3 align-middle">
-                      <div className="mono-data font-semibold dark:text-[var(--bg)]">{profile.id}</div>
+                  <tr 
+                    key={profile.id} 
+                    className="text-xs transition-colors hover:bg-[var(--accent-faint)]"
+                    style={{ borderBottom: '1px solid var(--border)' }}
+                  >
+                    <td className="px-6 py-4 align-middle">
+                      <div className="mono-data font-semibold text-xs" style={{ color: 'var(--ink)' }}>
+                        {profile.id}
+                      </div>
                     </td>
-                    <td className="px-4 py-3 align-middle">
-                      <div className="font-medium dark:text-[var(--bg)] uppercase">{profile.display_name}</div>
+                    <td className="px-6 py-4 align-middle">
+                      <div className="font-bold text-xs uppercase" style={{ color: 'var(--ink)' }}>
+                        {profile.display_name}
+                      </div>
                     </td>
-                    <td className="px-4 py-3 align-middle">
+                    <td className="px-6 py-4 align-middle">
                       <BrutalTag>{profile.role}</BrutalTag>
                     </td>
-                    <td className="px-4 py-3 align-middle text-right">
+                    <td className="px-6 py-4 align-middle text-right">
                       <div className="flex items-center justify-end gap-2">
                         {updating === profile.id ? (
-                          <span className="mono-data text-[10px] uppercase animate-pulse text-ink/50 dark:text-[var(--bg)]/50">Updating...</span>
+                          <span className="mono-data text-[10px] uppercase animate-pulse" style={{ color: 'var(--accent)' }}>
+                            Updating…
+                          </span>
                         ) : (
                           <select 
-                            className="border bg-base  dark:text-[var(--bg)] px-2 py-1.5 text-[10px] mono-data font-bold uppercase cursor-pointer hover:bg-surface focus:outline-none focus:ring-2 focus:ring-black"
+                            className="px-3 py-1.5 text-xs mono-data font-bold uppercase rounded cursor-pointer focus:outline-none"
+                            style={{
+                              background: 'var(--bg)',
+                              color: 'var(--ink)',
+                              border: '1px solid var(--border)',
+                            }}
                             value={profile.role}
                             onChange={(e) => handleRoleChange(profile.id, e.target.value as Role)}
                           >
                             {AVAILABLE_ROLES.map(role => (
-                              <option key={role} value={role}>{role}</option>
+                              <option key={role} value={role} style={{ background: 'var(--bg-surface)', color: 'var(--ink)' }}>
+                                {role}
+                              </option>
                             ))}
                           </select>
                         )}
-                        <Shield className="h-4 w-4 text-ink/40 dark:text-[var(--bg)]/40" />
+                        <Shield className="h-4 w-4 shrink-0" style={{ color: 'var(--ink-muted)' }} />
                       </div>
                     </td>
                   </tr>

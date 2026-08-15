@@ -96,7 +96,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
 
   return (
     <div className="border shadow-ambient bg-card rounded-xl">
-      <div className="flex items-center gap-2 border-b border-[var(--border)] bg-base px-4 py-3">
+      <div className="flex items-center gap-2 border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <Search className="h-4 w-4 shrink-0 text-ink/50" strokeWidth={2.5} />
         <input
           value={query}
@@ -113,7 +113,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
           onClick={() => setShowFilters(!showFilters)}
           className={cn(
             'flex items-center gap-1 border border-[var(--border)] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors',
-            showFilters ? 'bg-[var(--ink)] text-[var(--bg)]' : 'bg-base hover:bg-[var(--ink)]/5'
+            showFilters ? 'bg-[var(--ink)] text-[var(--bg)]' : 'bg-[var(--bg-surface)] hover:bg-[var(--ink)]/5'
           )}
         >
           <Filter className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -129,7 +129,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
               onClick={() => setStatusFilter('all')}
               className={cn(
                 'border-2 px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]',
-                statusFilter === 'all' ? 'border-black bg-[var(--ink)] text-[var(--bg)]' : 'border-black/30 hover:border-black'
+                statusFilter === 'all' ? 'border-[var(--border)] bg-[var(--ink)] text-[var(--bg)]' : 'border-[var(--border)] hover:border-[var(--border)]'
               )}
             >
               All
@@ -140,7 +140,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
                 onClick={() => setStatusFilter(s)}
                 className={cn(
                   'border-2 px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]',
-                  statusFilter === s ? 'border-black bg-[var(--ink)] text-[var(--bg)]' : 'border-black/30 hover:border-black'
+                  statusFilter === s ? 'border-[var(--border)] bg-[var(--ink)] text-[var(--bg)]' : 'border-[var(--border)] hover:border-[var(--border)]'
                 )}
               >
                 {s}
@@ -154,14 +154,14 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="border border-[var(--border)]/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border border-[var(--border)]/30 bg-[var(--bg-surface)] px-2 py-0.5 text-[10px] mono-data focus:border-[var(--border)] focus:outline-none"
             />
             <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">To:</span>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="border border-[var(--border)]/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border border-[var(--border)]/30 bg-[var(--bg-surface)] px-2 py-0.5 text-[10px] mono-data focus:border-[var(--border)] focus:outline-none"
             />
             {(dateFrom || dateTo) && (
               <button
@@ -209,7 +209,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
               filtered.map((b) => {
                 const breach = b.telemetry.some((t) => t.breached);
                 return (
-                  <tr key={b.batchId} className="border-b border-black/15 text-[12px] transition-colors hover:bg-[var(--bg-surface)]">
+                  <tr key={b.batchId} className="border-b border-[var(--border)] text-[12px] transition-colors hover:bg-[var(--bg-surface)]">
                     <td className="px-3 py-2.5">
                       <div className="mono-data font-semibold">{b.batchId}</div>
                       <div className="mono-data text-[10px] text-ink/50">{b.serial}</div>
@@ -251,7 +251,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
         </table>
       </div>
 
-      <div className="flex items-center justify-between border-t-2 border-black bg-[var(--bg-surface)] px-4 py-2">
+      <div className="flex items-center justify-between border-t border-[var(--border)] bg-[var(--bg-surface)] px-4 py-2">
         <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-ink/55">
           {filtered.length} of {batches.length} batches
         </span>

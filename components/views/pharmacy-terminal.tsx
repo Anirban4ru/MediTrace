@@ -203,14 +203,14 @@ export function PharmacyTerminal() {
               angle: 60,
               spread: 55,
               origin: { x: 0 },
-              colors: ['var(--success)', 'var(--ink)', 'var(--bg)']
+              colors: ['#6B7F6B', '#6D8196', '#FFFFE3', '#CBCBCB']
             });
             confetti({
               particleCount: 5,
               angle: 120,
               spread: 55,
               origin: { x: 1 },
-              colors: ['var(--success)', 'var(--ink)', 'var(--bg)']
+              colors: ['#6B7F6B', '#6D8196', '#FFFFE3', '#CBCBCB']
             });
             if (Date.now() < end) {
               requestAnimationFrame(frame);
@@ -275,7 +275,7 @@ export function PharmacyTerminal() {
   return (
     <div className="grid grid-cols-12 gap-6">
       {/* Header */}
-      <div className="col-span-12 flex flex-wrap items-end justify-between gap-3 border-2 border-black shadow-ambient bg-base px-5 py-4">
+      <div className="col-span-12 flex flex-wrap items-end justify-between gap-3 border border-[var(--border)] shadow-ambient bg-[var(--bg-surface)] px-5 py-4">
         <div>
           <h2 className="display-heavy text-[18px] uppercase">Pharmacy Verification Terminal</h2>
           <p className="mono-data text-[11px] text-ink/55">
@@ -299,8 +299,8 @@ export function PharmacyTerminal() {
                   className={cn(
                     'w-full border-2 p-2.5 text-left transition-colors',
                     active
-                      ? 'border-black bg-[var(--ink)] text-[var(--bg)]'
-                      : 'border-black/25 bg-base hover:border-black'
+                      ? 'border-[var(--border)] bg-[var(--ink)] text-[var(--bg)]'
+                      : 'border-[var(--border)] bg-[var(--bg-surface)] hover:border-[var(--border)]'
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -328,11 +328,11 @@ export function PharmacyTerminal() {
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
           className={cn(
-            'relative grid min-h-[560px] grid-rows-[auto_1fr] border-2 border-black shadow-ambient bg-[var(--bg-surface)]',
+            'relative grid min-h-[560px] grid-rows-[auto_1fr] border border-[var(--border)] shadow-ambient bg-[var(--bg-surface)]',
             dragOver && 'ring-4 ring-black ring-inset'
           )}
         >
-          <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-2.5">
+          <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-2.5">
             <div className="flex items-center gap-2">
               <ScanLine className="h-4 w-4" strokeWidth={2.5} />
               <span className="text-[11px] font-bold uppercase tracking-[0.14em]">
@@ -368,7 +368,7 @@ export function PharmacyTerminal() {
                   </span>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-1 border-2 border-black px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[var(--ink)] hover:text-[var(--bg)]"
+                    className="flex items-center gap-1 border border-[var(--border)] px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                   >
                     <Plus className="h-3 w-3" strokeWidth={2.5} />
                     Add
@@ -376,7 +376,7 @@ export function PharmacyTerminal() {
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {images.map((img, i) => (
-                    <div key={i} className="group relative border-2 border-black bg-base">
+                    <div key={i} className="group relative border border-[var(--border)] bg-[var(--bg-surface)]">
                       <Image src={img.dataUrl} alt={img.label} width={400} height={300} className="h-32 w-full object-cover" unoptimized />
                       <div className="flex items-center justify-between px-2 py-1">
                         <span className="mono-data text-[9px] uppercase text-ink/60">{img.label}</span>
@@ -402,7 +402,7 @@ export function PharmacyTerminal() {
                       Real CV Pipeline (OpenCV.js)
                     </span>
                   </div>
-                  <div className="mb-3 h-3 w-full border-2 border-black bg-base">
+                  <div className="mb-3 h-3 w-full border border-[var(--border)] bg-[var(--bg-surface)]">
                     <div
                       className="h-full bg-[var(--ink)] transition-all duration-200"
                       style={{ width: `${progress}%` }}
@@ -412,7 +412,7 @@ export function PharmacyTerminal() {
                     {Math.round(progress)}% · {stage}
                   </div>
                   {images.length > 0 && (
-                    <div className="mt-3 border-2 border-black relative overflow-hidden">
+                    <div className="mt-3 border border-[var(--border)] relative overflow-hidden">
                       <div className="absolute inset-0 z-10 bg-[var(--ink)]/10 animate-pulse backdrop-blur-[1px]" />
                       <Image src={images[0].dataUrl} alt="processing" width={400} height={300} className="h-32 w-full object-cover opacity-60" unoptimized />
                     </div>
@@ -511,7 +511,7 @@ function DropZone({ onClick, dragOver }: { onClick: () => void; dragOver: boolea
       onClick={onClick}
       className="flex h-full min-h-[480px] w-full flex-col items-center justify-center gap-4 p-8 text-center transition-colors"
     >
-      <div className={cn('border shadow-ambient flex h-24 w-24 items-center justify-center bg-base transition-transform', dragOver && 'scale-110 bg-[var(--ink)] text-[var(--bg)]')}>
+      <div className={cn('border shadow-ambient flex h-24 w-24 items-center justify-center bg-[var(--bg-surface)] transition-transform', dragOver && 'scale-110 bg-[var(--ink)] text-[var(--bg)]')}>
         <Upload className="h-10 w-10" strokeWidth={2} />
       </div>
       <div>
@@ -571,7 +571,7 @@ function ResultSheet({
     <div className="absolute inset-0 overflow-y-auto p-4 sm:p-6">
       <div className="glass border shadow-ambient w-full animate-editorial-fade">
         <div
-          className="flex items-center justify-between border-b-2 border-black px-4 py-2.5"
+          className="flex items-center justify-between border-b border-[var(--border)] px-4 py-2.5"
           style={{ background: spoiled ? 'var(--danger)' : authentic ? 'var(--success)' : 'var(--ink)', color: '#fff' }}
         >
           <div className="flex items-center gap-2">
@@ -586,7 +586,7 @@ function ResultSheet({
 
         <div className="grid grid-cols-1 gap-0 lg:grid-cols-2">
           {/* Image with bounding boxes */}
-          <div className="border-b-2 border-black p-4 lg:border-b-0 lg:border-r-2">
+          <div className="border-b border-[var(--border)] p-4 lg:border-b-0 lg:border-r-2">
             <div className="mb-2 flex items-center gap-2">
               <Boxes className="h-4 w-4" strokeWidth={2.5} />
               <span className="text-[11px] font-bold uppercase tracking-[0.14em]">
@@ -594,21 +594,21 @@ function ResultSheet({
               </span>
             </div>
             {overlayImage ? (
-              <Image src={overlayImage} alt="bounding boxes" width={800} height={600} style={{ width: '100%', height: 'auto' }} className="border-2 border-black" unoptimized />
+              <Image src={overlayImage} alt="bounding boxes" width={800} height={600} style={{ width: '100%', height: 'auto' }} className="border border-[var(--border)]" unoptimized />
             ) : (
-              <Image src={images[0]?.dataUrl || ''} alt="scanned" width={800} height={600} style={{ width: '100%', height: 'auto' }} className="border-2 border-black" unoptimized />
+              <Image src={images[0]?.dataUrl || ''} alt="scanned" width={800} height={600} style={{ width: '100%', height: 'auto' }} className="border border-[var(--border)]" unoptimized />
             )}
             {images.length > 1 && (
               <div className="mt-2 grid grid-cols-4 gap-1">
                 {images.slice(0, 4).map((img, i) => (
-                  <Image key={i} src={img.dataUrl} alt={img.label} width={200} height={150} className="h-12 w-full border border-black object-cover" unoptimized />
+                  <Image key={i} src={img.dataUrl} alt={img.label} width={200} height={150} className="h-12 w-full border border-[var(--border)] object-cover" unoptimized />
                 ))}
               </div>
             )}
 
             {/* Barcode result */}
             {barcodeResult && (
-              <div className="mt-3 border-2 border-black bg-[var(--bg-surface)] p-3">
+              <div className="mt-3 border border-[var(--border)] bg-[var(--bg-surface)] p-3">
                 <div className="mb-2 flex items-center gap-2">
                   <Barcode className="h-4 w-4" strokeWidth={2.5} />
                   <span className="text-[10px] font-bold uppercase tracking-[0.12em]">Barcode Decoded</span>
@@ -640,7 +640,7 @@ function ResultSheet({
                   {fmtScore(cvResult.authenticityScore)}
                 </span>
               </div>
-              <div className="h-3 w-full border-2 border-black bg-base">
+              <div className="h-3 w-full border border-[var(--border)] bg-[var(--bg-surface)]">
                 <div className="h-full transition-all duration-500" style={{ width: `${cvResult.authenticityScore * 100}%`, background: authentic ? 'var(--success)' : 'var(--danger)' }} />
               </div>
             </div>
@@ -655,7 +655,7 @@ function ResultSheet({
             <Metric icon={Cpu} label="Processing Time" value={`${cvResult.processingTimeMs} ms`} />
 
             {/* On-chain proof */}
-            <div className="mt-4 border-2 border-black bg-[var(--bg-surface)] p-3">
+            <div className="mt-4 border border-[var(--border)] bg-[var(--bg-surface)] p-3">
               <div className="mb-2 flex items-center gap-2">
                 <Fingerprint className="h-4 w-4" strokeWidth={2.5} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">On-Chain Proof</span>
@@ -669,7 +669,7 @@ function ResultSheet({
               <ProofRow label="Verified At" value={fmtTime(Date.now())} />
             </div>
 
-            <div className="mt-3 flex items-center gap-2 border-2 border-black bg-base px-3 py-2">
+            <div className="mt-3 flex items-center gap-2 border border-[var(--border)] bg-[var(--bg-surface)] px-3 py-2">
               {authentic && !spoiled ? (
                 <>
                   <CheckCircle2 className="h-4 w-4 text-[var(--success)]" strokeWidth={2.5} />
@@ -688,12 +688,12 @@ function ResultSheet({
             </div>
 
             {multiResult && multiResult.perImage.length > 1 && (
-              <div className="mt-3 border-2 border-black bg-base p-2">
+              <div className="mt-3 border border-[var(--border)] bg-[var(--bg-surface)] p-2">
                 <div className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-ink/60">
                   Per-image breakdown
                 </div>
                 {multiResult.perImage.map((r, i) => (
-                  <div key={i} className="flex items-center justify-between border-b border-black/10 py-1 text-[10px] last:border-b-0">
+                  <div key={i} className="flex items-center justify-between border-b border-[var(--border)] py-1 text-[10px] last:border-b-0">
                     <span className="mono-data">{images[i]?.label ?? `Image ${i + 1}`}</span>
                     <span className="mono-data" style={{ color: r.anomaliesDetected ? 'var(--danger)' : 'var(--success)' }}>
                       {fmtScore(r.authenticityScore)} · {r.boundingBoxes.length} boxes
@@ -711,7 +711,7 @@ function ResultSheet({
 
 function Metric({ icon: Icon, label, value, danger }: { icon: React.ElementType; label: string; value: string; danger?: boolean }) {
   return (
-    <div className="flex items-center justify-between border-b border-black/15 py-1.5 last:border-b-0">
+    <div className="flex items-center justify-between border-b border-[var(--border)] py-1.5 last:border-b-0">
       <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-ink/60">
         <Icon className="h-3.5 w-3.5" strokeWidth={2.5} />
         {label}
@@ -723,7 +723,7 @@ function Metric({ icon: Icon, label, value, danger }: { icon: React.ElementType;
 
 function ProofRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-black/15 py-1 last:border-b-0">
+    <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] py-1 last:border-b-0">
       <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-ink/55">{label}</span>
       <span className="mono-data truncate text-[11px] font-semibold">{value}</span>
     </div>
@@ -732,7 +732,7 @@ function ProofRow({ label, value }: { label: string; value: string }) {
 
 function ProofLink({ label, value, href }: { label: string; value: string; href: string }) {
   return (
-    <div className="flex items-center justify-between gap-2 border-b border-black/15 py-1 last:border-b-0">
+    <div className="flex items-center justify-between gap-2 border-b border-[var(--border)] py-1 last:border-b-0">
       <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-ink/55">{label}</span>
       <a href={href} target="_blank" rel="noopener noreferrer" className="mono-data flex items-center gap-1 truncate text-[11px] font-semibold text-[#102A43] hover:underline">
         {value}
@@ -744,7 +744,7 @@ function ProofLink({ label, value, href }: { label: string; value: string; href:
 
 function GS1Tag({ label, value }: { label: string; value: string }) {
   return (
-    <span className="border-2 border-black bg-base px-1.5 py-0.5">
+    <span className="border border-[var(--border)] bg-[var(--bg-surface)] px-1.5 py-0.5">
       <span className="text-[8px] font-bold uppercase text-ink/50">{label}: </span>
       <span className="mono-data text-[10px]">{value}</span>
     </span>

@@ -14,7 +14,7 @@ export function AlertsInbox() {
 
   return (
     <div className="border shadow-ambient bg-card rounded-xl">
-      <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-3">
+      <div className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--bg-surface)] px-4 py-3">
         <div className="flex items-center gap-2">
           <Bell className="h-4 w-4" strokeWidth={2.5} />
           <h3 className="display-heavy text-[13px] uppercase">Spoilage Alerts</h3>
@@ -55,7 +55,7 @@ export function AlertsInbox() {
               />
             ))}
             {unack.length > 0 && acked.length > 0 && (
-              <li className="border-y-2 border-black/10 bg-[var(--bg-surface)] px-4 py-1.5">
+              <li className="border-y-2 border-[var(--border)] bg-[var(--bg-surface)] px-4 py-1.5">
                 <span className="mono-data text-[9px] uppercase tracking-[0.16em] text-ink/45">
                   Acknowledged
                 </span>
@@ -117,7 +117,7 @@ function AlertItem({
   return (
     <li
       className={cn(
-        'border-b border-black/15 px-4 py-3 transition-colors',
+        'border-b border-[var(--border)] px-4 py-3 transition-colors',
         acknowledged ? 'opacity-50' : '',
         isCritical ? 'bg-[var(--danger)]/5' : isWarning ? 'bg-[#f59e0b]/5' : ''
       )}
@@ -163,7 +163,7 @@ function AlertItem({
                   value={commentary}
                   onChange={(e) => setCommentary(e.target.value)}
                   placeholder="Add inspector commentary..."
-                  className="border border-black px-2 py-1 text-[10px] mono-data w-48 focus:outline-none"
+                  className="border border-[var(--border)] px-2 py-1 text-[10px] mono-data w-48 focus:outline-none"
                   autoFocus
                 />
               )}
@@ -171,7 +171,7 @@ function AlertItem({
                 {showCommentary && (
                   <button
                     onClick={() => setShowCommentary(false)}
-                    className="flex h-6 items-center justify-center border-2 border-black bg-base text-ink px-2 text-[10px] font-bold uppercase hover:bg-[var(--ink)] hover:text-[var(--bg)]"
+                    className="flex h-6 items-center justify-center border border-[var(--border)] bg-[var(--bg-surface)] text-ink px-2 text-[10px] font-bold uppercase hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                   >
                     Cancel
                   </button>
@@ -179,7 +179,7 @@ function AlertItem({
                 <button
                   onClick={handleFileAudit}
                   disabled={isFiling}
-                  className="flex h-6 items-center justify-center border-2 border-black bg-[var(--danger)] px-2 text-[10px] font-bold uppercase text-[var(--bg)] transition-colors hover:bg-[var(--ink)] disabled:opacity-50"
+                  className="flex h-6 items-center justify-center border border-[var(--border)] bg-[var(--danger)] px-2 text-[10px] font-bold uppercase text-[var(--bg)] transition-colors hover:bg-[var(--ink)] disabled:opacity-50"
                   title="File Audit & Revoke Batch On-Chain"
                 >
                   {isFiling ? 'Mining...' : (showCommentary ? 'Confirm Revoke' : 'File Audit & Revoke')}
@@ -191,7 +191,7 @@ function AlertItem({
             <button
               onClick={onAck}
               disabled={isFiling}
-              className="flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-base transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)] disabled:opacity-50"
+              className="flex h-6 w-6 shrink-0 items-center justify-center border border-[var(--border)] bg-[var(--bg-surface)] transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)] disabled:opacity-50"
               title="Acknowledge"
             >
               <Check className="h-3.5 w-3.5" strokeWidth={2.5} />

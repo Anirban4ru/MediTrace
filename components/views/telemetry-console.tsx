@@ -331,7 +331,7 @@ export function TelemetryConsole() {
                 step={0.1}
                 value={tempInput}
                 onChange={(e) => setTempInput(Number(e.target.value))}
-                className="border w-full bg-base px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 text-[13px] mono-data rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent)]" style={{ background: "var(--bg)", color: "var(--ink)", border: "1px solid var(--border)" }}
               />
               <div className="mt-2 flex gap-1">
                 {[3.5, 5.0, 7.2, 9.5, 12.0].map((v) => (
@@ -358,7 +358,7 @@ export function TelemetryConsole() {
               <input
                 value={seedKey}
                 onChange={(e) => setSeedKey(e.target.value)}
-                className="border w-full bg-base px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
+                className="w-full px-3 py-2 text-[13px] mono-data rounded focus:outline-none focus:ring-1 focus:ring-[var(--accent)]" style={{ background: "var(--bg)", color: "var(--ink)", border: "1px solid var(--border)" }}
                 placeholder="auto"
               />
             </div>
