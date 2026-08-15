@@ -57,7 +57,7 @@ function useThemeToggle() {
   useEffect(() => {
     const stored = localStorage.getItem('meditrace-theme') as 'light' | 'dark' | null;
     const preferred = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    const resolved = stored || preferred;
+    const resolved = stored === 'dark' ? 'dark' : 'light';
     setThemeState(resolved);
     document.documentElement.setAttribute('data-theme', resolved);
   }, []);
@@ -452,14 +452,7 @@ function LandingHero({ navigate }: { navigate: (v: ViewState) => void }) {
               The chain of custody is public and permanent.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4">
-              <button onClick={() => navigate('manufacturer')} className="btn-primary">
-                Open Manufacturer Terminal
-              </button>
-              <button onClick={() => navigate('admin')} className="btn-ghost">
-                Admin Console
-              </button>
-            </div>
+            
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', borderTop: '1px solid var(--border)' }}>

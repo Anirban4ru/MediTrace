@@ -67,7 +67,7 @@ const themeScript = `
 (function() {
   try {
     var stored = localStorage.getItem('meditrace-theme');
-    var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var theme = stored === 'dark' ? 'dark' : 'light';
     document.documentElement.setAttribute('data-theme', theme);
   } catch(e) {}
 })();
@@ -75,7 +75,7 @@ const themeScript = `
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" data-theme="light" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
