@@ -53,40 +53,40 @@ export function RealtimeGraph() {
 
   if (data.length === 0) {
     return (
-      <div className="brutal-card p-6 h-[400px] w-full flex items-center justify-center">
-        <span className="mono-data text-[12px] uppercase tracking-[0.1em] text-black/50">Waiting for live network telemetry...</span>
+      <div className="border shadow-ambient bg-card rounded-xl p-6 h-[400px] w-full flex items-center justify-center">
+        <span className="mono-data text-[12px] uppercase tracking-[0.1em] text-ink/50">Waiting for live network telemetry...</span>
       </div>
     );
   }
 
   return (
-    <div className="brutal-card p-6 h-[400px] w-full flex flex-col">
+    <div className="border shadow-ambient bg-card rounded-xl p-6 h-[400px] w-full flex flex-col">
       <div className="mb-4 flex items-center justify-between">
         <h3 className="display-heavy text-[16px] uppercase">Live Network Telemetry</h3>
         <div className="flex gap-4 text-[10px] uppercase font-bold tracking-[0.1em]">
-          <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-black"></span> Avg Temp (°C)</span>
+          <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[var(--ink)]"></span> Avg Temp (°C)</span>
           <span className="flex items-center gap-1.5"><span className="w-3 h-3 bg-[#102A43]"></span> Ping Volume</span>
         </div>
       </div>
-      <div className="flex-1 w-full border-2 border-black bg-white/60">
+      <div className="flex-1 w-full border-2 border-black bg-base/60">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid stroke="#E5E5E9" strokeDasharray="3 3" />
             <XAxis 
               dataKey="time" 
-              stroke="#000" 
+              stroke="var(--ink)" 
               tick={{ fontSize: 10, fontFamily: 'monospace' }}
-              tickLine={{ stroke: '#000' }}
+              tickLine={{ stroke: 'var(--ink)' }}
             />
             <YAxis 
-              stroke="#000" 
+              stroke="var(--ink)" 
               tick={{ fontSize: 10, fontFamily: 'monospace' }}
-              tickLine={{ stroke: '#000' }}
+              tickLine={{ stroke: 'var(--ink)' }}
               domain={[0, 'auto']}
             />
             <Tooltip
               contentStyle={{
-                border: '2px solid #000',
+                border: '2px solid var(--ink)',
                 borderRadius: 0,
                 background: 'rgba(255,255,255,0.95)',
                 fontFamily: 'monospace',
@@ -98,8 +98,8 @@ export function RealtimeGraph() {
               type="monotone" 
               dataKey="avgTemp" 
               name="Avg Temp (°C)"
-              stroke="#000" 
-              fill="#000" 
+              stroke="var(--ink)" 
+              fill="var(--ink)" 
               fillOpacity={0.1} 
               strokeWidth={2.5}
               isAnimationActive={true}

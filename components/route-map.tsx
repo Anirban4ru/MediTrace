@@ -44,22 +44,22 @@ export function RouteMap({ batch, height = 360 }: { batch: Batch; height?: numbe
       ];
 
       const originIcon = L.divIcon({
-        html: '<div style="width:12px;height:12px;background:#102A43;border:2px solid #000;border-radius:50%;"></div>',
+        html: '<div style="width:12px;height:12px;background:#102A43;border:2px solid var(--ink);border-radius:50%;"></div>',
         className: '',
         iconSize: [16, 16],
       });
       const destIcon = L.divIcon({
-        html: '<div style="width:12px;height:12px;background:#0f5132;border:2px solid #000;border-radius:50%;"></div>',
+        html: '<div style="width:12px;height:12px;background:var(--success);border:2px solid var(--ink);border-radius:50%;"></div>',
         className: '',
         iconSize: [16, 16],
       });
       const breachIcon = L.divIcon({
-        html: '<div style="width:10px;height:10px;background:#B91C1C;border:2px solid #000;border-radius:2px;"></div>',
+        html: '<div style="width:10px;height:10px;background:var(--danger);border:2px solid var(--ink);border-radius:2px;"></div>',
         className: '',
         iconSize: [14, 14],
       });
       const normalIcon = L.divIcon({
-        html: '<div style="width:8px;height:8px;background:#000;border:1px solid #fff;border-radius:50%;"></div>',
+        html: '<div style="width:8px;height:8px;background:var(--ink);border:1px solid #fff;border-radius:50%;"></div>',
         className: '',
         iconSize: [10, 10],
       });
@@ -83,7 +83,7 @@ export function RouteMap({ batch, height = 360 }: { batch: Batch; height?: numbe
         L.marker([t.lat, t.lng], { icon: t.breached ? breachIcon : normalIcon })
           .addTo(map)
           .bindPopup(
-            `<b>Checkpoint #${i + 1}</b><br/>${t.temperature.toFixed(1)}°C<br/>${new Date(t.timestamp).toLocaleString()}<br/>${t.breached ? '<span style="color:#B91C1C;font-weight:bold">BREACH</span>' : 'OK'}`
+            `<b>Checkpoint #${i + 1}</b><br/>${t.temperature.toFixed(1)}°C<br/>${new Date(t.timestamp).toLocaleString()}<br/>${t.breached ? '<span style="color:var(--danger);font-weight:bold">BREACH</span>' : 'OK'}`
           );
       });
 

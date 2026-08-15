@@ -75,8 +75,8 @@ export function ManufacturerDashboard() {
   return (
     <div className="w-full">
       <div className="mb-4 flex items-center justify-between">
-         <h1 className="display-heavy text-[24px] uppercase dark:text-white">Manufacturer Control Center</h1>
-         <span className="mono-data text-[10px] uppercase text-black/50 dark:text-white/50">Drag widgets to customize layout</span>
+         <h1 className="display-heavy text-[24px] uppercase dark:text-[var(--bg)]">Manufacturer Control Center</h1>
+         <span className="mono-data text-[10px] uppercase text-ink/50 dark:text-[var(--bg)]/50">Drag widgets to customize layout</span>
       </div>
 
       <ResponsiveGridLayout
@@ -87,7 +87,7 @@ export function ManufacturerDashboard() {
         rowHeight={150}
         draggableHandle=".drag-handle"
       >
-        <div key="stats" className="border-2 border-black dark:border-white brutal-shadow flex w-full h-full overflow-hidden">
+        <div key="stats" className="border-2 border-black dark:border-white shadow-ambient flex w-full h-full overflow-hidden">
           <div className="grid grid-cols-2 md:grid-cols-6 w-full h-full">
             <StatCell label="Total Batches" value={stats.total} icon={Package} />
             <StatCell label="In Transit" value={stats.inTransit} icon={Activity} accent />
@@ -98,9 +98,9 @@ export function ManufacturerDashboard() {
           </div>
         </div>
 
-        <div key="provision" className="flex flex-col h-full glass brutal-border dark:border-white brutal-shadow p-5 dark:bg-black">
-          <div className="drag-handle cursor-move mb-4 flex items-center justify-between hover:bg-black/5 dark:hover:bg-white/5 p-2 -m-2">
-            <h2 className="display-heavy text-[15px] uppercase dark:text-white">Provision Batch</h2>
+        <div key="provision" className="flex flex-col h-full glass border dark:border-white shadow-ambient p-5 dark:bg-[var(--ink)]">
+          <div className="drag-handle cursor-move mb-4 flex items-center justify-between hover:bg-[var(--ink)]/5 dark:hover:bg-base/5 p-2 -m-2">
+            <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Provision Batch</h2>
             <BrutalTag>MANUFACTURER_ROLE</BrutalTag>
           </div>
           <div className="flex-1 overflow-y-auto pr-2">
@@ -109,7 +109,7 @@ export function ManufacturerDashboard() {
               <input
                 value={productName}
                 onChange={(e) => setProductName(e.target.value)}
-                className="brutal-border w-full bg-white dark:bg-black dark:text-white px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                 placeholder="e.g. Insulin Glargine 100IU"
               />
             </Field>
@@ -119,20 +119,20 @@ export function ManufacturerDashboard() {
                 min={1}
                 value={units}
                 onChange={(e) => setUnits(Number(e.target.value))}
-                className="brutal-border w-full bg-white dark:bg-black dark:text-white px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
               />
             </Field>
             <Field label="Provisioning Seed (optional)">
               <input
                 value={seedKey}
                 onChange={(e) => setSeedKey(e.target.value)}
-                className="brutal-border w-full bg-white dark:bg-black dark:text-white px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
+                className="border w-full bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white"
                 placeholder="auto-generated if blank"
               />
             </Field>
             <button
               type="submit"
-              className="brutal-border brutal-shadow brutal-press flex w-full items-center justify-center gap-2 bg-black py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-white"
+              className="border shadow-ambient active:scale-[0.98] transition-transform flex w-full items-center justify-center gap-2 bg-[var(--ink)] py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--bg)]"
             >
               <Plus className="h-4 w-4" strokeWidth={2.5} />
               Register On Ledger
@@ -140,22 +140,22 @@ export function ManufacturerDashboard() {
           </form>
 
           {lastProvisioned && (
-            <div className="mt-5 animate-in border-2 border-black dark:border-white bg-white dark:bg-black p-3">
+            <div className="mt-5 animate-editorial-fade border-2 border-black dark:border-white bg-base dark:bg-[var(--ink)] p-3">
               <div className="mb-2 flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-[#0f5132] dark:text-green-400" strokeWidth={2.5} />
-                <span className="text-[11px] font-bold uppercase tracking-[0.12em] dark:text-white">
+                <CheckCircle2 className="h-4 w-4 text-[var(--success)] dark:text-[var(--success)]" strokeWidth={2.5} />
+                <span className="text-[11px] font-bold uppercase tracking-[0.12em] dark:text-[var(--bg)]">
                   On-Chain Confirmed
                 </span>
               </div>
               <Row k="Batch ID" v={lastProvisioned.batchId} />
               <Row k="Serial" v={lastProvisioned.serial} />
               <div className="flex items-center justify-between py-1 text-[11px]">
-                <span className="uppercase tracking-[0.1em] text-black/50 dark:text-white/50">Tx Hash</span>
+                <span className="uppercase tracking-[0.1em] text-ink/50 dark:text-[var(--bg)]/50">Tx Hash</span>
                 <a
                   href={txExplorerUrl(lastProvisioned.provisionTx)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mono-data flex items-center gap-1 font-semibold text-[#102A43] dark:text-blue-400 hover:underline"
+                  className="mono-data flex items-center gap-1 font-semibold text-[#102A43] dark:text-[var(--accent)] hover:underline"
                 >
                   {shortHash(lastProvisioned.provisionTx)}
                   <ExternalLink className="h-3 w-3" strokeWidth={2.5} />
@@ -172,7 +172,7 @@ export function ManufacturerDashboard() {
           <div className="mt-4 flex gap-2 pb-4">
             <button
               onClick={() => exportBatchesCSV(batches)}
-              className="brutal-border brutal-shadow-sm brutal-press flex flex-1 items-center justify-center gap-2 bg-white dark:bg-black dark:text-white py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[#F4F4F6] dark:hover:bg-white/10"
+              className="border shadow-sm active:scale-[0.98] transition-transform flex flex-1 items-center justify-center gap-2 bg-base dark:bg-[var(--ink)] dark:text-[var(--bg)] py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)] dark:hover:bg-base/10"
             >
               <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
               Export CSV
@@ -181,17 +181,17 @@ export function ManufacturerDashboard() {
           </div>
         </div>
 
-        <div key="ledger" className="brutal-card flex flex-col h-full bg-white dark:bg-black dark:border-white">
-          <div className="drag-handle cursor-move flex items-center justify-between border-b-2 border-black dark:border-white px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5">
-            <h2 className="display-heavy text-[15px] uppercase dark:text-white">Batch Ledger</h2>
-            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-black/55 dark:text-white/55">
+        <div key="ledger" className="border shadow-ambient bg-card rounded-xl flex flex-col h-full bg-base dark:bg-[var(--ink)] dark:border-white">
+          <div className="drag-handle cursor-move flex items-center justify-between border-b-2 border-black dark:border-white px-4 py-3 hover:bg-[var(--ink)]/5 dark:hover:bg-base/5">
+            <h2 className="display-heavy text-[15px] uppercase dark:text-[var(--bg)]">Batch Ledger</h2>
+            <span className="mono-data text-[10px] uppercase tracking-[0.16em] text-ink/55 dark:text-[var(--bg)]/55">
               {batches.length} records · newest first
             </span>
           </div>
           <div className="flex-1 overflow-y-auto">
             <table className="w-full border-collapse text-left">
-              <thead className="sticky top-0 bg-[#F4F4F6] dark:bg-black/90 backdrop-blur z-10">
-                <tr className="border-b-2 border-black dark:border-white text-[10px] uppercase tracking-[0.14em] text-black/60 dark:text-white/60">
+              <thead className="sticky top-0 bg-[var(--bg-surface)] dark:bg-[var(--ink)]/90 backdrop-blur z-10">
+                <tr className="border-b-2 border-black dark:border-white text-[10px] uppercase tracking-[0.14em] text-ink/60 dark:text-[var(--bg)]/60">
                   <Th>Batch ID</Th>
                   <Th>Product</Th>
                   <Th>Status</Th>
@@ -219,16 +219,16 @@ export function ManufacturerDashboard() {
 
       {selectedDetail && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[var(--ink)]/40 p-4"
           onClick={() => setSelectedDetail(null)}
         >
           <div
-            className="brutal-card max-h-[80vh] w-full max-w-lg overflow-y-auto"
+            className="border shadow-ambient bg-card rounded-xl max-h-[80vh] w-full max-w-lg overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b-2 border-black bg-white px-4 py-3">
+            <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-3">
               <h3 className="display-heavy text-[14px] uppercase">Batch Detail</h3>
-              <button onClick={() => setSelectedDetail(null)} className="text-black/50 hover:text-black">
+              <button onClick={() => setSelectedDetail(null)} className="text-ink/50 hover:text-ink">
                 ✕
               </button>
             </div>
@@ -250,7 +250,7 @@ export function ManufacturerDashboard() {
               <div className="mt-3 flex gap-2">
                 <button
                   onClick={() => generateBatchReport(selectedDetail)}
-                  className="brutal-border brutal-shadow-sm brutal-press flex flex-1 items-center justify-center gap-1.5 bg-black py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white"
+                  className="border shadow-sm active:scale-[0.98] transition-transform flex flex-1 items-center justify-center gap-1.5 bg-[var(--ink)] py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--bg)]"
                 >
                   <FileText className="h-3.5 w-3.5" strokeWidth={2.5} />
                   PDF Report
@@ -259,7 +259,7 @@ export function ManufacturerDashboard() {
                   href={txExplorerUrl(selectedDetail.provisionTx)}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="brutal-border brutal-shadow-sm brutal-press flex flex-1 items-center justify-center gap-1.5 bg-white py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[#F4F4F6]"
+                  className="border shadow-sm active:scale-[0.98] transition-transform flex flex-1 items-center justify-center gap-1.5 bg-base py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)]"
                 >
                   <ExternalLink className="h-3.5 w-3.5" strokeWidth={2.5} />
                   View on Arbiscan
@@ -284,16 +284,16 @@ function BatchRow({
 }) {
   const breach = batch.telemetry.some((t) => t.breached);
   return (
-    <tr className="border-b border-black/15 text-[12px] transition-colors hover:bg-[#F4F4F6]">
+    <tr className="border-b border-black/15 text-[12px] transition-colors hover:bg-[var(--bg-surface)]">
       <Td>
         <button onClick={onSelect} className="text-left">
           <div className="mono-data font-semibold hover:underline">{batch.batchId}</div>
-          <div className="mono-data text-[10px] text-black/50">{batch.serial}</div>
+          <div className="mono-data text-[10px] text-ink/50">{batch.serial}</div>
         </button>
       </Td>
       <Td>
         <div className="font-medium">{batch.productName}</div>
-        <div className="mono-data text-[10px] text-black/50">{batch.manufacturerLabel}</div>
+        <div className="mono-data text-[10px] text-ink/50">{batch.manufacturerLabel}</div>
       </Td>
       <Td>
         <StatusPill status={batch.currentStatus} />
@@ -303,17 +303,17 @@ function BatchRow({
       </Td>
       <Td>
         {batch.telemetry.length === 0 ? (
-          <span className="mono-data text-[10px] text-black/40">—</span>
+          <span className="mono-data text-[10px] text-ink/40">—</span>
         ) : (
           <div className="flex items-center gap-1.5">
             <Thermometer
               className="h-3.5 w-3.5"
               strokeWidth={2.5}
-              style={{ color: breach ? '#B91C1C' : '#0f5132' }}
+              style={{ color: breach ? 'var(--danger)' : 'var(--success)' }}
             />
             <span className="mono-data text-[11px]">{batch.telemetry.length}</span>
             {breach && (
-              <span className="border border-[#B91C1C] px-1 text-[9px] font-bold uppercase text-[#B91C1C]">
+              <span className="border border-[var(--danger)] px-1 text-[9px] font-bold uppercase text-[var(--danger)]">
                 BREACH
               </span>
             )}
@@ -338,7 +338,7 @@ function BatchRow({
         <button
           onClick={onReport}
           title="Generate PDF report"
-          className="border-2 border-black/20 p-1 transition-colors hover:border-black hover:bg-black hover:text-white"
+          className="border-2 border-black/20 p-1 transition-colors hover:border-black hover:bg-[var(--ink)] hover:text-[var(--bg)]"
         >
           <FileText className="h-3.5 w-3.5" strokeWidth={2.5} />
         </button>
@@ -360,8 +360,8 @@ function StatCell({
   accent?: boolean;
   danger?: boolean;
 }) {
-  const bg = danger ? '#B91C1C' : accent ? '#102A43' : '#FFFFFF';
-  const fg = danger || accent ? '#fff' : '#000';
+  const bg = danger ? 'var(--danger)' : accent ? '#102A43' : 'var(--bg)';
+  const fg = danger || accent ? '#fff' : 'var(--ink)';
   return (
     <div
       className="border-b-2 border-black p-4 md:border-b-0 md:border-r-2 last:border-r-0"
@@ -383,7 +383,7 @@ function StatCell({
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-black/70">
+      <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-ink/70">
         {label}
       </span>
       {children}
@@ -394,7 +394,7 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
 function Row({ k, v }: { k: string; v: string }) {
   return (
     <div className="flex items-center justify-between py-1 text-[11px]">
-      <span className="uppercase tracking-[0.1em] text-black/50">{k}</span>
+      <span className="uppercase tracking-[0.1em] text-ink/50">{k}</span>
       <span className="mono-data font-semibold">{v}</span>
     </div>
   );

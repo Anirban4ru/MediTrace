@@ -48,15 +48,15 @@ export function NewsTicker() {
   }, [headlines]);
 
   return (
-    <div className="brutal-border brutal-shadow-sm flex items-center bg-[#F4F4F6] overflow-hidden h-12 w-full">
-      <div className="bg-black text-white h-full px-4 flex items-center gap-2 font-bold uppercase text-[11px] tracking-[0.14em] shrink-0">
+    <div className="border shadow-sm flex items-center bg-[var(--bg-surface)] overflow-hidden h-12 w-full">
+      <div className="bg-[var(--ink)] text-[var(--bg)] h-full px-4 flex items-center gap-2 font-bold uppercase text-[11px] tracking-[0.14em] shrink-0">
         <Globe className="h-4 w-4" strokeWidth={2.5} />
         Live News
       </div>
       <div className="px-4 flex-1 truncate">
         <span
           className={cn(
-            "mono-data text-[12px] uppercase tracking-[0.1em] text-black transition-opacity duration-300",
+            "mono-data text-[12px] uppercase tracking-[0.1em] text-ink transition-opacity duration-300",
             fade ? "opacity-100" : "opacity-0"
           )}
         >

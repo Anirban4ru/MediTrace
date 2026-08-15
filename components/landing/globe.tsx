@@ -25,8 +25,8 @@ export function GlobeComponent() {
 
   if (!Globe) {
     return (
-      <div className="w-full h-[400px] flex items-center justify-center bg-black brutal-card">
-        <span className="mono-data text-white/50 text-[12px] uppercase tracking-[0.2em] animate-pulse">Initializing Global Telemetry...</span>
+      <div className="w-full h-[400px] flex items-center justify-center bg-[var(--ink)] border shadow-ambient bg-card rounded-xl">
+        <span className="mono-data text-[var(--bg)]/50 text-[12px] uppercase tracking-[0.2em] animate-pulse">Initializing Global Telemetry...</span>
       </div>
     );
   }
@@ -37,12 +37,12 @@ export function GlobeComponent() {
     startLng: b.origin.lng,
     endLat: b.destination.lat,
     endLng: b.destination.lng,
-    color: b.currentStatus === 'Spoiled' ? '#B91C1C' : '#ffffff'
+    color: b.currentStatus === 'Spoiled' ? 'var(--danger)' : 'var(--bg)'
   }));
 
   return (
-    <div className="w-full h-[400px] bg-black brutal-card overflow-hidden flex items-center justify-center relative cursor-move">
-      <div className="absolute top-4 left-4 z-10 text-white/50 mono-data text-[10px] uppercase tracking-[0.2em]">
+    <div className="w-full h-[400px] bg-[var(--ink)] border shadow-ambient bg-card rounded-xl overflow-hidden flex items-center justify-center relative cursor-move">
+      <div className="absolute top-4 left-4 z-10 text-[var(--bg)]/50 mono-data text-[10px] uppercase tracking-[0.2em]">
         Live Global Network
       </div>
       <Globe
@@ -56,7 +56,7 @@ export function GlobeComponent() {
         arcDashGap={0.2}
         arcDashAnimateTime={1500}
         arcsTransitionDuration={0}
-        backgroundColor="#000000"
+        backgroundColor="var(--ink)"
       />
     </div>
   );

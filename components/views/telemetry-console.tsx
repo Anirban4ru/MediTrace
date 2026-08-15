@@ -95,7 +95,7 @@ export function TelemetryConsole() {
 
   if (!selected) {
     return (
-      <div className="brutal-card p-8 text-center text-[13px] uppercase tracking-[0.14em] text-black/60">
+      <div className="border shadow-ambient bg-card rounded-xl p-8 text-center text-[13px] uppercase tracking-[0.14em] text-ink/60">
         No batches available for telemetry ingestion.
       </div>
     );
@@ -127,7 +127,7 @@ export function TelemetryConsole() {
 
   return (
     <div className="grid grid-cols-12 gap-6">
-      <div className="col-span-12 flex items-center gap-3 overflow-x-auto no-scrollbar border-2 border-black brutal-shadow bg-white p-2">
+      <div className="col-span-12 flex items-center gap-3 overflow-x-auto no-scrollbar border-2 border-black shadow-ambient bg-base p-2">
         {inTransitBatches.slice(0, 12).map((b) => {
           const active = b.batchId === selectedId;
           return (
@@ -137,8 +137,8 @@ export function TelemetryConsole() {
               className={cn(
                 'flex shrink-0 items-center gap-2 border-2 px-3 py-1.5 text-[11px] font-bold uppercase tracking-[0.1em] transition-colors',
                 active
-                  ? 'border-black bg-black text-white'
-                  : 'border-black/30 bg-white text-black/70 hover:border-black'
+                  ? 'border-black bg-[var(--ink)] text-[var(--bg)]'
+                  : 'border-black/30 bg-base text-ink/70 hover:border-black'
               )}
             >
               <Thermometer className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -146,7 +146,7 @@ export function TelemetryConsole() {
               <span
                 className={cn(
                   'h-1.5 w-1.5',
-                  b.currentStatus === 'Spoiled' ? 'bg-[#B91C1C]' : 'bg-[#0f5132]'
+                  b.currentStatus === 'Spoiled' ? 'bg-[var(--danger)]' : 'bg-[var(--success)]'
                 )}
               />
             </button>
@@ -156,11 +156,11 @@ export function TelemetryConsole() {
 
       {/* Chart + stats */}
       <section className="col-span-12 lg:col-span-8 space-y-4">
-        <div className="glass brutal-border brutal-shadow p-5">
+        <div className="glass border shadow-ambient p-5">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <div>
               <h2 className="display-heavy text-[15px] uppercase">Cold-Chain Telemetry</h2>
-              <div className="mono-data text-[11px] text-black/55">
+              <div className="mono-data text-[11px] text-ink/55">
                 {selected.batchId} · {selected.productName}
               </div>
             </div>
@@ -171,7 +171,7 @@ export function TelemetryConsole() {
                 onClick={() => setLiveMode(!liveMode)}
                 className={cn(
                   'flex items-center gap-1.5 border-2 border-black px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] transition-colors',
-                  liveMode ? 'bg-[#B91C1C] text-white' : 'bg-white hover:bg-black/5'
+                  liveMode ? 'bg-[var(--danger)] text-[var(--bg)]' : 'bg-base hover:bg-[var(--ink)]/5'
                 )}
               >
                 {liveMode ? <Square className="h-3 w-3" strokeWidth={2.5} /> : <Radio className="h-3 w-3" strokeWidth={2.5} />}
@@ -181,67 +181,67 @@ export function TelemetryConsole() {
           </div>
 
           {liveMode && (
-            <div className="mb-3 flex items-center gap-2 border-2 border-[#B91C1C] bg-[#B91C1C]/5 px-3 py-1.5">
-              <span className="h-2 w-2 animate-pulse bg-[#B91C1C]" />
-              <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-[#B91C1C]">
+            <div className="mb-3 flex items-center gap-2 border-2 border-[var(--danger)] bg-[var(--danger)]/5 px-3 py-1.5">
+              <span className="h-2 w-2 animate-pulse bg-[var(--danger)]" />
+              <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-[var(--danger)]">
                 Live carrier stream — new reading every 3s
               </span>
             </div>
           )}
 
-          <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-black/60">
+          <div className="mb-3 flex flex-wrap items-center gap-x-5 gap-y-1 text-[10px] uppercase tracking-[0.14em] text-ink/60">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-4 bg-black" /> Sensor reading
+              <span className="h-2 w-4 bg-[var(--ink)]" /> Sensor reading
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-0.5 w-4 bg-[#B91C1C]" /> Ceiling 8.0°C
+              <span className="h-0.5 w-4 bg-[var(--danger)]" /> Ceiling 8.0°C
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="h-0.5 w-4 bg-[#B91C1C]" /> Floor 2.0°C
+              <span className="h-0.5 w-4 bg-[var(--danger)]" /> Floor 2.0°C
             </span>
             <span className="flex items-center gap-1.5">
               <span className="h-2 w-4 bg-[#102A43]/15" /> Safe band
             </span>
           </div>
 
-          <div className="h-[340px] w-full border-2 border-black bg-white/60">
+          <div className="h-[340px] w-full border-2 border-black bg-base/60">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData} margin={{ top: 16, right: 20, bottom: 8, left: 0 }}>
                 <CartesianGrid stroke="#E5E5E9" strokeDasharray="2 2" />
                 <XAxis
                   dataKey="label"
-                  stroke="#000"
+                  stroke="var(--ink)"
                   tick={{ fontSize: 10, fontFamily: 'monospace' }}
-                  tickLine={{ stroke: '#000' }}
-                  axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                  tickLine={{ stroke: 'var(--ink)' }}
+                  axisLine={{ stroke: 'var(--ink)', strokeWidth: 2 }}
                 />
                 <YAxis
                   domain={[0, 14]}
                   ticks={[0, 2, 4, 6, 8, 10, 12, 14]}
-                  stroke="#000"
+                  stroke="var(--ink)"
                   tick={{ fontSize: 10, fontFamily: 'monospace' }}
-                  tickLine={{ stroke: '#000' }}
-                  axisLine={{ stroke: '#000', strokeWidth: 2 }}
+                  tickLine={{ stroke: 'var(--ink)' }}
+                  axisLine={{ stroke: 'var(--ink)', strokeWidth: 2 }}
                   tickFormatter={(v) => `${v}°`}
                 />
                 <ReferenceArea y1={SAFE_BAND.min} y2={SAFE_BAND.max} fill="#102A43" fillOpacity={0.08} />
                 <ReferenceLine
                   y={SAFE_BAND.max}
-                  stroke="#B91C1C"
+                  stroke="var(--danger)"
                   strokeWidth={2}
                   strokeDasharray="6 3"
-                  label={{ value: 'CEILING 8.0°C', position: 'insideTopRight', fontSize: 9, fontFamily: 'monospace', fill: '#B91C1C' }}
+                  label={{ value: 'CEILING 8.0°C', position: 'insideTopRight', fontSize: 9, fontFamily: 'monospace', fill: 'var(--danger)' }}
                 />
                 <ReferenceLine
                   y={SAFE_BAND.min}
-                  stroke="#B91C1C"
+                  stroke="var(--danger)"
                   strokeWidth={2}
                   strokeDasharray="6 3"
-                  label={{ value: 'FLOOR 2.0°C', position: 'insideBottomRight', fontSize: 9, fontFamily: 'monospace', fill: '#B91C1C' }}
+                  label={{ value: 'FLOOR 2.0°C', position: 'insideBottomRight', fontSize: 9, fontFamily: 'monospace', fill: 'var(--danger)' }}
                 />
                 <Tooltip
                   contentStyle={{
-                    border: '2px solid #000',
+                    border: '2px solid var(--ink)',
                     borderRadius: 0,
                     background: 'rgba(255,255,255,0.92)',
                     fontFamily: 'monospace',
@@ -253,7 +253,7 @@ export function TelemetryConsole() {
                 <Line
                   type="stepAfter"
                   dataKey="temp"
-                  stroke="#000"
+                  stroke="var(--ink)"
                   strokeWidth={2.5}
                   dot={(props) => {
                     const { cx, cy, payload, index } = props as {
@@ -268,13 +268,13 @@ export function TelemetryConsole() {
                         cx={cx}
                         cy={cy}
                         r={4}
-                        fill={payload.breached ? '#B91C1C' : '#000'}
+                        fill={payload.breached ? 'var(--danger)' : 'var(--ink)'}
                         stroke="#fff"
                         strokeWidth={1.5}
                       />
                     );
                   }}
-                  activeDot={{ r: 6, fill: '#102A43', stroke: '#000', strokeWidth: 2 }}
+                  activeDot={{ r: 6, fill: '#102A43', stroke: 'var(--ink)', strokeWidth: 2 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -291,21 +291,21 @@ export function TelemetryConsole() {
 
         {/* Route Map */}
         {selected.telemetry.length > 0 && (
-          <div className="brutal-card p-4">
+          <div className="border shadow-ambient bg-card rounded-xl p-4">
             <div className="mb-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <MapPin className="h-4 w-4" strokeWidth={2.5} />
                 <h3 className="display-heavy text-[13px] uppercase">Geographic Route</h3>
               </div>
-              <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.12em] text-black/55">
+              <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.12em] text-ink/55">
                 <span className="flex items-center gap-1.5">
                   <span className="h-2.5 w-2.5 rounded-full bg-[#102A43]" /> Origin
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[#0f5132]" /> Destination
+                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--success)]" /> Destination
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <span className="h-2.5 w-2.5 bg-[#B91C1C]" /> Breach
+                  <span className="h-2.5 w-2.5 bg-[var(--danger)]" /> Breach
                 </span>
               </div>
             </div>
@@ -316,14 +316,14 @@ export function TelemetryConsole() {
 
       {/* Ingestion form + route grid */}
       <aside className="col-span-12 lg:col-span-4 space-y-4">
-        <div className="brutal-card p-5">
+        <div className="border shadow-ambient bg-card rounded-xl p-5">
           <div className="mb-4 flex items-center justify-between">
             <h3 className="display-heavy text-[13px] uppercase">Ingest Telemetry</h3>
             <Activity className="h-4 w-4" strokeWidth={2.5} />
           </div>
           <form onSubmit={handleIngest} className="space-y-3">
             <div>
-              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-black/70">
+              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-ink/70">
                 Temperature (°C)
               </span>
               <input
@@ -331,7 +331,7 @@ export function TelemetryConsole() {
                 step={0.1}
                 value={tempInput}
                 onChange={(e) => setTempInput(Number(e.target.value))}
-                className="brutal-border w-full bg-white px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
+                className="border w-full bg-base px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
               />
               <div className="mt-2 flex gap-1">
                 {[3.5, 5.0, 7.2, 9.5, 12.0].map((v) => (
@@ -342,7 +342,7 @@ export function TelemetryConsole() {
                     className={cn(
                       'border-2 px-2 py-1 text-[10px] mono-data',
                       v > SAFE_BAND.max || v < SAFE_BAND.min
-                        ? 'border-[#B91C1C] text-[#B91C1C]'
+                        ? 'border-[var(--danger)] text-[var(--danger)]'
                         : 'border-black/40 hover:border-black'
                     )}
                   >
@@ -352,13 +352,13 @@ export function TelemetryConsole() {
               </div>
             </div>
             <div>
-              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-black/70">
+              <span className="mb-1.5 block text-[10px] font-bold uppercase tracking-[0.14em] text-ink/70">
                 Carrier Seed
               </span>
               <input
                 value={seedKey}
                 onChange={(e) => setSeedKey(e.target.value)}
-                className="brutal-border w-full bg-white px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
+                className="border w-full bg-base px-3 py-2 text-[13px] mono-data focus:outline-none focus:ring-2 focus:ring-black"
                 placeholder="auto"
               />
             </div>
@@ -366,8 +366,8 @@ export function TelemetryConsole() {
               type="submit"
               disabled={isWriting}
               className={cn(
-                "brutal-border brutal-shadow flex w-full items-center justify-center gap-2 bg-black py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-white transition-opacity",
-                isWriting ? "opacity-50 cursor-not-allowed" : "brutal-press"
+                "border shadow-ambient flex w-full items-center justify-center gap-2 bg-[var(--ink)] py-2.5 text-[12px] font-bold uppercase tracking-[0.14em] text-[var(--bg)] transition-opacity",
+                isWriting ? "opacity-50 cursor-not-allowed" : "active:scale-[0.98] transition-transform"
               )}
             >
               {isWriting ? (
@@ -382,7 +382,7 @@ export function TelemetryConsole() {
                 </>
               )}
             </button>
-            <p className="text-[10px] uppercase tracking-[0.12em] text-black/50">
+            <p className="text-[10px] uppercase tracking-[0.12em] text-ink/50">
               Breach outside [2.0, 8.0]°C auto-mutates status to SPOILED on-chain.
             </p>
           </form>
@@ -392,7 +392,7 @@ export function TelemetryConsole() {
 
         <button
           onClick={() => exportTelemetryCSV(selected)}
-          className="brutal-border brutal-shadow-sm brutal-press flex w-full items-center justify-center gap-2 bg-white py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[#F4F4F6]"
+          className="border shadow-sm active:scale-[0.98] transition-transform flex w-full items-center justify-center gap-2 bg-base py-2 text-[10px] font-bold uppercase tracking-[0.12em] hover:bg-[var(--bg-surface)]"
         >
           <Download className="h-3.5 w-3.5" strokeWidth={2.5} />
           Export Telemetry CSV
@@ -404,13 +404,13 @@ export function TelemetryConsole() {
 
 function RouteGrid({ batch }: { batch: Batch }) {
   return (
-    <div className="brutal-card">
+    <div className="border shadow-ambient bg-card rounded-xl">
       <div className="border-b-2 border-black px-4 py-3">
         <h3 className="display-heavy text-[13px] uppercase">Route Checkpoints</h3>
       </div>
       <div className="max-h-[420px] overflow-y-auto">
         {batch.telemetry.length === 0 ? (
-          <div className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-black/50">
+          <div className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-ink/50">
             No telemetry recorded yet.
           </div>
         ) : (
@@ -418,37 +418,37 @@ function RouteGrid({ batch }: { batch: Batch }) {
             {batch.telemetry.map((t, i) => (
               <li
                 key={t.txHash}
-                className="border-b border-black/15 px-4 py-3 transition-colors hover:bg-[#F4F4F6]"
+                className="border-b border-black/15 px-4 py-3 transition-colors hover:bg-[var(--bg-surface)]"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="mono-data text-[10px] text-black/40">
+                    <span className="mono-data text-[10px] text-ink/40">
                       #{String(i + 1).padStart(2, '0')}
                     </span>
                     <Thermometer
                       className="h-3.5 w-3.5"
                       strokeWidth={2.5}
-                      style={{ color: t.breached ? '#B91C1C' : '#0f5132' }}
+                      style={{ color: t.breached ? 'var(--danger)' : 'var(--success)' }}
                     />
                     <span
                       className={cn(
                         'mono-data text-[13px] font-bold',
-                        t.breached && 'text-[#B91C1C]'
+                        t.breached && 'text-[var(--danger)]'
                       )}
                     >
                       {fmtTemp(t.temperature)}
                     </span>
                     {t.breached && (
-                      <span className="border border-[#B91C1C] px-1 text-[9px] font-bold uppercase text-[#B91C1C]">
+                      <span className="border border-[var(--danger)] px-1 text-[9px] font-bold uppercase text-[var(--danger)]">
                         BREACH
                       </span>
                     )}
                   </div>
-                  <span className="mono-data text-[10px] text-black/55">
+                  <span className="mono-data text-[10px] text-ink/55">
                     {fmtTime(t.timestamp)}
                   </span>
                 </div>
-                <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-black/55">
+                <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[10px] text-ink/55">
                   <span className="flex items-center gap-1 mono-data">
                     <MapPin className="h-3 w-3" strokeWidth={2.5} />
                     {t.lat.toFixed(4)}, {t.lng.toFixed(4)}
@@ -473,13 +473,13 @@ function RouteGrid({ batch }: { batch: Batch }) {
         )}
       </div>
       {batch.telemetry.length > 0 && (
-        <div className="flex items-center justify-between border-t-2 border-black bg-[#F4F4F6] px-4 py-2.5 text-[10px] uppercase tracking-[0.14em]">
-          <span className="flex items-center gap-1.5 text-black/60">
+        <div className="flex items-center justify-between border-t-2 border-black bg-[var(--bg-surface)] px-4 py-2.5 text-[10px] uppercase tracking-[0.14em]">
+          <span className="flex items-center gap-1.5 text-ink/60">
             <MapPin className="h-3 w-3" strokeWidth={2.5} />
             {batch.origin.label}
           </span>
           <ArrowRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-          <span className="flex items-center gap-1.5 text-black/60">
+          <span className="flex items-center gap-1.5 text-ink/60">
             {batch.destination.label}
             <MapPin className="h-3 w-3" strokeWidth={2.5} />
           </span>
@@ -503,7 +503,7 @@ function Stat({
   return (
     <div
       className="border-r-2 border-black p-3 last:border-r-0"
-      style={{ background: danger ? '#B91C1C' : '#fff', color: danger ? '#fff' : '#000' }}
+      style={{ background: danger ? 'var(--danger)' : '#fff', color: danger ? '#fff' : 'var(--ink)' }}
     >
       <div className="flex items-center gap-1 text-[9px] font-bold uppercase tracking-[0.14em] opacity-70">
         {Icon && <Icon className="h-3 w-3" strokeWidth={2.5} />}

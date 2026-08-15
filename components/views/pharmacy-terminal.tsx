@@ -203,14 +203,14 @@ export function PharmacyTerminal() {
               angle: 60,
               spread: 55,
               origin: { x: 0 },
-              colors: ['#0f5132', '#000000', '#ffffff']
+              colors: ['var(--success)', 'var(--ink)', 'var(--bg)']
             });
             confetti({
               particleCount: 5,
               angle: 120,
               spread: 55,
               origin: { x: 1 },
-              colors: ['#0f5132', '#000000', '#ffffff']
+              colors: ['var(--success)', 'var(--ink)', 'var(--bg)']
             });
             if (Date.now() < end) {
               requestAnimationFrame(frame);
@@ -275,10 +275,10 @@ export function PharmacyTerminal() {
   return (
     <div className="grid grid-cols-12 gap-6">
       {/* Header */}
-      <div className="col-span-12 flex flex-wrap items-end justify-between gap-3 border-2 border-black brutal-shadow bg-white px-5 py-4">
+      <div className="col-span-12 flex flex-wrap items-end justify-between gap-3 border-2 border-black shadow-ambient bg-base px-5 py-4">
         <div>
           <h2 className="display-heavy text-[18px] uppercase">Pharmacy Verification Terminal</h2>
-          <p className="mono-data text-[11px] text-black/55">
+          <p className="mono-data text-[11px] text-ink/55">
             Real OpenCV.js analysis · SSIM authenticity · barcode decode · on-chain proof
           </p>
         </div>
@@ -287,7 +287,7 @@ export function PharmacyTerminal() {
 
       {/* Batch selector */}
       <section className="col-span-12 lg:col-span-4">
-        <div className="brutal-card p-4">
+        <div className="border shadow-ambient bg-card rounded-xl p-4">
           <h3 className="mb-3 display-heavy text-[13px] uppercase">Select Batch</h3>
           <div className="max-h-[520px] space-y-2 overflow-y-auto pr-1">
             {batches.map((b) => {
@@ -299,18 +299,18 @@ export function PharmacyTerminal() {
                   className={cn(
                     'w-full border-2 p-2.5 text-left transition-colors',
                     active
-                      ? 'border-black bg-black text-white'
-                      : 'border-black/25 bg-white hover:border-black'
+                      ? 'border-black bg-[var(--ink)] text-[var(--bg)]'
+                      : 'border-black/25 bg-base hover:border-black'
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <span className="mono-data text-[11px] font-bold">{b.batchId}</span>
                     <StatusPill status={b.currentStatus} className={active ? '!border-white/40' : ''} />
                   </div>
-                  <div className={cn('mt-1 text-[11px]', active ? 'text-white/70' : 'text-black/60')}>
+                  <div className={cn('mt-1 text-[11px]', active ? 'text-[var(--bg)]/70' : 'text-ink/60')}>
                     {b.productName}
                   </div>
-                  <div className={cn('mono-data text-[10px]', active ? 'text-white/50' : 'text-black/40')}>
+                  <div className={cn('mono-data text-[10px]', active ? 'text-[var(--bg)]/50' : 'text-ink/40')}>
                     {b.serial}
                   </div>
                 </button>
@@ -328,11 +328,11 @@ export function PharmacyTerminal() {
           onDragLeave={() => setDragOver(false)}
           onDrop={onDrop}
           className={cn(
-            'relative grid min-h-[560px] grid-rows-[auto_1fr] border-2 border-black brutal-shadow bg-[#F4F4F6]',
+            'relative grid min-h-[560px] grid-rows-[auto_1fr] border-2 border-black shadow-ambient bg-[var(--bg-surface)]',
             dragOver && 'ring-4 ring-black ring-inset'
           )}
         >
-          <div className="flex items-center justify-between border-b-2 border-black bg-white px-4 py-2.5">
+          <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-2.5">
             <div className="flex items-center gap-2">
               <ScanLine className="h-4 w-4" strokeWidth={2.5} />
               <span className="text-[11px] font-bold uppercase tracking-[0.14em]">
@@ -343,13 +343,13 @@ export function PharmacyTerminal() {
               {images.length > 0 && phase === 'idle' && (
                 <button
                   onClick={startProcessing}
-                  className="brutal-border brutal-shadow-sm brutal-press flex items-center gap-1.5 bg-black px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white"
+                  className="border shadow-sm active:scale-[0.98] transition-transform flex items-center gap-1.5 bg-[var(--ink)] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--bg)]"
                 >
                   <Cpu className="h-3.5 w-3.5" strokeWidth={2.5} />
                   Run CV Pipeline
                 </button>
               )}
-              <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-black/55">
+              <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-ink/55">
                 OpenCV.js · WASM
               </span>
             </div>
@@ -363,12 +363,12 @@ export function PharmacyTerminal() {
             {phase === 'idle' && images.length > 0 && (
               <div className="p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-black/70">
+                  <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/70">
                     {images.length} image(s) ready — click &quot;Run CV Pipeline&quot;
                   </span>
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="flex items-center gap-1 border-2 border-black px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-black hover:text-white"
+                    className="flex items-center gap-1 border-2 border-black px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                   >
                     <Plus className="h-3 w-3" strokeWidth={2.5} />
                     Add
@@ -376,13 +376,13 @@ export function PharmacyTerminal() {
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
                   {images.map((img, i) => (
-                    <div key={i} className="group relative border-2 border-black bg-white">
+                    <div key={i} className="group relative border-2 border-black bg-base">
                       <Image src={img.dataUrl} alt={img.label} width={400} height={300} className="h-32 w-full object-cover" unoptimized />
                       <div className="flex items-center justify-between px-2 py-1">
-                        <span className="mono-data text-[9px] uppercase text-black/60">{img.label}</span>
+                        <span className="mono-data text-[9px] uppercase text-ink/60">{img.label}</span>
                         <button
                           onClick={() => removeImage(i)}
-                          className="text-black/40 hover:text-[#B91C1C]"
+                          className="text-ink/40 hover:text-[var(--danger)]"
                         >
                           <X className="h-3.5 w-3.5" strokeWidth={2.5} />
                         </button>
@@ -395,30 +395,30 @@ export function PharmacyTerminal() {
 
             {phase === 'processing' && (
               <div className="absolute inset-0 flex items-center justify-center p-6">
-                <div className="glass-strong brutal-border w-full max-w-md p-6">
+                <div className="glass border w-full max-w-md p-6">
                   <div className="mb-4 flex items-center gap-2">
                     <Loader2 className="h-5 w-5 animate-spin" strokeWidth={2.5} />
                     <span className="text-[12px] font-bold uppercase tracking-[0.14em]">
                       Real CV Pipeline (OpenCV.js)
                     </span>
                   </div>
-                  <div className="mb-3 h-3 w-full border-2 border-black bg-white">
+                  <div className="mb-3 h-3 w-full border-2 border-black bg-base">
                     <div
-                      className="h-full bg-black transition-all duration-200"
+                      className="h-full bg-[var(--ink)] transition-all duration-200"
                       style={{ width: `${progress}%` }}
                     />
                   </div>
-                  <div className="mono-data text-[11px] text-black/70">
+                  <div className="mono-data text-[11px] text-ink/70">
                     {Math.round(progress)}% · {stage}
                   </div>
                   {images.length > 0 && (
                     <div className="mt-3 border-2 border-black relative overflow-hidden">
-                      <div className="absolute inset-0 z-10 bg-black/10 animate-pulse backdrop-blur-[1px]" />
+                      <div className="absolute inset-0 z-10 bg-[var(--ink)]/10 animate-pulse backdrop-blur-[1px]" />
                       <Image src={images[0].dataUrl} alt="processing" width={400} height={300} className="h-32 w-full object-cover opacity-60" unoptimized />
                     </div>
                   )}
                   <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                    <div className="scanline absolute inset-x-0 h-24" />
+                    <div className=" absolute inset-x-0 h-24" />
                   </div>
                 </div>
               </div>
@@ -439,15 +439,15 @@ export function PharmacyTerminal() {
 
             {phase === 'error' && (
               <div className="flex h-full min-h-[400px] flex-col items-center justify-center gap-4 p-8">
-                <AlertTriangle className="h-12 w-12 text-[#B91C1C]" strokeWidth={2} />
+                <AlertTriangle className="h-12 w-12 text-[var(--danger)]" strokeWidth={2} />
                 <div className="text-center">
                   <div className="display-heavy text-[16px] uppercase">Pipeline Error</div>
-                  <p className="mono-data mt-1 text-[11px] text-black/60">{error}</p>
-                  <p className="mono-data mt-2 text-[10px] text-black/45">
+                  <p className="mono-data mt-1 text-[11px] text-ink/60">{error}</p>
+                  <p className="mono-data mt-2 text-[10px] text-ink/45">
                     OpenCV.js may have failed to load. Check your internet connection.
                   </p>
                 </div>
-                <button onClick={reset} className="brutal-border brutal-shadow-sm brutal-press bg-black px-4 py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-white">
+                <button onClick={reset} className="border shadow-sm active:scale-[0.98] transition-transform bg-[var(--ink)] px-4 py-2 text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--bg)]">
                   Try Again
                 </button>
               </div>
@@ -511,16 +511,16 @@ function DropZone({ onClick, dragOver }: { onClick: () => void; dragOver: boolea
       onClick={onClick}
       className="flex h-full min-h-[480px] w-full flex-col items-center justify-center gap-4 p-8 text-center transition-colors"
     >
-      <div className={cn('brutal-border brutal-shadow flex h-24 w-24 items-center justify-center bg-white transition-transform', dragOver && 'scale-110 bg-black text-white')}>
+      <div className={cn('border shadow-ambient flex h-24 w-24 items-center justify-center bg-base transition-transform', dragOver && 'scale-110 bg-[var(--ink)] text-[var(--bg)]')}>
         <Upload className="h-10 w-10" strokeWidth={2} />
       </div>
       <div>
         <div className="display-heavy text-[18px] uppercase">Drop packaging images</div>
-        <div className="mono-data mt-1 text-[11px] uppercase tracking-[0.16em] text-black/55">
+        <div className="mono-data mt-1 text-[11px] uppercase tracking-[0.16em] text-ink/55">
           or click to browse · JPG / PNG / WEBP · up to 5 images
         </div>
       </div>
-      <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-[10px] uppercase tracking-[0.14em] text-black/45">
+      <div className="mt-2 flex flex-wrap items-center justify-center gap-3 text-[10px] uppercase tracking-[0.14em] text-ink/45">
         <span className="flex items-center gap-1.5">
           <Layers className="h-3.5 w-3.5" strokeWidth={2.5} />
           Multi-image scan
@@ -569,10 +569,10 @@ function ResultSheet({
 
   return (
     <div className="absolute inset-0 overflow-y-auto p-4 sm:p-6">
-      <div className="glass-strong brutal-border brutal-shadow w-full animate-blur-in">
+      <div className="glass border shadow-ambient w-full animate-editorial-fade">
         <div
           className="flex items-center justify-between border-b-2 border-black px-4 py-2.5"
-          style={{ background: spoiled ? '#B91C1C' : authentic ? '#0f5132' : '#000', color: '#fff' }}
+          style={{ background: spoiled ? 'var(--danger)' : authentic ? 'var(--success)' : 'var(--ink)', color: '#fff' }}
         >
           <div className="flex items-center gap-2">
             {spoiled || !authentic ? <ShieldAlert className="h-4 w-4" strokeWidth={2.5} /> : <ShieldCheck className="h-4 w-4" strokeWidth={2.5} />}
@@ -608,13 +608,13 @@ function ResultSheet({
 
             {/* Barcode result */}
             {barcodeResult && (
-              <div className="mt-3 border-2 border-black bg-[#F4F4F6] p-3">
+              <div className="mt-3 border-2 border-black bg-[var(--bg-surface)] p-3">
                 <div className="mb-2 flex items-center gap-2">
                   <Barcode className="h-4 w-4" strokeWidth={2.5} />
                   <span className="text-[10px] font-bold uppercase tracking-[0.12em]">Barcode Decoded</span>
-                  <span className="mono-data text-[9px] text-black/50">{barcodeResult.format}</span>
+                  <span className="mono-data text-[9px] text-ink/50">{barcodeResult.format}</span>
                 </div>
-                <div className="mono-data break-all text-[10px] text-black/70">{barcodeResult.text}</div>
+                <div className="mono-data break-all text-[10px] text-ink/70">{barcodeResult.text}</div>
                 {gs1Data && (gs1Data.serial || gs1Data.gtin || gs1Data.batch) && (
                   <div className="mt-2 flex flex-wrap gap-2">
                     {gs1Data.gtin && <GS1Tag label="GTIN" value={gs1Data.gtin} />}
@@ -635,13 +635,13 @@ function ResultSheet({
 
             <div className="mb-4">
               <div className="mb-1 flex items-baseline justify-between">
-                <span className="text-[10px] uppercase tracking-[0.14em] text-black/60">Authenticity</span>
-                <span className="mono-data text-[22px] font-bold" style={{ color: authentic ? '#0f5132' : '#B91C1C' }}>
+                <span className="text-[10px] uppercase tracking-[0.14em] text-ink/60">Authenticity</span>
+                <span className="mono-data text-[22px] font-bold" style={{ color: authentic ? 'var(--success)' : 'var(--danger)' }}>
                   {fmtScore(cvResult.authenticityScore)}
                 </span>
               </div>
-              <div className="h-3 w-full border-2 border-black bg-white">
-                <div className="h-full transition-all duration-500" style={{ width: `${cvResult.authenticityScore * 100}%`, background: authentic ? '#0f5132' : '#B91C1C' }} />
+              <div className="h-3 w-full border-2 border-black bg-base">
+                <div className="h-full transition-all duration-500" style={{ width: `${cvResult.authenticityScore * 100}%`, background: authentic ? 'var(--success)' : 'var(--danger)' }} />
               </div>
             </div>
 
@@ -655,7 +655,7 @@ function ResultSheet({
             <Metric icon={Cpu} label="Processing Time" value={`${cvResult.processingTimeMs} ms`} />
 
             {/* On-chain proof */}
-            <div className="mt-4 border-2 border-black bg-[#F4F4F6] p-3">
+            <div className="mt-4 border-2 border-black bg-[var(--bg-surface)] p-3">
               <div className="mb-2 flex items-center gap-2">
                 <Fingerprint className="h-4 w-4" strokeWidth={2.5} />
                 <span className="text-[10px] font-bold uppercase tracking-[0.12em]">On-Chain Proof</span>
@@ -669,18 +669,18 @@ function ResultSheet({
               <ProofRow label="Verified At" value={fmtTime(Date.now())} />
             </div>
 
-            <div className="mt-3 flex items-center gap-2 border-2 border-black bg-white px-3 py-2">
+            <div className="mt-3 flex items-center gap-2 border-2 border-black bg-base px-3 py-2">
               {authentic && !spoiled ? (
                 <>
-                  <CheckCircle2 className="h-4 w-4 text-[#0f5132]" strokeWidth={2.5} />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#0f5132]">
+                  <CheckCircle2 className="h-4 w-4 text-[var(--success)]" strokeWidth={2.5} />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--success)]">
                     Cryptographic proof verified on-chain
                   </span>
                 </>
               ) : (
                 <>
-                  <ShieldAlert className="h-4 w-4 text-[#B91C1C]" strokeWidth={2.5} />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#B91C1C]">
+                  <ShieldAlert className="h-4 w-4 text-[var(--danger)]" strokeWidth={2.5} />
+                  <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-[var(--danger)]">
                     Do not dispense — quarantine batch
                   </span>
                 </>
@@ -688,14 +688,14 @@ function ResultSheet({
             </div>
 
             {multiResult && multiResult.perImage.length > 1 && (
-              <div className="mt-3 border-2 border-black bg-white p-2">
-                <div className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-black/60">
+              <div className="mt-3 border-2 border-black bg-base p-2">
+                <div className="mb-1.5 text-[9px] font-bold uppercase tracking-[0.12em] text-ink/60">
                   Per-image breakdown
                 </div>
                 {multiResult.perImage.map((r, i) => (
                   <div key={i} className="flex items-center justify-between border-b border-black/10 py-1 text-[10px] last:border-b-0">
                     <span className="mono-data">{images[i]?.label ?? `Image ${i + 1}`}</span>
-                    <span className="mono-data" style={{ color: r.anomaliesDetected ? '#B91C1C' : '#0f5132' }}>
+                    <span className="mono-data" style={{ color: r.anomaliesDetected ? 'var(--danger)' : 'var(--success)' }}>
                       {fmtScore(r.authenticityScore)} · {r.boundingBoxes.length} boxes
                     </span>
                   </div>
@@ -712,11 +712,11 @@ function ResultSheet({
 function Metric({ icon: Icon, label, value, danger }: { icon: React.ElementType; label: string; value: string; danger?: boolean }) {
   return (
     <div className="flex items-center justify-between border-b border-black/15 py-1.5 last:border-b-0">
-      <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-black/60">
+      <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-ink/60">
         <Icon className="h-3.5 w-3.5" strokeWidth={2.5} />
         {label}
       </span>
-      <span className={cn('mono-data text-[12px] font-bold', danger && 'text-[#B91C1C]')}>{value}</span>
+      <span className={cn('mono-data text-[12px] font-bold', danger && 'text-[var(--danger)]')}>{value}</span>
     </div>
   );
 }
@@ -724,7 +724,7 @@ function Metric({ icon: Icon, label, value, danger }: { icon: React.ElementType;
 function ProofRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-2 border-b border-black/15 py-1 last:border-b-0">
-      <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-black/55">{label}</span>
+      <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-ink/55">{label}</span>
       <span className="mono-data truncate text-[11px] font-semibold">{value}</span>
     </div>
   );
@@ -733,7 +733,7 @@ function ProofRow({ label, value }: { label: string; value: string }) {
 function ProofLink({ label, value, href }: { label: string; value: string; href: string }) {
   return (
     <div className="flex items-center justify-between gap-2 border-b border-black/15 py-1 last:border-b-0">
-      <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-black/55">{label}</span>
+      <span className="shrink-0 text-[10px] uppercase tracking-[0.12em] text-ink/55">{label}</span>
       <a href={href} target="_blank" rel="noopener noreferrer" className="mono-data flex items-center gap-1 truncate text-[11px] font-semibold text-[#102A43] hover:underline">
         {value}
         <ExternalLink className="h-3 w-3 shrink-0" strokeWidth={2.5} />
@@ -744,8 +744,8 @@ function ProofLink({ label, value, href }: { label: string; value: string; href:
 
 function GS1Tag({ label, value }: { label: string; value: string }) {
   return (
-    <span className="border-2 border-black bg-white px-1.5 py-0.5">
-      <span className="text-[8px] font-bold uppercase text-black/50">{label}: </span>
+    <span className="border-2 border-black bg-base px-1.5 py-0.5">
+      <span className="text-[8px] font-bold uppercase text-ink/50">{label}: </span>
       <span className="mono-data text-[10px]">{value}</span>
     </span>
   );
