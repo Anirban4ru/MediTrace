@@ -12,7 +12,7 @@ export function getSupabase(): SupabaseClient | null {
   if (!client) {
     client = createClient(supabaseUrl!, supabaseAnonKey!, {
       auth: {
-        persistSession: true,
+        persistSession: false,
         autoRefreshToken: true,
       },
     });

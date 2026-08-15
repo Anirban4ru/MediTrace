@@ -95,9 +95,9 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
   }
 
   return (
-    <div className="brutal-card">
-      <div className="flex items-center gap-2 border-b-2 border-black bg-white px-4 py-3">
-        <Search className="h-4 w-4 shrink-0 text-black/50" strokeWidth={2.5} />
+    <div className="border shadow-ambient bg-card rounded-xl">
+      <div className="flex items-center gap-2 border-b-2 border-black bg-base px-4 py-3">
+        <Search className="h-4 w-4 shrink-0 text-ink/50" strokeWidth={2.5} />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -105,7 +105,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
           className="flex-1 bg-transparent text-[13px] mono-data focus:outline-none"
         />
         {query && (
-          <button onClick={() => setQuery('')} className="text-black/40 hover:text-black">
+          <button onClick={() => setQuery('')} className="text-ink/40 hover:text-ink">
             <X className="h-4 w-4" strokeWidth={2.5} />
           </button>
         )}
@@ -113,7 +113,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
           onClick={() => setShowFilters(!showFilters)}
           className={cn(
             'flex items-center gap-1 border-2 border-black px-2 py-1 text-[10px] font-bold uppercase tracking-[0.1em] transition-colors',
-            showFilters ? 'bg-black text-white' : 'bg-white hover:bg-black/5'
+            showFilters ? 'bg-[var(--ink)] text-[var(--bg)]' : 'bg-base hover:bg-[var(--ink)]/5'
           )}
         >
           <Filter className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -122,14 +122,14 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
       </div>
 
       {showFilters && (
-        <div className="flex flex-wrap items-center gap-3 border-b-2 border-black/15 bg-[#F4F4F6] px-4 py-3">
+        <div className="flex flex-wrap items-center gap-3 border-b-2 border-black/15 bg-[var(--bg-surface)] px-4 py-3">
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-black/60">Status:</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">Status:</span>
             <button
               onClick={() => setStatusFilter('all')}
               className={cn(
                 'border-2 px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]',
-                statusFilter === 'all' ? 'border-black bg-black text-white' : 'border-black/30 hover:border-black'
+                statusFilter === 'all' ? 'border-black bg-[var(--ink)] text-[var(--bg)]' : 'border-black/30 hover:border-black'
               )}
             >
               All
@@ -140,7 +140,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
                 onClick={() => setStatusFilter(s)}
                 className={cn(
                   'border-2 px-2 py-0.5 text-[10px] uppercase tracking-[0.1em]',
-                  statusFilter === s ? 'border-black bg-black text-white' : 'border-black/30 hover:border-black'
+                  statusFilter === s ? 'border-black bg-[var(--ink)] text-[var(--bg)]' : 'border-black/30 hover:border-black'
                 )}
               >
                 {s}
@@ -149,24 +149,24 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-black/60">From:</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">From:</span>
             <input
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
-              className="border-2 border-black/30 bg-white px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border-2 border-black/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
             />
-            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-black/60">To:</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/60">To:</span>
             <input
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
-              className="border-2 border-black/30 bg-white px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
+              className="border-2 border-black/30 bg-base px-2 py-0.5 text-[10px] mono-data focus:border-black focus:outline-none"
             />
             {(dateFrom || dateTo) && (
               <button
                 onClick={() => { setDateFrom(''); setDateTo(''); }}
-                className="text-[10px] text-black/40 hover:text-black"
+                className="text-[10px] text-ink/40 hover:text-ink"
               >
                 clear
               </button>
@@ -177,8 +177,8 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
 
       <div className="max-h-[520px] overflow-y-auto">
         <table className="w-full border-collapse text-left">
-          <thead className="sticky top-0 bg-[#F4F4F6]">
-            <tr className="border-b-2 border-black text-[10px] uppercase tracking-[0.14em] text-black/60">
+          <thead className="sticky top-0 bg-[var(--bg-surface)]">
+            <tr className="border-b-2 border-black text-[10px] uppercase tracking-[0.14em] text-ink/60">
               <Th onClick={() => toggleSort('batchId')} active={sortField === 'batchId'} dir={sortDir}>
                 Batch ID
               </Th>
@@ -201,7 +201,7 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={7} className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-black/50">
+                <td colSpan={7} className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-ink/50">
                   No batches match your filters.
                 </td>
               </tr>
@@ -209,14 +209,14 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
               filtered.map((b) => {
                 const breach = b.telemetry.some((t) => t.breached);
                 return (
-                  <tr key={b.batchId} className="border-b border-black/15 text-[12px] transition-colors hover:bg-[#F4F4F6]">
+                  <tr key={b.batchId} className="border-b border-black/15 text-[12px] transition-colors hover:bg-[var(--bg-surface)]">
                     <td className="px-3 py-2.5">
                       <div className="mono-data font-semibold">{b.batchId}</div>
-                      <div className="mono-data text-[10px] text-black/50">{b.serial}</div>
+                      <div className="mono-data text-[10px] text-ink/50">{b.serial}</div>
                     </td>
                     <td className="px-3 py-2.5">
                       <div className="font-medium">{b.productName}</div>
-                      <div className="mono-data text-[10px] text-black/50">{b.manufacturerLabel}</div>
+                      <div className="mono-data text-[10px] text-ink/50">{b.manufacturerLabel}</div>
                     </td>
                     <td className="px-3 py-2.5">
                       <StatusPill status={b.currentStatus} />
@@ -229,13 +229,13 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
                     </td>
                     <td className="px-3 py-2.5">
                       {b.telemetry.length === 0 ? (
-                        <span className="mono-data text-[10px] text-black/40">—</span>
+                        <span className="mono-data text-[10px] text-ink/40">—</span>
                       ) : (
                         <div className="flex items-center gap-1.5">
-                          <Thermometer className="h-3.5 w-3.5" strokeWidth={2.5} style={{ color: breach ? '#B91C1C' : '#0f5132' }} />
+                          <Thermometer className="h-3.5 w-3.5" strokeWidth={2.5} style={{ color: breach ? 'var(--danger)' : 'var(--success)' }} />
                           <span className="mono-data text-[11px]">{b.telemetry.length}</span>
                           {breach && (
-                            <span className="border border-[#B91C1C] px-1 text-[9px] font-bold uppercase text-[#B91C1C]">BREACH</span>
+                            <span className="border border-[var(--danger)] px-1 text-[9px] font-bold uppercase text-[var(--danger)]">BREACH</span>
                           )}
                         </div>
                       )}
@@ -251,14 +251,14 @@ export function SearchFilter({ batches }: { batches: Batch[] }) {
         </table>
       </div>
 
-      <div className="flex items-center justify-between border-t-2 border-black bg-[#F4F4F6] px-4 py-2">
-        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-black/55">
+      <div className="flex items-center justify-between border-t-2 border-black bg-[var(--bg-surface)] px-4 py-2">
+        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-ink/55">
           {filtered.length} of {batches.length} batches
         </span>
         {(query || statusFilter !== 'all' || dateFrom || dateTo) && (
           <button
             onClick={() => { setQuery(''); setStatusFilter('all'); setDateFrom(''); setDateTo(''); }}
-            className="text-[10px] font-bold uppercase tracking-[0.12em] text-black/50 hover:text-black"
+            className="text-[10px] font-bold uppercase tracking-[0.12em] text-ink/50 hover:text-ink"
           >
             Reset all filters
           </button>
@@ -281,7 +281,7 @@ function Th({
 }) {
   return (
     <th className="px-3 py-2 font-bold">
-      <button onClick={onClick} className="flex items-center gap-1 hover:text-black">
+      <button onClick={onClick} className="flex items-center gap-1 hover:text-ink">
         {children}
         {active && <ArrowUpDown className="h-3 w-3" style={{ transform: dir === 'asc' ? 'none' : 'scaleY(-1)' }} />}
       </button>

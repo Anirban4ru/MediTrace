@@ -18,20 +18,20 @@ export function AuditLog() {
   const { auditLog, getBatch } = useLedger();
 
   return (
-    <div className="brutal-card">
-      <div className="flex items-center justify-between border-b-2 border-black bg-white px-4 py-3">
+    <div className="border shadow-ambient bg-card rounded-xl">
+      <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-3">
         <div className="flex items-center gap-2">
           <History className="h-4 w-4" strokeWidth={2.5} />
           <h3 className="display-heavy text-[13px] uppercase">Audit Trail</h3>
         </div>
-        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-black/55">
+        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-ink/55">
           {auditLog.length} events
         </span>
       </div>
 
       <div className="max-h-[520px] overflow-y-auto">
         {auditLog.length === 0 ? (
-          <div className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-black/50">
+          <div className="p-6 text-center text-[11px] uppercase tracking-[0.14em] text-ink/50">
             No audit events recorded yet.
           </div>
         ) : (
@@ -43,15 +43,15 @@ export function AuditLog() {
                 <li
                   key={entry.id}
                   className={cn(
-                    'border-b border-black/15 px-4 py-3 transition-colors hover:bg-[#F4F4F6]',
-                    isSpoiled && 'bg-[#B91C1C]/5'
+                    'border-b border-black/15 px-4 py-3 transition-colors hover:bg-[var(--bg-surface)]',
+                    isSpoiled && 'bg-[var(--danger)]/5'
                   )}
                 >
                   <div className="flex items-start gap-3">
                     <div
                       className={cn(
                         'flex h-7 w-7 shrink-0 items-center justify-center border-2 border-black',
-                        isSpoiled ? 'bg-[#B91C1C] text-white' : 'bg-white'
+                        isSpoiled ? 'bg-[var(--danger)] text-[var(--bg)]' : 'bg-base'
                       )}
                     >
                       <Icon className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -61,12 +61,12 @@ export function AuditLog() {
                         <span
                           className={cn(
                             'text-[11px] font-bold uppercase tracking-[0.1em]',
-                            isSpoiled && 'text-[#B91C1C]'
+                            isSpoiled && 'text-[var(--danger)]'
                           )}
                         >
                           {entry.event_type.replace(/_/g, ' ')}
                         </span>
-                        <span className="mono-data text-[9px] text-black/40">
+                        <span className="mono-data text-[9px] text-ink/40">
                           {new Date(entry.created_at).toLocaleString('en-GB', {
                             day: '2-digit',
                             month: 'short',
@@ -76,15 +76,15 @@ export function AuditLog() {
                         </span>
                       </div>
                       {entry.batch_id && (
-                        <div className="mono-data text-[10px] text-black/50">{entry.batch_id}</div>
+                        <div className="mono-data text-[10px] text-ink/50">{entry.batch_id}</div>
                       )}
-                      <div className="mono-data text-[10px] text-black/60">
+                      <div className="mono-data text-[10px] text-ink/60">
                         by {entry.actor}
                       </div>
                       {entry.details && Object.keys(entry.details).length > 0 && (
                         <div className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5">
                           {Object.entries(entry.details).map(([k, v]) => (
-                            <span key={k} className="mono-data text-[9px] text-black/45">
+                            <span key={k} className="mono-data text-[9px] text-ink/45">
                               {k}: {String(v)}
                             </span>
                           ))}
@@ -97,7 +97,7 @@ export function AuditLog() {
                           const b = getBatch(entry.batch_id!);
                           if (b) generatePDFReport(b);
                         }}
-                        className="flex h-7 shrink-0 items-center gap-1 border-2 border-black bg-white px-2 transition-colors hover:bg-black hover:text-white"
+                        className="flex h-7 shrink-0 items-center gap-1 border-2 border-black bg-base px-2 transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                         title="Download PDF Report"
                       >
                         <FileText className="h-3 w-3" strokeWidth={2.5} />

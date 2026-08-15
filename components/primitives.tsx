@@ -23,14 +23,14 @@ export function StatusPill({
       )}
       style={{
         background: bg,
-        color: isLight ? '#000' : '#fff',
+        color: isLight ? 'var(--ink)' : '#fff',
       }}
     >
       <motion.div
         animate={{ opacity: [1, 0.4, 1] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         className="h-1.5 w-1.5 rounded-full"
-        style={{ background: isLight ? '#000' : '#fff' }}
+        style={{ background: isLight ? 'var(--ink)' : '#fff' }}
       />
       {status}
     </span>

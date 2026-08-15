@@ -13,18 +13,18 @@ export function AlertsInbox() {
   const acked = alerts.filter((a) => a.acknowledged);
 
   return (
-    <div className="brutal-card">
-      <div className="flex items-center justify-between border-b-2 border-black bg-white px-4 py-3">
+    <div className="border shadow-ambient bg-card rounded-xl">
+      <div className="flex items-center justify-between border-b-2 border-black bg-base px-4 py-3">
         <div className="flex items-center gap-2">
           <Bell className="h-4 w-4" strokeWidth={2.5} />
           <h3 className="display-heavy text-[13px] uppercase">Spoilage Alerts</h3>
           {unack.length > 0 && (
-            <span className="border-2 border-[#B91C1C] bg-[#B91C1C] px-1.5 text-[10px] font-bold uppercase text-white">
+            <span className="border-2 border-[var(--danger)] bg-[var(--danger)] px-1.5 text-[10px] font-bold uppercase text-[var(--bg)]">
               {unack.length} new
             </span>
           )}
         </div>
-        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-black/55">
+        <span className="mono-data text-[10px] uppercase tracking-[0.14em] text-ink/55">
           {alerts.length} total
         </span>
       </div>
@@ -32,8 +32,8 @@ export function AlertsInbox() {
       <div className="max-h-[480px] overflow-y-auto">
         {alerts.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-2 p-8 text-center">
-            <Check className="h-8 w-8 text-[#0f5132]" strokeWidth={2} />
-            <span className="text-[11px] uppercase tracking-[0.14em] text-black/50">
+            <Check className="h-8 w-8 text-[var(--success)]" strokeWidth={2} />
+            <span className="text-[11px] uppercase tracking-[0.14em] text-ink/50">
               No alerts — all batches within safe parameters
             </span>
           </div>
@@ -55,8 +55,8 @@ export function AlertsInbox() {
               />
             ))}
             {unack.length > 0 && acked.length > 0 && (
-              <li className="border-y-2 border-black/10 bg-[#F4F4F6] px-4 py-1.5">
-                <span className="mono-data text-[9px] uppercase tracking-[0.16em] text-black/45">
+              <li className="border-y-2 border-black/10 bg-[var(--bg-surface)] px-4 py-1.5">
+                <span className="mono-data text-[9px] uppercase tracking-[0.16em] text-ink/45">
                   Acknowledged
                 </span>
               </li>
@@ -119,32 +119,32 @@ function AlertItem({
       className={cn(
         'border-b border-black/15 px-4 py-3 transition-colors',
         acknowledged ? 'opacity-50' : '',
-        isCritical ? 'bg-[#B91C1C]/5' : isWarning ? 'bg-[#f59e0b]/5' : ''
+        isCritical ? 'bg-[var(--danger)]/5' : isWarning ? 'bg-[#f59e0b]/5' : ''
       )}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-start gap-2">
           {isCritical ? (
-            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[#B91C1C]" strokeWidth={2.5} />
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-[var(--danger)]" strokeWidth={2.5} />
           ) : isWarning ? (
             <AlertCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#d97706]" strokeWidth={2.5} />
           ) : (
-            <Bell className="mt-0.5 h-4 w-4 shrink-0 text-black/50" strokeWidth={2.5} />
+            <Bell className="mt-0.5 h-4 w-4 shrink-0 text-ink/50" strokeWidth={2.5} />
           )}
           <div>
             <div className="flex items-center gap-2">
               <span
                 className={cn(
                   'text-[10px] font-bold uppercase tracking-[0.12em]',
-                  isCritical ? 'text-[#B91C1C]' : isWarning ? 'text-[#d97706]' : 'text-black/60'
+                  isCritical ? 'text-[var(--danger)]' : isWarning ? 'text-[#d97706]' : 'text-ink/60'
                 )}
               >
                 {alert.alert_type}
               </span>
-              <span className="mono-data text-[10px] text-black/40">{alert.batch_id}</span>
+              <span className="mono-data text-[10px] text-ink/40">{alert.batch_id}</span>
             </div>
-            <p className="mt-0.5 text-[11px] text-black/70">{alert.message}</p>
-            <span className="mono-data text-[9px] text-black/40">
+            <p className="mt-0.5 text-[11px] text-ink/70">{alert.message}</p>
+            <span className="mono-data text-[9px] text-ink/40">
               {new Date(alert.created_at).toLocaleString('en-GB', {
                 day: '2-digit',
                 month: 'short',
@@ -171,7 +171,7 @@ function AlertItem({
                 {showCommentary && (
                   <button
                     onClick={() => setShowCommentary(false)}
-                    className="flex h-6 items-center justify-center border-2 border-black bg-white text-black px-2 text-[10px] font-bold uppercase hover:bg-black hover:text-white"
+                    className="flex h-6 items-center justify-center border-2 border-black bg-base text-ink px-2 text-[10px] font-bold uppercase hover:bg-[var(--ink)] hover:text-[var(--bg)]"
                   >
                     Cancel
                   </button>
@@ -179,7 +179,7 @@ function AlertItem({
                 <button
                   onClick={handleFileAudit}
                   disabled={isFiling}
-                  className="flex h-6 items-center justify-center border-2 border-black bg-[#B91C1C] px-2 text-[10px] font-bold uppercase text-white transition-colors hover:bg-black disabled:opacity-50"
+                  className="flex h-6 items-center justify-center border-2 border-black bg-[var(--danger)] px-2 text-[10px] font-bold uppercase text-[var(--bg)] transition-colors hover:bg-[var(--ink)] disabled:opacity-50"
                   title="File Audit & Revoke Batch On-Chain"
                 >
                   {isFiling ? 'Mining...' : (showCommentary ? 'Confirm Revoke' : 'File Audit & Revoke')}
@@ -191,7 +191,7 @@ function AlertItem({
             <button
               onClick={onAck}
               disabled={isFiling}
-              className="flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-white transition-colors hover:bg-black hover:text-white disabled:opacity-50"
+              className="flex h-6 w-6 shrink-0 items-center justify-center border-2 border-black bg-base transition-colors hover:bg-[var(--ink)] hover:text-[var(--bg)] disabled:opacity-50"
               title="Acknowledge"
             >
               <Check className="h-3.5 w-3.5" strokeWidth={2.5} />
