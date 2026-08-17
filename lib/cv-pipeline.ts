@@ -9,7 +9,8 @@ declare global {
   }
 }
 
-const OPENCV_CDN = 'https://docs.opencv.org/4.x/opencv.js';
+const OPENCV_CDN = 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.12.0-release.1/dist/opencv.js';
+const OPENCV_SRI = 'sha384-i8A4fJEsRcMFMyEEDNri/2MR12DhkFLlUF+9oxUrxs6prIcRj7YtWAQ1OJ+iE0C7';
 
 export function loadOpenCV(): Promise<void> {
   if (typeof window === 'undefined') return Promise.reject(new Error('SSR'));
@@ -19,6 +20,8 @@ export function loadOpenCV(): Promise<void> {
   window.__opencvLoading = new Promise<void>((resolve, reject) => {
     const script = document.createElement('script');
     script.src = OPENCV_CDN;
+    script.integrity = OPENCV_SRI;
+    script.crossOrigin = 'anonymous';
     script.async = true;
     script.onload = () => {
       const check = setInterval(() => {
@@ -258,18 +261,19 @@ export function getLevenshteinDistance(a: string, b: string): number {
 
 export function verifyDigitalHandoff(): { safe: boolean; reason?: string } {
   if (typeof window === 'undefined') return { safe: true };
-  
+
   const currentHost = window.location.hostname;
-  const officialHost = process.env.NEXT_PUBLIC_SITE_URL ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname : 'pharma-trace-ten.vercel.app';
+  const officialHost = process.env.NEXT_PUBLIC_SITE_URL
+    ? new URL(process.env.NEXT_PUBLIC_SITE_URL).hostname
+    : 'pharma-trace-ten.vercel.app';
   const allowedHosts = [officialHost, 'pharma-trace-ten.vercel.app', 'localhost', '127.0.0.1'];
 
-  if (allowedHosts.includes(currentHost) || currentHost.endsWith('.vercel.app')) {
+  if (allowedHosts.includes(currentHost)) {
     return { safe: true };
   }
 
-  // Check for typosquatting / lookalike
   const distance = getLevenshteinDistance(currentHost, officialHost);
-  
+
   if (distance > 0 && distance <= 3) {
     return { safe: false, reason: `CRITICAL: TYPOSQUATTING DETECTED! Lookalike domain (${currentHost}). Official domain is ${officialHost}.` };
   }

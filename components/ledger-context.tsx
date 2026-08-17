@@ -322,19 +322,27 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
           throw new Error(`Supabase insert failed: ${error.message}`);
         }
 
-        await supabase.from('audit_logs').insert({
+        const { error: auditError } = await supabase.from('audit_logs').insert({
           batch_id: batch.batchId,
           event_type: 'provisioned',
           actor: user.email,
           details: { product: batch.productName, units: batch.units, serial: batch.serial },
         });
+        if (auditError) {
+          console.error('Audit log write failed (addBatch):', auditError);
+          toast.error(`Audit log failed: ${auditError.message}`);
+        }
       }
 
       setBatches((prev) => [batch, ...prev]);
       return batch;
       } catch (err: any) {
         console.error("addBatch Error:", err);
-        toast.error(`Failed to provision batch: ${err.message}`);
+        if (err?.reason?.includes('AccessControl') || err?.message?.includes('missing role')) {
+          toast.error('Your wallet address does not hold the required on-chain role for this action. Contact the contract admin to be granted the role separately from your app account role.');
+        } else {
+          toast.error(`Failed to provision batch: ${err.message}`);
+        }
       }
     },
     [user]
@@ -416,12 +424,16 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
             severity: 'critical',
           });
 
-          await supabase.from('audit_logs').insert({
+          const { error: spoiledAuditError } = await supabase.from('audit_logs').insert({
             batch_id: batchId,
             event_type: 'spoiled',
             actor: user.email,
             details: { temperature: checkpoint.temperature, lat: checkpoint.lat, lng: checkpoint.lng },
           });
+          if (spoiledAuditError) {
+            console.error('Audit log write failed (spoiled):', spoiledAuditError);
+            toast.error(`Audit log failed: ${spoiledAuditError.message}`);
+          }
         } else if (batch.currentStatus === 'Manufactured') {
           await supabase
             .from('batches')
@@ -429,17 +441,26 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
             .eq('batch_id', batchId);
         }
 
-        await supabase.from('audit_logs').insert({
+        const { error: telemetryAuditError } = await supabase.from('audit_logs').insert({
           batch_id: batchId,
           event_type: 'telemetry_logged',
           actor: user.email,
           details: { temperature: checkpoint.temperature, breached: checkpoint.breached, simulated: skipBlockchain },
         });
+        if (telemetryAuditError) {
+          console.error('Audit log write failed (telemetry):', telemetryAuditError);
+          toast.error(`Audit log failed: ${telemetryAuditError.message}`);
+        }
       }
 
       setBatches((prev) => prev.map((b) => (b.batchId === batchId ? updated : b)));
       } catch (err: any) {
         console.error("pushTelemetry Error:", err);
+        if (err?.reason?.includes('AccessControl') || err?.message?.includes('missing role')) {
+          toast.error('Your wallet address does not hold the required on-chain role for this action. Contact the contract admin to be granted the role separately from your app account role.');
+        } else {
+          toast.error(`Failed to log telemetry: ${err.message}`);
+        }
       }
     },
     [batches, user]
@@ -498,12 +519,16 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
             .update({ acknowledged: true })
             .eq('id', alertId);
 
-          await supabase.from('audit_logs').insert({
+          const { error: fileAuditError } = await supabase.from('audit_logs').insert({
             batch_id: batchId,
             event_type: 'spoiled', // Trigger red styling
             actor: user.email,
             details: { action: 'admin_revocation', reason: message, on_chain: chainSuccess },
           });
+          if (fileAuditError) {
+            console.error('Audit log write failed (fileAudit):', fileAuditError);
+            toast.error(`Audit log failed: ${fileAuditError.message}`);
+          }
         }
         
         setAlerts((prev) =>
@@ -556,12 +581,16 @@ export function LedgerProvider({ children }: { children: React.ReactNode }) {
           image_preview: record.image_preview,
         });
 
-        await supabase.from('audit_logs').insert({
+        const { error: scanAuditError } = await supabase.from('audit_logs').insert({
           batch_id: record.batch_id,
           event_type: 'scanned',
           actor: user.email,
           details: { score: record.authenticity_score, anomalies: record.anomalies_detected },
         });
+        if (scanAuditError) {
+          console.error('Audit log write failed (saveVerification):', scanAuditError);
+          toast.error(`Audit log failed: ${scanAuditError.message}`);
+        }
 
         if (record.anomalies_detected) {
           const msg = `Verification anomaly detected for ${record.batch_id} — score ${(record.authenticity_score * 100).toFixed(1)}%`;

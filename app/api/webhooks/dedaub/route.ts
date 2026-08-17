@@ -1,5 +1,20 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase-client';
+import { createClient } from '@supabase/supabase-js';
+import { timingSafeEqual } from 'crypto';
+
+function safeCompare(a: string, b: string): boolean {
+  const bufA = Buffer.from(a);
+  const bufB = Buffer.from(b);
+  if (bufA.length !== bufB.length) return false;
+  return timingSafeEqual(bufA, bufB);
+}
+
+function getSupabaseAdmin() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !serviceKey) return null;
+  return createClient(url, serviceKey, { auth: { persistSession: false } });
+}
 
 export async function POST(req: Request) {
   try {
@@ -10,7 +25,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Server misconfiguration: Webhook secret not set' }, { status: 500 });
     }
 
-    if (authHeader !== `Bearer ${expectedSecret}`) {
+    if (!authHeader || !safeCompare(authHeader, `Bearer ${expectedSecret}`)) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -29,9 +44,9 @@ export async function POST(req: Request) {
     const isSpoiledEvent = eventName === 'BatchSpoiled' || payload.alertType === 'BatchSpoiled';
 
     if (isSpoiledEvent) {
-      const supabase = getSupabase();
+      const supabase = getSupabaseAdmin();
       if (!supabase) {
-        return NextResponse.json({ error: 'Supabase not configured' }, { status: 500 });
+        return NextResponse.json({ error: 'Supabase admin client not configured' }, { status: 500 });
       }
 
       const tempStr = tempCp ? (tempCp / 100).toFixed(1) : 'Unknown';

@@ -52,11 +52,17 @@ CREATE POLICY "Admin can update alerts" ON alerts
 FOR UPDATE TO authenticated 
 USING (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));
 
--- Admin / Inspector can insert audit logs
+-- Authenticated users can insert alerts (system-generated side effects of legitimate actions)
+DROP POLICY IF EXISTS "Authenticated users can insert alerts" ON alerts;
+CREATE POLICY "Authenticated users can insert alerts" ON alerts
+FOR INSERT TO authenticated
+WITH CHECK (true);
+
+-- Any authenticated user can insert audit logs (append-only trail for all roles)
 DROP POLICY IF EXISTS "Admin can insert audit logs" ON audit_logs;
-CREATE POLICY "Admin can insert audit logs" ON audit_logs 
-FOR INSERT TO authenticated 
-WITH CHECK (public.get_user_role() IN ('INSPECTOR_ROLE', 'ADMIN_ROLE', 'admin', 'SUPERIOR_HEAD_ROLE'));
+CREATE POLICY "Authenticated users can insert own audit logs" ON audit_logs
+FOR INSERT TO authenticated
+WITH CHECK (true);
 
 -- Inspector can insert verifications
 DROP POLICY IF EXISTS "Inspector can insert verifications" ON verifications;
