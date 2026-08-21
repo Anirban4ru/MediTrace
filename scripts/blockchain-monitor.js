@@ -14,15 +14,15 @@ const contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, provider);
 // 3. Your Live Vercel Webhook URL
 const WEBHOOK_URL = 'https://pharma-trace-ten.vercel.app/api/webhooks/dedaub';
 
-console.log('?? Starting Custom Blockchain Monitor...');
-console.log(Listening for BatchSpoiled events on contract: );
+console.log('⏳ Starting Custom Blockchain Monitor...');
+console.log(`Listening for BatchSpoiled events on contract: ${CONTRACT_ADDRESS}`);
 
 // 4. Listen for the event
 contract.on('BatchSpoiled', async (batchId, carrier, temperatureCp, event) => {
-  console.log('\n?? BREACH DETECTED ON BLOCKCHAIN!');
-  console.log(Batch: );
-  console.log(Temp: );
-  console.log(Tx Hash: );
+  console.log('\n🚨 BREACH DETECTED ON BLOCKCHAIN!');
+  console.log(`Batch: ${batchId}`);
+  console.log(`Temp: ${temperatureCp}`);
+  console.log(`Tx Hash: ${event?.transactionHash || 'N/A'}`);
 
   // 5. Fire the webhook to your Vercel site (Acting as Dedaub)
   try {
