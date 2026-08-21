@@ -27,7 +27,7 @@ export function AuthScreen() {
 
   return (
     <div 
-      className="flex min-h-screen items-center justify-center p-4 relative overflow-hidden"
+      className="flex min-h-screen items-center justify-center lg:justify-end p-4 lg:p-24 xl:pr-32 relative overflow-hidden"
       style={{
         backgroundColor: 'var(--bg)',
       }}
