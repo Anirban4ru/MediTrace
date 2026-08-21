@@ -227,6 +227,7 @@ function TopNavigation({
           style={{ background: 'none', border: 'none', cursor: 'pointer' }}
         >
           <div className="flex h-8 w-8 items-center justify-center rounded border" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo.png" alt="Logo" className="h-5 w-5 object-contain" />
           </div>
           <span className="text-lg font-bold tracking-tight" style={{ color: 'var(--ink)' }}>
@@ -349,6 +350,7 @@ function TopNavigation({
         >
           <div className="flex items-center justify-between p-4" style={{ borderBottom: '1px solid var(--border)' }}>
             <div className="flex items-center gap-2">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/logo.png" alt="Logo" className="h-6 w-6 object-contain" />
               <span className="font-bold text-base">MediTrace Menu</span>
             </div>
