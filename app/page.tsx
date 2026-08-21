@@ -2,7 +2,7 @@
 
 export const dynamic = 'force-dynamic';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import {
   ShieldCheck, ScanLine, LogOut, Lock, AlertTriangle,
   Fingerprint, Activity, ExternalLink, Menu, X, ChevronRight,
@@ -111,7 +111,9 @@ function Shell({ user, onSignOut }: {
   const isLanding = view === 'landing';
 
   const navigate = (v: ViewState) => {
-    setView(v);
+    startTransition(() => {
+      setView(v);
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 

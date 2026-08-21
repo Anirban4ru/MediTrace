@@ -107,6 +107,9 @@ export function PharmacyTerminal() {
       setProgress(0);
       setStage(stages[0]);
 
+      // Yield to the browser main thread so the "processing" loading UI can paint
+      await new Promise(r => setTimeout(r, 100));
+
       const handoff = verifyDigitalHandoff();
       if (!handoff.safe) {
         cancelled = true;
