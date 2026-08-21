@@ -27,29 +27,36 @@ export function AuthScreen() {
 
   return (
     <div 
-      className="flex min-h-screen items-center justify-center p-4 relative"
+      className="flex min-h-screen items-center justify-center p-4 relative overflow-hidden"
       style={{
-        backgroundImage: 'url(/Background.jpg)',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
         backgroundColor: 'var(--bg)',
       }}
     >
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ zIndex: 0 }}
+      >
+        <source src="/bg.mp4" type="video/mp4" />
+      </video>
       {/* Background backdrop blur & tint overlay */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px]" />
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-[3px] z-0" />
 
       <div className="w-full max-w-md relative z-10 animate-editorial-fade">
         {/* Brand Header */}
         <div className="mb-6 flex flex-col items-center text-center gap-2">
           <div className="flex h-14 w-14 items-center justify-center rounded-xl border shadow-lg" style={{ background: 'var(--bg-surface)', borderColor: 'var(--border)' }}>
-            <img src="/BrandLogo.png" alt="Logo" className="h-9 w-9 object-contain" />
+            <img src="/logo.png" alt="Logo" className="h-9 w-9 object-contain" />
           </div>
           <div>
             <div className="display-heavy text-[26px] sm:text-[28px] tracking-tight text-white drop-shadow-md">
               MediTrace
             </div>
             <div className="mono-data text-[10px] sm:text-[11px] uppercase tracking-[0.18em] text-white/90 drop-shadow">
-              Pharmaceutical Integrity Ledger
+              Traced. Tracked. Trusted.
             </div>
           </div>
         </div>
@@ -181,7 +188,7 @@ export function AuthScreen() {
           </form>
 
           <p className="mt-6 text-center text-[10px] uppercase tracking-[0.12em]" style={{ color: 'var(--ink-muted)' }}>
-            Secure Terminal · Zero-Trust Cryptographic Ledger
+            Traced. Tracked. Trusted.
           </p>
         </div>
       </div>
